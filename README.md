@@ -43,10 +43,10 @@ Here is the documentation of options for the modules configuration
 |:----------------------|:-------------
 | `P1_IP`            | **REQUIRED** - The IP Address of your HomeWizard P1 meter <br /><br />**Number** <br />Default: `0.0.0.0`
 | `WM_IP`           | **REQUIRED** - The IP Address of your HomeWizard Water meter <br /><br />**Number** <br />Default: `0.0.0.0`
-| `updateInterval`		| **REQUIRED** - The interval the information is updated <br />**Number** <br/>Default: `5000`
-| `ee`		| Choose if you like to see Icons or Plain Text <br /><br />**True/False**<br />Default: `true`
-| `ff`		| Choose if you like to see additional weather information <br /><br />**True/False**<br />Default: `false`
-| `gg`		| The maximum width of the module <br /><br />Default: `500px`
+| `updateInterval`		| **REQUIRED** - The interval the information is updated <br /><br />**Number** <br/>Default: `5000`
+| `ee`		| Extra option <br /><br />**True/False**<br />Default: `true`
+| `ff`		| Extra option <br /><br />**True/False**<br />Default: `false`
+| `maxWidth`		| The maximum width of the module <br /><br />Default: `500px`
 
 ## Version
 v1.0.0 - 26-11-2024	: Initial version </br>
