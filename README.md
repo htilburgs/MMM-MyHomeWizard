@@ -1,2 +1,2 @@
 # MMM-MyHomeWizard
-MagicMirror module HomeWizard 
+HomeWizard module for MagicMirror
