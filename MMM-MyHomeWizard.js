@@ -74,7 +74,7 @@ Module.register('MMM-MyDutchWeather', {
     		var MHWWTR = this.MHWWTR;
 
 		console.log(JSON.stringify(MHWP1));
-		console.log(JSON.stringify(MHWWTR);
+		console.log(JSON.stringify(MHWWTR));
 /*
 		// creating the tablerows
 		var WoonplaatsRow = document.createElement("tr");
