@@ -45,7 +45,7 @@ Module.register('MMM-MyDutchWeather', {
 		requiresVersion: "2.1.0",	
 			
 		// Set locales
-		this.urlP1 = "http://" + this.P1_IP + "/api/v1/data";
+		this.url = "http://" + this.P1_IP + "/api/v1/data";
     		this.urlWM = "http://" + this.WM_IP + "/api/v1/data";
 		this.MHWP1 = [];			        // <-- Create empty MHWP1 array
     		this.MHWWMT = [];             // <-- Create empty MHWWMT array
