@@ -43,10 +43,8 @@ Module.register('MMM-MyDutchWeather', {
 		requiresVersion: "2.1.0",	
 			
 		// Set locales
-		this.url = "http://192.168.0.192/api/v1/data";
-    		//this.urlWM = "http://" + this.WM_IP + "/api/v1/data";
-		this.MHW = [];			        // <-- Create empty MHWP1 array
-    		//this.MHWWMT = [];             // <-- Create empty MHWWMT array
+		this.url = 'http://192.168.0.192/api/v1/data';
+    		this.MHW = [];			        // <-- Create empty MHWP1 array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
 	},
 
@@ -69,11 +67,9 @@ Module.register('MMM-MyDutchWeather', {
         	}	
 
 		var MHW = this.MHW;
-    		//var MHWWTR = this.MHWWTR;
-
+    		
 		console.log(JSON.stringify(MHW));
-		//console.log(JSON.stringify(MHWWTR));
-
+		
 		// creating the tablerows
 		var WoonplaatsRow = document.createElement("tr");
 		WoonplaatsRow.className = "woonplaats-row";
@@ -258,7 +254,7 @@ Module.register('MMM-MyDutchWeather', {
 */
 		var FooterRow = document.createElement("tr");
 		FooterRow.className = "footer";
-		FooterRow.innerHTML = "MyHomeWizard v1.0.0";
+		FooterRow.innerHTML = MHW.meter_model;
 		table.appendChild(FooterRow);
 			
 		return table;		
@@ -276,10 +272,8 @@ Module.register('MMM-MyDutchWeather', {
 	scheduleUpdate: function() { 
 		setInterval(() => {
 		    	this.getMHW();
-		//	this.getMHWWTR();
 		}, this.config.updateInterval);
 		this.getMHW();
-		// this.getMHWWTR();
 		var self = this;
 	},
 	  
