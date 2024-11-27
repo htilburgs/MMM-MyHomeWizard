@@ -17,9 +17,9 @@ module.exports = NodeHelper.create({
           console.log("Starting node_helper for: " + this.name);
   },
 
-getMHWP1: function(url) {
+getMHWP1: function(urlP1) {
         // Make a GET request using the Fetch API
-        fetch(url)
+        fetch(urlP1)
           .then(response => {
             if (!response.ok) {
               console.error('MMM-MyHomeWizard: Network response was not ok');
@@ -38,9 +38,9 @@ getMHWP1: function(url) {
           });
   },
 
-  getMHWWTR: function(url) {
+  getMHWWTR: function(urlWM) {
         // Make a GET request using the Fetch API
-        fetch(url)
+        fetch(urlWM)
           .then(response => {
             if (!response.ok) {
               console.error('MMM-MyHomeWizard: Network response was not ok');
@@ -50,7 +50,7 @@ getMHWP1: function(url) {
 
           .then(result => {
             // Process the retrieved user data
-            // console.log(result.liveweer['0']); // Remove trailing slashes to display data in Console for testing
+            console.log(result); // Remove trailing slashes to display data in Console for testing
             this.sendSocketNotification('MHWWTR_RESULT', result);
           })
 
