@@ -46,9 +46,9 @@ Module.register('MMM-MyDutchWeather', {
 			
 		// Set locales
 		this.urlP1 = "http://" + this.P1_IP + "/api/v1/data";
-    this.urlWM = "http://" + this.WM_IP + "/api/v1/data";
+    		this.urlWM = "http://" + this.WM_IP + "/api/v1/data";
 		this.MHWP1 = [];			        // <-- Create empty MHWP1 array
-    this.MHWWMT = [];             // <-- Create empty MHWWMT array
+    		this.MHWWMT = [];             // <-- Create empty MHWWMT array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
 	},
 
@@ -71,7 +71,7 @@ Module.register('MMM-MyDutchWeather', {
         	}	
 
 		var MHWP1 = this.MHWP1;
-    var MHWWTR = this.MHWWTR;
+    		var MHWWTR = this.MHWWTR;
 
 		console.log(JSON.stringify(MHWP1));
 		console.log(JSON.stringify(MHWWTR);
@@ -267,32 +267,36 @@ Module.register('MMM-MyDutchWeather', {
 		
 	}, // <-- closes the getDom function from above
 		
-	// this processes your data
-	processMWB: function(data) { 
-		this.MWB = data; 
-		console.log(this.MWB); // uncomment to see if you're getting data (in dev console)
+	// this processes your data P1 Meter
+	processMHWP1: function(datap1) { 
+		this.MHWP1 = datap1; 
+		console.log(this.MHWP1); // uncomment to see if you're getting data (in dev console)
+		this.loaded = true;
+	},
+
+	// this processes your data Water Meter
+	processMHWWMT: function(datawmt) { 
+		this.MHWP1 = datawmt; 
+		console.log(this.MHWWMT); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 	
 	// this tells module when to update
 	scheduleUpdate: function() { 
 		setInterval(() => {
-		    this.getMWB();
+		    	this.getMHWP1();
+			this.getMHWWTR():
 		}, this.config.updateInterval);
-		this.getMWB();
+		this.getMHWP1();
+		this.getMHWWTR();
 		var self = this;
 	},
 	  
 	// this asks node_helper for data
-	getMWB: function() { 
-		this.sendSocketNotification('GET_MWB', this.url);
+	getMHWP1: function() { 
+		this.sendSocketNotification('GET_MHWP1', this.urlP1);
 	},
-	
-	// this gets data from node_helper
-	socketNotificationReceived: function(notification, payload) { 
-		if (notification === "MWB_RESULT") {
-		    this.processMWB(payload);
-		}
-		this.updateDom(this.config.initialLoadDelay);
+	getMHWWTR: function() {
+		this.sendSocketNotification('GET_MHWWTR', this.urlWM);
 	},
 });
