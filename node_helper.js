@@ -17,7 +17,7 @@ module.exports = NodeHelper.create({
           console.log("Starting node_helper for: " + this.name);
   },
 
-getMHW: function(url) {
+getMHWP1: function(url) {
         // Make a GET request using the Fetch API
         fetch(url)
           .then(response => {
@@ -30,7 +30,7 @@ getMHW: function(url) {
           .then(result => {
             // Process the retrieved user data
             // console.log(result.liveweer['0']); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHW_RESULT', result);
+            this.sendSocketNotification('MHWP1_RESULT', result);
           })
 
           .catch(error => {
@@ -38,10 +38,38 @@ getMHW: function(url) {
           });
   },
 
+  getMHWWTR: function(url) {
+        // Make a GET request using the Fetch API
+        fetch(url)
+          .then(response => {
+            if (!response.ok) {
+              console.error('MMM-MyHomeWizard: Network response was not ok');
+            }
+            return response.json();
+          })
+
+          .then(result => {
+            // Process the retrieved user data
+            // console.log(result.liveweer['0']); // Remove trailing slashes to display data in Console for testing
+            this.sendSocketNotification('MHWWTR_RESULT', result);
+          })
+
+          .catch(error => {
+            console.error('Error:', error);
+          });
+  },
+  
   socketNotificationReceived: function(notification, payload) {
-            if (notification === 'GET_MHW') {
-            this.getMHW(payload);
+            if (notification === 'GET_MHWP1') {
+            this.getMHWP1(payload);
             }
   },
+
+    socketNotificationReceived: function(notification, payload) {
+            if (notification === 'GET_MHWWTR') {
+            this.getMHWWTR(payload);
+            }
+  },
+
 
 });
