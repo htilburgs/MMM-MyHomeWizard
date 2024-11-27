@@ -75,7 +75,7 @@ Module.register('MMM-MyDutchWeather', {
 
 		console.log(JSON.stringify(MHWP1));
 		console.log(JSON.stringify(MHWWTR);
-
+/*
 		// creating the tablerows
 		var WoonplaatsRow = document.createElement("tr");
 		WoonplaatsRow.className = "woonplaats-row";
@@ -260,7 +260,7 @@ Module.register('MMM-MyDutchWeather', {
 */
 		var FooterRow = document.createElement("tr");
 		FooterRow.className = "footer";
-		FooterRow.innerHTML = API[0].bron;
+		FooterRow.innerHTML = "MyHomeWizard v1.0.0";
 		table.appendChild(FooterRow);
 			
 		return table;		
