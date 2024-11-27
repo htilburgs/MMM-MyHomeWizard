@@ -27,16 +27,14 @@ Module.register('MMM-MyDutchWeather', {
 	},  
 
 	// Define required scripts.
-//	getScripts: function () {
-//		return ["moment.js"];
-//	},
+	getScripts: function () {
+		return ["moment.js"];
+	},
 
 	// Define required translations.
   	getTranslations: function () {
     		return {
-      		nl: "translations/nl.json",
-		      en: "translations/en.json",
-		      de: "translations/de.json"
+      		nl: "translations/nl.json"
     		}
   	},
 	
@@ -46,9 +44,9 @@ Module.register('MMM-MyDutchWeather', {
 			
 		// Set locales
 		this.url = "http://192.168.0.192/api/v1/data";
-    		this.urlWM = "http://" + this.WM_IP + "/api/v1/data";
+    		//this.urlWM = "http://" + this.WM_IP + "/api/v1/data";
 		this.MHW = [];			        // <-- Create empty MHWP1 array
-    		this.MHWWMT = [];             // <-- Create empty MHWWMT array
+    		//this.MHWWMT = [];             // <-- Create empty MHWWMT array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
 	},
 
@@ -71,22 +69,22 @@ Module.register('MMM-MyDutchWeather', {
         	}	
 
 		var MHW = this.MHW;
-    		var MHWWTR = this.MHWWTR;
+    		//var MHWWTR = this.MHWWTR;
 
 		console.log(JSON.stringify(MHW));
-		console.log(JSON.stringify(MHWWTR));
-/*
+		//console.log(JSON.stringify(MHWWTR));
+
 		// creating the tablerows
 		var WoonplaatsRow = document.createElement("tr");
 		WoonplaatsRow.className = "woonplaats-row";
 		
 		var WoonplaatsTextCell = document.createElement("td");
 		WoonplaatsTextCell.className = "normal woonplaatstextcell";
-		WoonplaatsTextCell.innerHTML = WL[0].plaats; 
+		WoonplaatsTextCell.innerHTML = MHW.wifi_ssid; 
 		WoonplaatsRow.appendChild(WoonplaatsTextCell);	
 		table.appendChild(WoonplaatsRow);
 		
-		var WoonplaatsTempCell = document.createElement("td");
+/*		var WoonplaatsTempCell = document.createElement("td");
 		WoonplaatsTempCell.className = "normal temptextcell";
 		WoonplaatsTempCell.innerHTML = WL[0].temp + " ℃";
 		WoonplaatsRow.appendChild(WoonplaatsTempCell);
@@ -268,7 +266,7 @@ Module.register('MMM-MyDutchWeather', {
 	}, // <-- closes the getDom function from above
 		
 	// this processes your data P1 Meter
-	processMHWP1: function(data) { 
+	processMHW: function(data) { 
 		this.MHW = data; 
 		console.log(this.MHW); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
