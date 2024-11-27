@@ -19,7 +19,7 @@ module.exports = NodeHelper.create({
 
 getMHW: function(url) {
         // Make a GET request using the Fetch API
-        fetch(url)
+        fetch('http://192.168.0.192/api/v1/data')
           .then(response => {
             if (!response.ok) {
               console.error('MMM-MyHomeWizard: Network response was not ok');
@@ -37,7 +37,7 @@ getMHW: function(url) {
             console.error('Error:', error);
           });
   },
-  
+
   socketNotificationReceived: function(notification, payload) {
             if (notification === 'GET_MHW') {
             this.getMHW(payload);
