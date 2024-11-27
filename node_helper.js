@@ -30,49 +30,18 @@ getMHWP1: function(url) {
           .then(result => {
             // Process the retrieved user data
             console.log(result); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHWP1_RESULT', result);
+            this.sendSocketNotification('MHW_RESULT', result);
           })
 
           .catch(error => {
             console.error('Error:', error);
           });
   },
-
-/*
-  getMHWWTR: function(urlWM) {
-        // Make a GET request using the Fetch API
-        fetch(urlWM)
-          .then(response => {
-            if (!response.ok) {
-              console.error('MMM-MyHomeWizard: Network response was not ok');
-            }
-            return response.json();
-          })
-
-          .then(result => {
-            // Process the retrieved user data
-            console.log(result); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHWWTR_RESULT', result);
-          })
-
-          .catch(error => {
-            console.error('Error:', error);
-          });
-  },
-*/
   
   socketNotificationReceived: function(notification, payload) {
-            if (notification === 'GET_MHWP1') {
-            this.getMHWP1(payload);
+            if (notification === 'GET_MHW') {
+            this.getMHW(payload);
             }
   },
-
-/*
-    socketNotificationReceived: function(notification, payload) {
-            if (notification === 'GET_MHWWTR') {
-            this.getMHWWTR(payload);
-            }
-  },
-*/
 
 });
