@@ -285,7 +285,7 @@ Module.register('MMM-MyDutchWeather', {
 	scheduleUpdate: function() { 
 		setInterval(() => {
 		    	this.getMHWP1();
-			this.getMHWWTR():
+			this.getMHWWTR();
 		}, this.config.updateInterval);
 		this.getMHWP1();
 		this.getMHWWTR();
