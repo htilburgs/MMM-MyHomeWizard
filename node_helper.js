@@ -29,7 +29,7 @@ getMHWP1: function(url) {
 
           .then(result => {
             // Process the retrieved user data
-            // console.log(result.liveweer['0']); // Remove trailing slashes to display data in Console for testing
+            console.log(result); // Remove trailing slashes to display data in Console for testing
             this.sendSocketNotification('MHWP1_RESULT', result);
           })
 
