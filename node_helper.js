@@ -19,7 +19,7 @@ module.exports = NodeHelper.create({
 
 getMHWP1: function(url) {
         // Make a GET request using the Fetch API
-        fetch(urlP1)
+        fetch(url)
           .then(response => {
             if (!response.ok) {
               console.error('MMM-MyHomeWizard: Network response was not ok');
