@@ -46,12 +46,8 @@ Module.register('MMM-MyHomeWizard', {
     		this.MHWP1 = [];	        // <-- Create empty MHW-P1 array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
 	},
-
+/*
 	getDom: function () {
-		
-		// creating the table
-		var table = document.createElement("table");
-		table.style.maxWidth = this.config.maxWidth;
 		
 		// creating the wrapper
 		var wrapper = document.createElement("div");
@@ -59,15 +55,15 @@ Module.register('MMM-MyHomeWizard', {
 		wrapper.style.maxWidth = this.config.maxWidth;
 	
 		// The loading sequence
-        	if (!this.loaded) {
-            	    wrapper.innerHTML = "Loading....";
-            	    wrapper.classList.add("bright", "light", "small");
-            	    return wrapper;
-        	}	
-
+   		if (!this.loaded) {
+            	wrapper.innerHTML = "Loading....";
+           	wrapper.classList.add("bright", "light", "small");
+            	
+		return wrapper;
+	}	
+*/	
 		var MHWP1 = this.MHWP1;
-    		
-		console.log(MHWP1);
+    		console.log(this.MHWP1);
 
 
 		// creating the tablerows
@@ -82,7 +78,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		var TotalGasCell = document.createElement("td");
 		TotalGasCell.className = "normal totalgascell";
-		TotalGasCell.innerHTML = WL[0].temp + " ℃";
+		TotalGasCell.innerHTML = MHWP1.total_gas_m3;
 		TotalPowerRow.appendChild(TotalGasCell);
 		table.appendChild(TotalPowerRow);
 /*
@@ -256,9 +252,8 @@ Module.register('MMM-MyHomeWizard', {
 		FooterRow.className = "footer";
 		FooterRow.innerHTML = "Harm";
 		table.appendChild(FooterRow);
-			
+*/			
 		return table;		
-*/
 
 	}, // <-- closes the getDom function from above
 		
