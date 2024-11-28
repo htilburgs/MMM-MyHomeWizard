@@ -27,10 +27,10 @@ getMHWP1: function(urlP1) {
             return response.json();
           })
 
-          .then(result => {
+          .then(resultP1 => {
             // Process the retrieved user data
-            console.log(result); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHWP1_RESULT', result);
+            console.log(resultP1); // Remove trailing slashes to display data in Console for testing
+            this.sendSocketNotification('MHWP1_RESULT', resultP1);
           })
 
           .catch(error => {
@@ -48,10 +48,10 @@ getMHWP1: function(urlP1) {
             return response.json();
           })
 
-          .then(result => {
+          .then(resultWM => {
             // Process the retrieved user data
-            console.log(result); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHWWM_RESULT', result);
+            console.log(resultWM); // Remove trailing slashes to display data in Console for testing
+            this.sendSocketNotification('MHWWM_RESULT', resultWM);
           })
 
           .catch(error => {
