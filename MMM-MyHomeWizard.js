@@ -43,10 +43,8 @@ Module.register('MMM-MyHomeWizard', {
 		requiresVersion: "2.1.0",	
 			
 		// Set locales
-		this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
-		this.urlWM = "http://" + this.config.WM_IP + "/api/vi/data/";
+		this.url = "http://" + this.config.P1_IP + "/api/v1/data/";
     		this.MHWP1 = [];	        // <-- Create empty MHW-P1 array
-		this.MHWWT = []; 		// <-- Create empty MHW-WTR array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
 	},
 
@@ -69,10 +67,8 @@ Module.register('MMM-MyHomeWizard', {
         	}	
 
 		var MHWP1 = this.MHWP1;
-		var MHWWTR = this.MHWWTR;
     		
 		console.log(JSON.stringify(MHWP1));
-		console.log(JSON.stringify(MHWWT));
 
 /*
 		// creating the tablerows
@@ -268,19 +264,12 @@ Module.register('MMM-MyHomeWizard', {
 	}, // <-- closes the getDom function from above
 		
 	// this processes your data P1 Meter
-	processMHWP1: function(dataP1) { 
-		this.MHWP1 = dataP1; 
+	processMHWP1: function(data) { 
+		this.MHWP1 = data; 
 		console.log(this.MHWP1); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 
-	// this processes your data P1 Meter
-	processMHWWM: function(dataWM) { 
-		this.MHWWM = dataWM; 
-		console.log(this.MHWWM); // uncomment to see if you're getting data (in dev console)
-		this.loaded = true;
-	},
-	
 	// this tells module when to update
 	scheduleUpdate: function() { 
 		setInterval(() => {
@@ -289,23 +278,10 @@ Module.register('MMM-MyHomeWizard', {
 		this.getMHWP1();
 		var self = this;
 	},
-
-	// this tells module when to update
-	scheduleUpdate: function() { 
-		setInterval(() => {
-		    	this.getMHWWM();
-		}, this.config.updateInterval);
-		this.getMHWWM();
-		var self = this;
-	},
 	  
 	// this asks node_helper for data
 	getMHWP1: function() { 
-		this.sendSocketNotification('GET_MHWP1', this.urlP1);
+		this.sendSocketNotification('GET_MHWP1', this.url);
 	},
 
-		// this asks node_helper for data
-	getMHWWM: function() { 
-		this.sendSocketNotification('GET_MHWWM', this.urlWM);
-	},
 });
