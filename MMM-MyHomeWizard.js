@@ -247,12 +247,12 @@ Module.register('MMM-MyHomeWizard', {
 			table.appendChild(ZonOnderRow);			
 			
 		}
-
+*/
 		var FooterRow = document.createElement("tr");
 		FooterRow.className = "footer";
 		FooterRow.innerHTML = "Harm";
 		table.appendChild(FooterRow);
-*/			
+  
 		return table;		
 
 	}, // <-- closes the getDom function from above
