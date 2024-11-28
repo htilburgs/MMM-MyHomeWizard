@@ -13,7 +13,6 @@ Module.register('MMM-MyHomeWizard', {
 	// Default values
 	defaults: {
 		P1_IP: null,					// IP Address P1 Meter
-		WM_IP: null,				  // IP Address Water Meter
 		showIcons: true,				// Display Icons or Text
 		maxWidth: "500px",				// Max width wrapper
 		initialLoadDelay: 1000,
@@ -68,25 +67,25 @@ Module.register('MMM-MyHomeWizard', {
 
 		var MHWP1 = this.MHWP1;
     		
-		console.log(JSON.stringify(MHWP1));
+		console.log(MHWP1);
 
-/*
+
 		// creating the tablerows
-		var WoonplaatsRow = document.createElement("tr");
-		WoonplaatsRow.className = "woonplaats-row";
+		var TotalPowerRow = document.createElement("tr");
+		TotalPowerRow.className = "total-power-row";
 		
-		var WoonplaatsTextCell = document.createElement("td");
-		WoonplaatsTextCell.className = "normal woonplaatstextcell";
-		WoonplaatsTextCell.innerHTML = MHWP1.wifi_ssid; 
-		WoonplaatsRow.appendChild(WoonplaatsTextCell);	
-		table.appendChild(WoonplaatsRow);
+		var TotalPowerTextCell = document.createElement("td");
+		TotalPowerTextCell.className = "normal totalpowertextcell";
+		TotalPowerTextCell.innerHTML = MHWP1.total_power_import_kwh; 
+		TotalPowerRow.appendChild(TotalPowerTextCell);	
+		table.appendChild(TotalPowerRow);
 
-		var WoonplaatsTempCell = document.createElement("td");
-		WoonplaatsTempCell.className = "normal temptextcell";
-		WoonplaatsTempCell.innerHTML = WL[0].temp + " ℃";
-		WoonplaatsRow.appendChild(WoonplaatsTempCell);
-		table.appendChild(WoonplaatsRow);
-
+		var TotalGasCell = document.createElement("td");
+		TotalGasCell.className = "normal totalgascell";
+		TotalGasCell.innerHTML = WL[0].temp + " ℃";
+		TotalPowerRow.appendChild(TotalGasCell);
+		table.appendChild(TotalPowerRow);
+/*
 		var MinMaxTempRow = document.createElement("tr");
 		MinMaxTempRow.className = "minmaxtemp-row";		
 
@@ -255,7 +254,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		var FooterRow = document.createElement("tr");
 		FooterRow.className = "footer";
-		FooterRow.innerHTML = MHWP1.meter_model;
+		FooterRow.innerHTML = "Harm";
 		table.appendChild(FooterRow);
 			
 		return table;		
