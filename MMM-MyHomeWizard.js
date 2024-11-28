@@ -43,7 +43,8 @@ Module.register('MMM-MyHomeWizard', {
 		requiresVersion: "2.1.0",	
 			
 		// Set locales
-		this.urlP1 = "http://192.168.0.192/api/v1/data/";
+		this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
+		this.urlWM = "http://" + this.config.WM_IP + "/api/vi/data/";
     		this.MHWP1 = [];	        // <-- Create empty MHW-P1 array
 		this.MHWWTR = []; 		// <-- Create empty MHW-WTR array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
