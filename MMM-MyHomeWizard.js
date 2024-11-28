@@ -45,8 +45,8 @@ Module.register('MMM-MyHomeWizard', {
 		// Set locales
 		this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data";
 		this.urlWT = "http://" + this.config.WT_IP + "/api/v1/data";
-    		this.MHW-P1 = [];	        // <-- Create empty MHW-P1 array
-		this.MHW-WTR = []; 		// <-- Create empty MHW-WTR array
+    		this.MHWP1 = [];	        // <-- Create empty MHW-P1 array
+		this.MHWWTR = []; 		// <-- Create empty MHW-WTR array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
 	},
 
@@ -68,10 +68,10 @@ Module.register('MMM-MyHomeWizard', {
             	    return wrapper;
         	}	
 
-		var MHW-P1 = this.MHW-P1;
-		var MHW-WTR = this.MHW-WTR;
+		var MHWP1 = this.MHWP1;
+		var MHWWTR = this.MHWWTR;
     		
-		console.log(JSON.stringify(MHW-P1));
+		console.log(JSON.stringify(MHWP1));
 		
 		// creating the tablerows
 		var WoonplaatsRow = document.createElement("tr");
@@ -79,7 +79,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 		var WoonplaatsTextCell = document.createElement("td");
 		WoonplaatsTextCell.className = "normal woonplaatstextcell";
-		WoonplaatsTextCell.innerHTML = MHW-P1.wifi_ssid; 
+		WoonplaatsTextCell.innerHTML = MHWP1.wifi_ssid; 
 		WoonplaatsRow.appendChild(WoonplaatsTextCell);	
 		table.appendChild(WoonplaatsRow);
 		
@@ -257,7 +257,7 @@ Module.register('MMM-MyHomeWizard', {
 */
 		var FooterRow = document.createElement("tr");
 		FooterRow.className = "footer";
-		FooterRow.innerHTML = MHW-P1.meter_model;
+		FooterRow.innerHTML = MHWP1.meter_model;
 		table.appendChild(FooterRow);
 			
 		return table;		
@@ -266,22 +266,22 @@ Module.register('MMM-MyHomeWizard', {
 		
 	// this processes your data P1 Meter
 	processMHW-P1: function(data) { 
-		this.MHW-P1 = data; 
-		console.log(this.MHW-P1); // uncomment to see if you're getting data (in dev console)
+		this.MHWP1 = data; 
+		console.log(this.MHWP1); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 	
 	// this tells module when to update
 	scheduleUpdate: function() { 
 		setInterval(() => {
-		    	this.getMHW-P1();
+		    	this.getMHWP1();
 		}, this.config.updateInterval);
-		this.getMHW-P1();
+		this.getMHWP1();
 		var self = this;
 	},
 	  
 	// this asks node_helper for data
-	getMHW-P1: function() { 
-		this.sendSocketNotification('GET_MHW-P1', this.urlP1);
+	getMHWP1: function() { 
+		this.sendSocketNotification('GET_MHWP1', this.urlP1);
 	},
 });
