@@ -19,7 +19,7 @@ module.exports = NodeHelper.create({
 
 getMHWP1: function(url) {
         // Make a GET request using the Fetch API
-        fetch("http://192.168.0.192/api/v1/data")
+        fetch(url)
           .then(response => {
             if (!response.ok) {
               console.error('MMM-MyHomeWizard: Network response was not ok');
@@ -38,37 +38,10 @@ getMHWP1: function(url) {
           });
   },
 
-  getMHWWT: function(urlWT) {
-        // Make a GET request using the Fetch API
-        fetch(urlWT)
-          .then(response => {
-            if (!response.ok) {
-              console.error('MMM-MyHomeWizard: Network response was not ok');
-            }
-            return response.json();
-          })
-
-          .then(result => {
-            // Process the retrieved user data
-            console.log(result); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHWWT_RESULT', result);
-          })
-
-          .catch(error => {
-            console.error('Error:', error);
-          });
-  },
-
   socketNotificationReceived: function(notification, payload) {
             if (notification === 'GET_MHWP1') {
             this.getMHWP1(payload);
             }
   },
   
-    socketNotificationReceived: function(notification, payload) {
-            if (notification === 'GET_MHWWTR') {
-            this.getMHWWTR(payload);
-            }
-  },
-
 });
