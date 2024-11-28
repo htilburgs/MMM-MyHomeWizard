@@ -265,7 +265,7 @@ Module.register('MMM-MyHomeWizard', {
 	}, // <-- closes the getDom function from above
 		
 	// this processes your data P1 Meter
-	processMHW-P1: function(data) { 
+	processMHWP1: function(data) { 
 		this.MHWP1 = data; 
 		console.log(this.MHWP1); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
