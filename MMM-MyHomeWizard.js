@@ -43,8 +43,7 @@ Module.register('MMM-MyHomeWizard', {
 		requiresVersion: "2.1.0",	
 			
 		// Set locales
-		this.urlP1 = "http://192.168.0.192/api/v1/data";
-		this.urlWT = "http://192.168.0.197/api/v1/data";
+		this.url = "http://" + this.config.P1_IP + "/api/v1/data";
     		this.MHWP1 = [];	        // <-- Create empty MHW-P1 array
 		this.MHWWTR = []; 		// <-- Create empty MHW-WTR array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
@@ -282,6 +281,6 @@ Module.register('MMM-MyHomeWizard', {
 	  
 	// this asks node_helper for data
 	getMHWP1: function() { 
-		this.sendSocketNotification('GET_MHWP1', this.urlP1);
+		this.sendSocketNotification('GET_MHWP1', this.url);
 	},
 });
