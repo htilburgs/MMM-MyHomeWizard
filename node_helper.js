@@ -17,7 +17,7 @@ module.exports = NodeHelper.create({
           console.log("Starting node_helper for: " + this.name);
   },
 
-getMHW-P1: function(urlP1) {
+getMHWP1: function(urlP1) {
         // Make a GET request using the Fetch API
         fetch(urlP1)
           .then(response => {
@@ -30,7 +30,7 @@ getMHW-P1: function(urlP1) {
           .then(result => {
             // Process the retrieved user data
             console.log(result); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHW-P1_RESULT', result);
+            this.sendSocketNotification('MHWP1_RESULT', result);
           })
 
           .catch(error => {
@@ -38,7 +38,7 @@ getMHW-P1: function(urlP1) {
           });
   },
 
-  getMHW-WT: function(urlP1) {
+  getMHWWT: function(urlWT) {
         // Make a GET request using the Fetch API
         fetch(urlWT)
           .then(response => {
@@ -51,7 +51,7 @@ getMHW-P1: function(urlP1) {
           .then(result => {
             // Process the retrieved user data
             console.log(result); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHW-W1_RESULT', result);
+            this.sendSocketNotification('MHWWT_RESULT', result);
           })
 
           .catch(error => {
@@ -60,14 +60,14 @@ getMHW-P1: function(urlP1) {
   },
 
   socketNotificationReceived: function(notification, payload) {
-            if (notification === 'GET_MHW-P1') {
-            this.getMHW-P1(payload);
+            if (notification === 'GET_MHWP1') {
+            this.getMHWP1(payload);
             }
   },
   
     socketNotificationReceived: function(notification, payload) {
-            if (notification === 'GET_MHW-W1') {
-            this.getMHW-W1(payload);
+            if (notification === 'GET_MHWWTR') {
+            this.getMHWWTR(payload);
             }
   },
 
