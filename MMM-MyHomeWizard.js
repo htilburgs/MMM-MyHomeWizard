@@ -8,7 +8,7 @@ v1.0.0 - 26-11-2024 - Initial version
 //-------------------------------------------
 */
 
-Module.register('MMM-MyDutchWeather', {
+Module.register('MMM-MyHomeWizard', {
 
 	// Default values
 	defaults: {
