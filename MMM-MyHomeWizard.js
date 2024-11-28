@@ -63,7 +63,7 @@ Module.register('MMM-MyHomeWizard', {
 	}	
 */	
 		var MHWP1 = this.MHWP1;
-    		console.log(this.MHWP1);
+    		console.log(MHWP1);
 
 
 		// creating the tablerows
