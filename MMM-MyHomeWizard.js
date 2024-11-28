@@ -265,9 +265,16 @@ Module.register('MMM-MyHomeWizard', {
 	}, // <-- closes the getDom function from above
 		
 	// this processes your data P1 Meter
-	processMHWP1: function(data) { 
-		this.MHWP1 = data; 
+	processMHWP1: function(dataP1) { 
+		this.MHWP1 = dataP1; 
 		console.log(this.MHWP1); // uncomment to see if you're getting data (in dev console)
+		this.loaded = true;
+	},
+
+	// this processes your data P1 Meter
+	processMHWWM: function(dataWM) { 
+		this.MHWWM = dataWM; 
+		console.log(this.MHWWM); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 	
@@ -279,9 +286,23 @@ Module.register('MMM-MyHomeWizard', {
 		this.getMHWP1();
 		var self = this;
 	},
+
+	// this tells module when to update
+	scheduleUpdate: function() { 
+		setInterval(() => {
+		    	this.getMHWWM();
+		}, this.config.updateInterval);
+		this.getMHWWM();
+		var self = this;
+	},
 	  
 	// this asks node_helper for data
 	getMHWP1: function() { 
 		this.sendSocketNotification('GET_MHWP1', this.urlP1);
+	},
+
+		// this asks node_helper for data
+	getMHWWM: function() { 
+		this.sendSocketNotification('GET_MHWWM', this.urlWM);
 	},
 });
