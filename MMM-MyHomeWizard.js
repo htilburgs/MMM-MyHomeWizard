@@ -46,7 +46,7 @@ Module.register('MMM-MyHomeWizard', {
     		this.MHWP1 = [];	        // <-- Create empty MHW-P1 array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
 	},
-/*
+
 	getDom: function () {
 		
 		// creating the wrapper
@@ -61,7 +61,7 @@ Module.register('MMM-MyHomeWizard', {
             	
 		return wrapper;
 	}	
-*/	
+	
 		var MHWP1 = this.MHWP1;
     		console.log(MHWP1);
 
