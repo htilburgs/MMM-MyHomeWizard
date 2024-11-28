@@ -46,7 +46,7 @@ Module.register('MMM-MyHomeWizard', {
 		this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
 		this.urlWM = "http://" + this.config.WM_IP + "/api/vi/data/";
     		this.MHWP1 = [];	        // <-- Create empty MHW-P1 array
-		this.MHWWTR = []; 		// <-- Create empty MHW-WTR array
+		this.MHWWT = []; 		// <-- Create empty MHW-WTR array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
 	},
 
