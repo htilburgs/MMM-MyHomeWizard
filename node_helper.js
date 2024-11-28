@@ -38,7 +38,7 @@ getMHWP1: function(urlP1) {
           });
   },
 
-  getMHWP1: function(urlWM) {
+  getMHWWM: function(urlWM) {
         // Make a GET request using the Fetch API
         fetch(urlWM)
           .then(response => {
