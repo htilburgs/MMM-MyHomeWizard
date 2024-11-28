@@ -72,7 +72,9 @@ Module.register('MMM-MyHomeWizard', {
 		var MHWWTR = this.MHWWTR;
     		
 		console.log(JSON.stringify(MHWP1));
-		
+		console.log(JSON.stringify(MHWWT));
+
+/*
 		// creating the tablerows
 		var WoonplaatsRow = document.createElement("tr");
 		WoonplaatsRow.className = "woonplaats-row";
@@ -82,8 +84,8 @@ Module.register('MMM-MyHomeWizard', {
 		WoonplaatsTextCell.innerHTML = MHWP1.wifi_ssid; 
 		WoonplaatsRow.appendChild(WoonplaatsTextCell);	
 		table.appendChild(WoonplaatsRow);
-		
-/*		var WoonplaatsTempCell = document.createElement("td");
+
+		var WoonplaatsTempCell = document.createElement("td");
 		WoonplaatsTempCell.className = "normal temptextcell";
 		WoonplaatsTempCell.innerHTML = WL[0].temp + " ℃";
 		WoonplaatsRow.appendChild(WoonplaatsTempCell);
@@ -254,14 +256,15 @@ Module.register('MMM-MyHomeWizard', {
 			table.appendChild(ZonOnderRow);			
 			
 		}
-*/
+
 		var FooterRow = document.createElement("tr");
 		FooterRow.className = "footer";
 		FooterRow.innerHTML = MHWP1.meter_model;
 		table.appendChild(FooterRow);
 			
 		return table;		
-		
+*/
+
 	}, // <-- closes the getDom function from above
 		
 	// this processes your data P1 Meter
