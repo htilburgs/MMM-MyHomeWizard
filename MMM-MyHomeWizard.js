@@ -13,7 +13,6 @@ Module.register('MMM-MyHomeWizard', {
 	// Default values
 	defaults: {
 		P1_IP: null,					// IP Address P1 Meter
-		showIcons: true,				// Display Icons or Text
 		maxWidth: "500px",				// Max width wrapper
 		initialLoadDelay: 1000,
 		retryDelay: 2500,
@@ -25,12 +24,12 @@ Module.register('MMM-MyHomeWizard', {
 		return ["MMM-MyHomeWizard.css"];
 	},  
 
-	// Define required scripts.
+/*	// Define required scripts.
 	getScripts: function () {
 		return ["moment.js"];
 	},
 
-/*	// Define required translations.
+	// Define required translations.
   	getTranslations: function () {
     		return {
       		nl: "translations/nl.json"
@@ -62,8 +61,8 @@ Module.register('MMM-MyHomeWizard', {
 		return wrapper;
 		}	
 	
-		var MHWP1 = this.MHWP1;
-    		console.log(MHWP1);
+		var MHW = this.MHWP1;
+		console.log(JSON.stringify(MHWP1));
 
 		// creating the tablerows
 		var TotalPowerRow = document.createElement("tr");
