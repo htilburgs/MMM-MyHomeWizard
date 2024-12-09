@@ -79,11 +79,6 @@ Module.register('MMM-MyHomeWizard', {
 		TotalPowerDataCell.innerHTML = MHWP1.total_power_import_kwh;
 		TotalPowerRow.appendChild(TotalPowerDataCell);
 		table.appendChild(TotalPowerRow);
-
-		var FooterRow = document.createElement("tr");
-		FooterRow.className = "footer";
-		FooterRow.innerHTML = "Harm";
-		table.appendChild(FooterRow);
   
 		return table;		
 
