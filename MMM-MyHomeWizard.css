@@ -1,1 +1,37 @@
+/*
+//-------------------------------------------
+MMM-MyHomeWizard - CSS
+Copyright (C) 2024 - H. Tilburgs
+MIT License
+//-------------------------------------------
+Copy and paste any or all of these css entries into your custom.css file inside your
+css folder. The functions are annotated to make things as easy as possible for you.
+Use any colors you want! Go to - "http://htmlcolorcodes.com/color-picker/"
+Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green.
+*/
 
+.header {
+     color: white;               /* Header color. Default is white. */
+     text-align: left;           /* Align header text. (left, center, right) */
+}
+
+.total-power-row {
+     line-height: 25px;
+}
+
+.TotalPowerTextCell {
+     color: white !important;               
+     text-align: left !important;       
+}
+
+.TotalPowerDataCell { 
+     color: white !important;               
+     text-align: right !important;   
+}
+
+.footer {
+     font-size: 12px;
+     line-height: 16px;
+     color: #333;
+     text-align: right !important;
+}
