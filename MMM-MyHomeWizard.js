@@ -76,10 +76,10 @@ Module.register('MMM-MyHomeWizard', {
 
 		var TotalPowerDataCell = document.createElement("td");
 		TotalPowerDataCell.className = "normal totalpowerdatacell";
-		TotalPowerDataCell.innerHTML = MHWP.total_power_import_kwh;
+		TotalPowerDataCell.innerHTML = Math.round(MHWP.total_power_import_kwh);
 		TotalPowerRow.appendChild(TotalPowerDataCell);
 		table.appendChild(TotalPowerRow);
-  
+		
 		return table;		
 
 	}, // <-- closes the getDom function from above
