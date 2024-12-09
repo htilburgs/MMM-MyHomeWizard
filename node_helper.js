@@ -17,7 +17,7 @@ module.exports = NodeHelper.create({
           console.log("Starting node_helper for: " + this.name);
   },
 
-getMHWP1: function(url) {
+getMHWP: function(url) {
         // Make a GET request using the Fetch API
         fetch(url)
           .then(response => {
@@ -30,7 +30,7 @@ getMHWP1: function(url) {
           .then(result => {
             // Process the retrieved user data
             console.log(result); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHWP1_RESULT', result);
+            this.sendSocketNotification('MHWP_RESULT', result);
           })
 
           .catch(error => {
@@ -39,8 +39,8 @@ getMHWP1: function(url) {
   },
 
   socketNotificationReceived: function(notification, payload) {
-            if (notification === 'GET_MHWP1') {
-            this.getMHWP1(payload);
+            if (notification === 'GET_MHWP') {
+            this.getMHWP(payload);
             }
   },
   
