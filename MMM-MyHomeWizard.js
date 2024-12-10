@@ -85,8 +85,6 @@ Module.register('MMM-MyHomeWizard', {
 		TotalPowerRow.appendChild(TotalPowerDataCell);
 		table.appendChild(TotalPowerRow);
 
-		TempTextCell.innerHTML = MWB.temp + " ℃";
-
 		var TotalGasRow = document.createElement("tr");
 		TotalGasRow.className = "total-gas-row";
 		
