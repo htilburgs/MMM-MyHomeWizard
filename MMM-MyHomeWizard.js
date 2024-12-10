@@ -138,8 +138,8 @@ Module.register('MMM-MyHomeWizard', {
 // <-- P1 Meter Section -->
 	
 	// This processes your data P1 Meter
-	processMHWP1: function(dataP1) { 
-		this.MHWP1 = dataP1; 
+	processMHWP1: function(data) { 
+		this.MHWP1 = data; 
 		console.log(JSON.stringify(this.MHWP1)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
@@ -192,9 +192,9 @@ Module.register('MMM-MyHomeWizard', {
 
 	// this gets data from node_helper
 	socketNotificationReceived: function(notification, payload) { 
-		if (notificationWM === "MHWWM_RESULT") {
+		if (notification=== "MHWWM_RESULT") {
 		// this notification doesn't come back on error..
-		this.processMHWWM(payloaM);
+		this.processMHWWM(payload);
 		this.updateDom(this.config.initialLoadDelay);  // or put in processMHWWM
 		}
 	},
