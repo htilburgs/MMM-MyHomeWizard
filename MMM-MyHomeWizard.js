@@ -64,7 +64,8 @@ Module.register('MMM-MyHomeWizard', {
            	wrapper.classList.add("bright", "light", "small");
 		return wrapper;
 		}	
-	
+
+		this.loaded = true;
 		var MHWP = this.result;
 		console.log(JSON.stringify(MHWP));
 		console.log(result);
