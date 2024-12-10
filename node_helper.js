@@ -74,6 +74,5 @@ getMHWP1: function(urlP1) {
             this.getMHWWM(payload);
             }
   },
-*/
   
 });
