@@ -13,7 +13,7 @@ Module.register('MMM-MyHomeWizard', {
 	// Default values
 	defaults: {
 		P1_IP: null,				// IP Address P1 Meter
-		maxWidth: "500px",				// Max width wrapper
+		maxWidth: "500px",			// Max width wrapper
 		initialLoadDelay: 1000,
 		retryDelay: 2500,
 		updateInterval: 5000			// Every 5 seconds
@@ -43,7 +43,7 @@ Module.register('MMM-MyHomeWizard', {
 			
 		// Set locales
 		this.url = "http://" + this.config.P1_IP + "/api/v1/data/";
-    		this.MHWP = [];	        // <-- Create empty MHW-P1 array
+    		this.MHWP = [];	        	// <-- Create empty MHW-P1 array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
 	},
 
@@ -66,10 +66,9 @@ Module.register('MMM-MyHomeWizard', {
 		}	
 
 		this.loaded = true;
-		var MHWP = this.result;
+		var MHWP = this.MHWP;
 		console.log(JSON.stringify(MHWP));
-		console.log(result);
-
+		
 		// creating the tablerows
 		var TotalPowerRow = document.createElement("tr");
 		TotalPowerRow.className = "total-power-row";
