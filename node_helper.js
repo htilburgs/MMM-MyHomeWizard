@@ -35,8 +35,8 @@ getMHWP1: function(urlP1) {
             this.sendSocketNotification('MHWP1_RESULT', resultP1);
           })
 
-          .catch(errorP1 => {
-            console.errorP1('Error:', errorP1);
+          .catch(error => {
+            console.error('Error:', error);
           });
   },
 
@@ -64,8 +64,8 @@ getMHWP1: function(urlP1) {
             this.sendSocketNotification('MHWWM_RESULT', resultWM);
           })
 
-          .catch(errorWM => {
-            console.errorWM('Error:', errorWM);
+          .catch(error => {
+            console.error('Error:', error);
           });
   },
 
