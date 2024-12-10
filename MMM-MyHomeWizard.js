@@ -84,6 +84,21 @@ Module.register('MMM-MyHomeWizard', {
 		TotalPowerDataCell.innerHTML = Math.round(MHWP.total_power_import_kwh);
 		TotalPowerRow.appendChild(TotalPowerDataCell);
 		table.appendChild(TotalPowerRow);
+
+		var TotalGasRow = document.createElement("tr");
+		TotalGasRow.className = "total-gas-row";
+		
+		var TotalGasTextCell = document.createElement("td");
+		TotalGasTextCell.className = "normal totalgastextcell";
+		TotalGasTextCell.innerHTML = "Total Gas: "; 
+		TotalGasRow.appendChild(TotalGasTextCell);	
+		table.appendChild(TotalGasRow);
+
+		var TotalGasDataCell = document.createElement("td");
+		TotalGasDataCell.className = "normal totalpowerdatacell";
+		TotalGasDataCell.innerHTML = Math.round(MHWP.total_gas_m3);
+		TotalGasRow.appendChild(TotalGasDataCell);
+		table.appendChild(TotalGasRow);
 		
 		wrapper.appendChild(table);
 		return table;		
