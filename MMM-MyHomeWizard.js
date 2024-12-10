@@ -81,8 +81,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		var TotalPowerDataCell = document.createElement("td");
 		TotalPowerDataCell.className = "normal totalpowerdatacell";
-		//TotalPowerDataCell.innerHTML = Math.round(MHWP.total_power_import_kwh);
-		TotalPowerDataCell.innerHTML = MHW.wifi_ssid;
+		TotalPowerDataCell.innerHTML = Math.round(MHWP.total_power_import_kwh);
 		TotalPowerRow.appendChild(TotalPowerDataCell);
 		table.appendChild(TotalPowerRow);
 		
