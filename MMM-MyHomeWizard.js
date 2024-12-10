@@ -39,7 +39,7 @@ Module.register('MMM-MyHomeWizard', {
 	
 	start: function () {
 		Log.info("Starting module: " + this.name);
-		requiresVersion: "2.1.0",	
+		requiresVersion: "2.9.0",	
 			
 		// Set locales
 		this.url = "http://" + this.config.P1_IP + "/api/v1/data/";
@@ -70,6 +70,21 @@ Module.register('MMM-MyHomeWizard', {
 		console.log(JSON.stringify(MHW));
 		
 		// creating the tablerows
+		var CurrentPowerRow = document.createElement("tr");
+		CurrentPowerRow.className = "current-power-row";
+
+		var CurrentPowerTextCell = document.createElement("td");
+		CurrentPowerTextCell.className = "normal currentpowertextcell";
+		CurrentPowerTextCell.innerHTML = this.translate("Current_Pwr"); 
+		CurrentPowerRow.appendChild(CurrentPowerTextCell);	
+		table.appendChild(CurrentPowerRow);
+
+		var CurrentPowerDataCell = document.createElement("td");
+		CurrentPowerDataCell.className = "normal currentpowerdatacell";
+		CurrentPowerDataCell.innerHTML = Math.round(MHW.active_power_w) + " kWh";
+		CurrentPowerRow.appendChild(CurrentPowerDataCell);
+		table.appendChild(CurrentPowerRow);
+
 		var TotalPowerRow = document.createElement("tr");
 		TotalPowerRow.className = "total-power-row";
 		
@@ -108,7 +123,7 @@ Module.register('MMM-MyHomeWizard', {
 	// this processes your data P1 Meter
 	processMHW: function(data) { 
 		this.MHW = data; 
-		console.log(JSON.stringify(this.MHW)); // uncomment to see if you're getting data (in dev console)
+		// console.log(JSON.stringify(this.MHW)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 
