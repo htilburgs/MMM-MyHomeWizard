@@ -38,7 +38,8 @@ Module.register('MMM-MyHomeWizard', {
 		requiresVersion: "2.9.0",	
 			
 		// Set locales
-		this.url = "http://" + this.config.P1_IP + "/api/v1/data/";
+		this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
+		this.urlWM = "http://" + this.config.WM_IP + "/api/v1/data/";
     		this.MHWP1 = [];	        // <-- Create empty MHW-P1 array
 		this.MWHWM = [];		// <-- Create empty MHW-WM array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
@@ -118,8 +119,10 @@ Module.register('MMM-MyHomeWizard', {
 		return table;		
 
 	}, // <-- closes the getDom function from above
-		
-	// this processes your data P1 Meter
+
+// <-- P1 Meter Section -->
+	
+	// This processes your data P1 Meter
 	processMHWP1: function(data) { 
 		this.MHWP1 = data; 
 		// console.log(JSON.stringify(this.MHWP1)); // uncomment to see if you're getting data (in dev console)
@@ -137,7 +140,7 @@ Module.register('MMM-MyHomeWizard', {
 	  
 	// this asks node_helper for data
 	getMHWP1: function() { 
-		this.sendSocketNotification('GET_MHWP1', this.url);
+		this.sendSocketNotification('GET_MHWP1', this.urlP1);
 	},
 
 	// this gets data from node_helper
@@ -148,4 +151,37 @@ Module.register('MMM-MyHomeWizard', {
 		this.updateDom(this.config.initialLoadDelay);  // or put in processMHWP1
 		}
 	},
+	
+//<-- Water Meter Section -->
+	
+	// This processes your data Water Meter
+	processMHWWM: function(data) { 
+		this.MHWWM = data; 
+		// console.log(JSON.stringify(this.MHWWM)); // uncomment to see if you're getting data (in dev console)
+		this.loaded = true;
+	},
+
+	// this tells module when to update
+	scheduleUpdate: function() { 
+		setInterval(() => {
+		    	this.getMHWWM();
+		}, this.config.updateInterval);
+		this.getMHWWM();
+		var self = this;
+	},
+	  
+	// this asks node_helper for data
+	getMHWWM: function() { 
+		this.sendSocketNotification('GET_MHWwm', this.urlWM);
+	},
+
+	// this gets data from node_helper
+	socketNotificationReceived: function(notification, payload) { 
+		if (notification === "MHWWM_RESULT") {
+		// this notification doesn't come back on error..
+		this.processMHWWM(payload);
+		this.updateDom(this.config.initialLoadDelay);  // or put in processMHWWM
+		}
+	},
+
 });
