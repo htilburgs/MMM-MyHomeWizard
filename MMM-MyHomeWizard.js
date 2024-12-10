@@ -19,12 +19,12 @@ Module.register('MMM-MyHomeWizard', {
 		updateInterval: 5000			// Every 5 seconds
 	},
 		
-	// Define stylesheet
+/*	// Define stylesheet
 	getStyles: function () {
 		return ["MMM-MyHomeWizard.css"];
 	},  
 
-/*	// Define required scripts.
+	// Define required scripts.
 	getScripts: function () {
 		return ["moment.js"];
 	},
@@ -66,7 +66,7 @@ Module.register('MMM-MyHomeWizard', {
 		}	
 
 		this.loaded = true;
-		var MHWP = this.MHWP;
+		var MHW = this.MHW;
 		console.log(JSON.stringify(MHW));
 		
 		// creating the tablerows
@@ -94,7 +94,7 @@ Module.register('MMM-MyHomeWizard', {
 	// this processes your data P1 Meter
 	processMHW: function(data) { 
 		this.MHW = data; 
-		console.log(JSON.stringify(data)); // uncomment to see if you're getting data (in dev console)
+		console.log(JSON.stringify(this.MHW)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 
@@ -112,4 +112,14 @@ Module.register('MMM-MyHomeWizard', {
 		this.sendSocketNotification('GET_MHW', this.url);
 	},
 
+	// this gets data from node_helper
+	socketNotificationReceived: function(notification, payload) { 
+		if (notification === "MHW_RESULT") {
+		// this notification doesn't come back on error..
+		this.processMHW(payload);
+		this.updateDom(this.config.initialLoadDelay);  // or put in processMHW
+		}
+		// do you want to do updateDom on EVER notification? or only yours
+		//this.updateDom(this.config.initialLoadDelay);
+	},
 });
