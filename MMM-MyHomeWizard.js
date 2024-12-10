@@ -43,7 +43,7 @@ Module.register('MMM-MyHomeWizard', {
 			
 		// Set locales
 		this.url = "http://" + this.config.P1_IP + "/api/v1/data/";
-    		this.MHWP = [];	        	// <-- Create empty MHW-P1 array
+    		this.MHW = [];	        	// <-- Create empty MHW-P1 array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
 	},
 
@@ -67,7 +67,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		this.loaded = true;
 		var MHWP = this.MHWP;
-		console.log(JSON.stringify(MHWP));
+		console.log(JSON.stringify(MHW));
 		
 		// creating the tablerows
 		var TotalPowerRow = document.createElement("tr");
@@ -82,7 +82,7 @@ Module.register('MMM-MyHomeWizard', {
 		var TotalPowerDataCell = document.createElement("td");
 		TotalPowerDataCell.className = "normal totalpowerdatacell";
 		//TotalPowerDataCell.innerHTML = Math.round(MHWP.total_power_import_kwh);
-		TotalPowerDataCell.innerHTML = MHWP.wifi_ssid;
+		TotalPowerDataCell.innerHTML = MHW.wifi_ssid;
 		TotalPowerRow.appendChild(TotalPowerDataCell);
 		table.appendChild(TotalPowerRow);
 		
@@ -92,8 +92,8 @@ Module.register('MMM-MyHomeWizard', {
 	}, // <-- closes the getDom function from above
 		
 	// this processes your data P1 Meter
-	processMHWP: function(data) { 
-		this.MHWP = data; 
+	processMHW: function(data) { 
+		this.MHW = data; 
 		console.log(JSON.stringify(data)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
@@ -101,15 +101,15 @@ Module.register('MMM-MyHomeWizard', {
 	// this tells module when to update
 	scheduleUpdate: function() { 
 		setInterval(() => {
-		    	this.getMHWP();
+		    	this.getMHW();
 		}, this.config.updateInterval);
-		this.getMHWP();
+		this.getMHW();
 		var self = this;
 	},
 	  
 	// this asks node_helper for data
-	getMHWP: function() { 
-		this.sendSocketNotification('GET_MHWP', this.url);
+	getMHW: function() { 
+		this.sendSocketNotification('GET_MHW', this.url);
 	},
 
 });
