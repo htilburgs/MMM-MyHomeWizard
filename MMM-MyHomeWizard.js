@@ -114,6 +114,21 @@ Module.register('MMM-MyHomeWizard', {
 		TotalGasDataCell.innerHTML = Math.round(MHWP1.total_gas_m3) + " m³";
 		TotalGasRow.appendChild(TotalGasDataCell);
 		table.appendChild(TotalGasRow);
+
+		var TotalWaterRow = document.createElement("tr");
+		TotalWaterRow.className = "total-water-row";
+		
+		var TotalWaterTextCell = document.createElement("td");
+		TotalWaterTextCell.className = "normal totalwatertextcell";
+		TotalWaterTextCell.innerHTML = this.translate("Total_Wtr"); 
+		TotalWaterRow.appendChild(TotalWaterTextCell);	
+		table.appendChild(TotalWaterRow);
+
+		var TotalWaterDataCell = document.createElement("td");
+		TotalWaterDataCell.className = "normal totalwaterdatacell";
+		TotalWaterDataCell.innerHTML = Math.round(MHWP1.total_liter_m3) + " m³";
+		TotalWaterRow.appendChild(TotalWaterDataCell);
+		table.appendChild(TotalWaterRow);
 		
 		wrapper.appendChild(table);
 		return table;		
