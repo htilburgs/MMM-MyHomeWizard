@@ -30,7 +30,7 @@ getMHWP: function(url) {
           .then(result => {
             // Process the retrieved user data
             console.log(result); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHWP_RESULT', result);
+            this.sendSocketNotification('MHW_RESULT', result);
           })
 
           .catch(error => {
@@ -39,8 +39,8 @@ getMHWP: function(url) {
   },
 
   socketNotificationReceived: function(notification, payload) {
-            if (notification === 'GET_MHWP') {
-            this.getMHWP(payload);
+            if (notification === 'GET_MHW') {
+            this.getMHW(payload);
             }
   },
   
