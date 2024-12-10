@@ -166,7 +166,7 @@ Module.register('MMM-MyHomeWizard', {
 		this.updateDom(this.config.initialLoadDelay);  // or put in processMHWP1
 		}
 	},
-	
+/*	
 //<-- Water Meter Section -->
 	
 	// This processes your data Water Meter
@@ -198,5 +198,6 @@ Module.register('MMM-MyHomeWizard', {
 		this.updateDom(this.config.initialLoadDelay);  // or put in processMHWWM
 		}
 	},
+ */
 
 });
