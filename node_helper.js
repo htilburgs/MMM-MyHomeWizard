@@ -22,17 +22,17 @@ module.exports = NodeHelper.create({
 getMHWP1: function(urlP1) {
         // Make a GET request using the Fetch API for the P1 Meter
         fetch(urlP1)
-          .then(responseP1 => {
-            if (!responseP1.ok) {
+          .then(response => {
+            if (!response.ok) {
               console.error('MMM-MyHomeWizard: Network response was not ok');
             }
-            return responseP1.json();
+            return response.json();
           })
 
-          .then(resultP1 => {
+          .then(result => {
             // Process the retrieved user data
-            console.log(resultP1); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHWP1_RESULT', resultP1);
+            console.log(result); // Remove trailing slashes to display data in Console for testing
+            this.sendSocketNotification('MHWP1_RESULT', result);
           })
 
           .catch(error => {
@@ -40,9 +40,9 @@ getMHWP1: function(urlP1) {
           });
   },
 
-  socketNotificationReceived: function(notificationP1, payloadP1) {
-            if (notificationP1 === 'GET_MHWP1') {
-            this.getMHWP1(payloadP1);
+  socketNotificationReceived: function(notification, payload) {
+            if (notification === 'GET_MHWP1') {
+            this.getMHWP1(payload);
             }
   },
 
@@ -51,17 +51,17 @@ getMHWP1: function(urlP1) {
   getMHWWM: function(urlWM) {
         // Make a GET request using the Fetch API for the Water Meter
         fetch(urlWM)
-          .then(responseWM => {
-            if (!responseWM.ok) {
+          .then(response => {
+            if (!response.ok) {
               console.error('MMM-MyHomeWizard: Network response was not ok');
             }
-            return responseWM.json();
+            return response.json();
           })
 
-          .then(resultWM => {
+          .then(result => {
             // Process the retrieved user data
-            console.log(resultWM); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHWWM_RESULT', resultWM);
+            console.log(result); // Remove trailing slashes to display data in Console for testing
+            this.sendSocketNotification('MHWWM_RESULT', result);
           })
 
           .catch(error => {
@@ -69,9 +69,9 @@ getMHWP1: function(urlP1) {
           });
   },
 
-  socketNotificationReceived: function(notificationWM, payloadWM) {
-            if (notificationWM === 'GET_MHWWM') {
-            this.getMHWWM(payloadWM);
+  socketNotificationReceived: function(notification, payload) {
+            if (notification === 'GET_MHWWM') {
+            this.getMHWWM(payload);
             }
   },
 });
