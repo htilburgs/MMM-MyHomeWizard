@@ -41,7 +41,7 @@ Module.register('MMM-MyHomeWizard', {
 		this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
 		this.urlWM = "http://" + this.config.WM_IP + "/api/v1/data/";
     		this.MHWP1 = [];	        // <-- Create empty MHW-P1 array
-		this.MWHWM = [];		// <-- Create empty MHW-WM array
+		this.MHWWM = [];		// <-- Create empty MHW-WM array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
 	},
 
@@ -65,7 +65,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		this.loaded = true;
 		var MHWP1 = this.MHWP1;
-		var MHWWM = this.MWHWM;
+		var MHWWM = this.MHWWM;
 		console.log(JSON.stringify(MHWP1));
 		console.log(JSON.stringify(MHWWM));
 		
@@ -126,7 +126,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		var TotalWaterDataCell = document.createElement("td");
 		TotalWaterDataCell.className = "normal totalwaterdatacell";
-		TotalWaterDataCell.innerHTML = Math.round(MHWP1.total_liter_m3) + " m³";
+		TotalWaterDataCell.innerHTML = Math.round(MHWWM.total_liter_m3) + " m³";
 		TotalWaterRow.appendChild(TotalWaterDataCell);
 		table.appendChild(TotalWaterRow);
 		
