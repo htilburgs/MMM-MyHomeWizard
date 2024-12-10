@@ -19,7 +19,7 @@ module.exports = NodeHelper.create({
 
 // P1 Meter section
 //
-getMHWP1: function(urlP1) {
+getMHW_P1: function(urlP1) {
         // Make a GET request using the Fetch API for the P1 Meter
         fetch(urlP1)
           .then(response => {
@@ -42,13 +42,13 @@ getMHWP1: function(urlP1) {
 
   socketNotificationReceived: function(notification, payloadP1) {
             if (notification === 'GET_MHWP1') {
-            this.getMHWP1(payloadP1);
+            this.getMHW_P1(payloadP1);
             }
   },
   
   // Water Meter Section
   //
-  getMHWWM: function(urlWM) {
+  getMHW_WM: function(urlWM) {
         // Make a GET request using the Fetch API for the Water Meter
         fetch(urlWM)
           .then(response => {
@@ -71,7 +71,7 @@ getMHWP1: function(urlP1) {
 
   socketNotificationReceived: function(notification, payloadWM) {
             if (notification === 'GET_MHWWM') {
-            this.getMHWWM(payloadWM);
+            this.getMH_WWM(payloadWM);
             }
   },
   
