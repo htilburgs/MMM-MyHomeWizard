@@ -86,6 +86,7 @@ Module.register('MMM-MyHomeWizard', {
 		TotalPowerRow.appendChild(TotalPowerDataCell);
 		table.appendChild(TotalPowerRow);
 		
+		wrapper.appendChild(table)
 		return table;		
 
 	}, // <-- closes the getDom function from above
