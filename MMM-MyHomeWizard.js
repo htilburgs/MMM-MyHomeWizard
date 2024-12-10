@@ -88,7 +88,7 @@ Module.register('MMM-MyHomeWizard', {
 	// this processes your data P1 Meter
 	processMHWP: function(data) { 
 		this.MHWP = data; 
-		console.log(this.MHWP); // uncomment to see if you're getting data (in dev console)
+		console.log(JSON.stringify(data)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 
