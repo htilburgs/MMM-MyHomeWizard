@@ -198,6 +198,5 @@ Module.register('MMM-MyHomeWizard', {
 		this.updateDom(this.config.initialLoadDelay);
 		}
 	},
- */
 
 });
