@@ -125,7 +125,7 @@ Module.register('MMM-MyHomeWizard', {
 	// This processes your data P1 Meter
 	processMHWP1: function(dataP1) { 
 		this.MHWP1 = dataP1; 
-		// console.log(JSON.stringify(this.MHWP1)); // uncomment to see if you're getting data (in dev console)
+		console.log(JSON.stringify(this.MHWP1)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 
@@ -157,7 +157,7 @@ Module.register('MMM-MyHomeWizard', {
 	// This processes your data Water Meter
 	processMHWWM: function(dataWM) { 
 		this.MHWWM = dataWM; 
-		// console.log(JSON.stringify(this.MHWWM)); // uncomment to see if you're getting data (in dev console)
+		console.log(JSON.stringify(this.MHWWM)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 
@@ -172,7 +172,7 @@ Module.register('MMM-MyHomeWizard', {
 	  
 	// this asks node_helper for data
 	getMHWWM: function() { 
-		this.sendSocketNotification('GET_MHWwm', this.urlWM);
+		this.sendSocketNotification('GET_MHWWM', this.urlWM);
 	},
 
 	// this gets data from node_helper
