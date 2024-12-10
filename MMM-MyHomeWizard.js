@@ -160,7 +160,7 @@ Module.register('MMM-MyHomeWizard', {
 
 	// this gets data from node_helper
 	socketNotificationReceived: function(notification, payload) { 
-		if (notificationP1 === "MHWP1_RESULT") {
+		if (notification === "MHWP1_RESULT") {
 		// this notification doesn't come back on error..
 		this.processMHWP1(payload);
 		this.updateDom(this.config.initialLoadDelay);  // or put in processMHWP1
@@ -192,7 +192,7 @@ Module.register('MMM-MyHomeWizard', {
 
 	// this gets data from node_helper
 	socketNotificationReceived: function(notification, payload) { 
-		if (notification=== "MHWWM_RESULT") {
+		if (notification === "MHWWM_RESULT") {
 		// this notification doesn't come back on error..
 		this.processMHWWM(payload);
 		this.updateDom(this.config.initialLoadDelay);  // or put in processMHWWM
