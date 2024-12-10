@@ -29,10 +29,10 @@ getMHWP1: function(urlP1) {
             return response.json();
           })
 
-          .then(result => {
+          .then(resultP1 => {
             // Process the retrieved user data
-            console.log(result); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHWP1_RESULT', result);
+            console.log(resultP1); // Remove trailing slashes to display data in Console for testing
+            this.sendSocketNotification('MHWP1_RESULT', resultP1);
           })
 
           .catch(error => {
@@ -40,9 +40,9 @@ getMHWP1: function(urlP1) {
           });
   },
 
-  socketNotificationReceived: function(notification, payload) {
+  socketNotificationReceived: function(notification, payloadP1) {
             if (notification === 'GET_MHWP1') {
-            this.getMHWP1(payload);
+            this.getMHWP1(payloadP1);
             }
   },
   
@@ -60,8 +60,8 @@ getMHWP1: function(urlP1) {
 
           .then(result => {
             // Process the retrieved user data
-            console.log(result); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHWWM_RESULT', result);
+            console.log(resultWM); // Remove trailing slashes to display data in Console for testing
+            this.sendSocketNotification('MHWWM_RESULT', resultWM);
           })
 
           .catch(error => {
@@ -69,9 +69,9 @@ getMHWP1: function(urlP1) {
           });
   },
 
-  socketNotificationReceived: function(notification, payload) {
+  socketNotificationReceived: function(notification, payloadWM) {
             if (notification === 'GET_MHWWM') {
-            this.getMHWWM(payload);
+            this.getMHWWM(payloadWM);
             }
   },
   
