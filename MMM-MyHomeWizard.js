@@ -12,7 +12,7 @@ Module.register('MMM-MyHomeWizard', {
 
 	// Default values
 	defaults: {
-		P1_IP: null,					// IP Address P1 Meter
+		P1_IP: null,				// IP Address P1 Meter
 		maxWidth: "500px",				// Max width wrapper
 		initialLoadDelay: 1000,
 		retryDelay: 2500,
@@ -61,7 +61,7 @@ Module.register('MMM-MyHomeWizard', {
 		return wrapper;
 		}	
 	
-		var MHWP1 = this.result;
+		var MHWP = this.result;
 		console.log(JSON.stringify(MHWP));
 
 		// creating the tablerows
