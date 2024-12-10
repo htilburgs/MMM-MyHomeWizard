@@ -45,7 +45,8 @@ getMHWP1: function(urlP1) {
             this.getMHWP1(payload);
             }
   },
-
+  
+/*
   // Water Meter Section
   //
   getMHWWM: function(urlWM) {
@@ -74,4 +75,6 @@ getMHWP1: function(urlP1) {
             this.getMHWWM(payload);
             }
   },
+*/
+  
 });
