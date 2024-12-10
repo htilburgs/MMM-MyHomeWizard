@@ -17,9 +17,11 @@ module.exports = NodeHelper.create({
           console.log("Starting node_helper for: " + this.name);
   },
 
-getMHW: function(url) {
-        // Make a GET request using the Fetch API
-        fetch(url)
+// P1 Meter section
+//
+getMHWP1: function(urlP1) {
+        // Make a GET request using the Fetch API for the P1 Meter
+        fetch(urlP1)
           .then(response => {
             if (!response.ok) {
               console.error('MMM-MyHomeWizard: Network response was not ok');
@@ -30,7 +32,7 @@ getMHW: function(url) {
           .then(result => {
             // Process the retrieved user data
             console.log(result); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHW_RESULT', result);
+            this.sendSocketNotification('MHWP1_RESULT', result);
           })
 
           .catch(error => {
@@ -39,9 +41,37 @@ getMHW: function(url) {
   },
 
   socketNotificationReceived: function(notification, payload) {
-            if (notification === 'GET_MHW') {
-            this.getMHW(payload);
+            if (notification === 'GET_MHWP1') {
+            this.getMHWP1(payload);
             }
   },
-  
+
+  // Water Meter Section
+  //
+  getMHWWM: function(urlWM) {
+        // Make a GET request using the Fetch API for the Water Meter
+        fetch(urlWM)
+          .then(response => {
+            if (!response.ok) {
+              console.error('MMM-MyHomeWizard: Network response was not ok');
+            }
+            return response.json();
+          })
+
+          .then(result => {
+            // Process the retrieved user data
+            console.log(result); // Remove trailing slashes to display data in Console for testing
+            this.sendSocketNotification('MHWWM_RESULT', result);
+          })
+
+          .catch(error => {
+            console.error('Error:', error);
+          });
+  },
+
+  socketNotificationReceived: function(notification, payload) {
+            if (notification === 'GET_MHWWM') {
+            this.getMHWWM(payload);
+            }
+  },
 });
