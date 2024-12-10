@@ -148,8 +148,10 @@ Module.register('MMM-MyHomeWizard', {
 	scheduleUpdate: function() { 
 		setInterval(() => {
 		    	this.getMHW_P1();
+			this.getMHW_WM();
 		}, this.config.updateInterval);
 		this.getMHW_P1();
+		this.getMHW_WM();
 		var self = this;
 	},
 	  
@@ -176,7 +178,7 @@ Module.register('MMM-MyHomeWizard', {
 		this.loaded = true;
 	},
 
-	// this tells module when to update
+/*	// this tells module when to update
 	scheduleUpdate: function() { 
 		setInterval(() => {
 		    	this.getMHW_WM();
@@ -184,7 +186,7 @@ Module.register('MMM-MyHomeWizard', {
 		this.getMHW_WM();
 		var self = this;
 	},
-	  
+*/	  
 	// this asks node_helper for data
 	getMHW_WM: function() { 
 		this.sendSocketNotification('GET_MHWWM', this.urlWM);
