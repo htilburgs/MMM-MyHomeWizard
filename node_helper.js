@@ -29,10 +29,10 @@ getMHW_P1: function(urlP1) {
             return response.json();
           })
 
-          .then(resultP1 => {
+          .then(result_P1 => {
             // Process the retrieved user data
-            console.log(resultP1); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHWP1_RESULT', resultP1);
+            console.log(result_P1); // Remove trailing slashes to display data in Console for testing
+            this.sendSocketNotification('MHWP1_RESULT', result_P1);
           })
 
           .catch(error => {
@@ -40,9 +40,9 @@ getMHW_P1: function(urlP1) {
           });
   },
 
-  socketNotificationReceived: function(notification, payloadP1) {
+  socketNotificationReceived: function(notification, payload_P1) {
             if (notification === 'GET_MHWP1') {
-            this.getMHW_P1(payloadP1);
+            this.getMHW_P1(payload_P1);
             }
   },
   
@@ -58,10 +58,10 @@ getMHW_P1: function(urlP1) {
             return response.json();
           })
 
-          .then(result => {
+          .then(result_WM => {
             // Process the retrieved user data
-            console.log(resultWM); // Remove trailing slashes to display data in Console for testing
-            this.sendSocketNotification('MHWWM_RESULT', resultWM);
+            console.log(result_WM); // Remove trailing slashes to display data in Console for testing
+            this.sendSocketNotification('MHWWM_RESULT', result_WM);
           })
 
           .catch(error => {
@@ -69,9 +69,9 @@ getMHW_P1: function(urlP1) {
           });
   },
 
-  socketNotificationReceived: function(notification, payloadWM) {
+  socketNotificationReceived: function(notification, payload_WM) {
             if (notification === 'GET_MHWWM') {
-            this.getMH_WWM(payloadWM);
+            this.getMHW_WM(payload_WM);
             }
   },
   
