@@ -17,7 +17,7 @@ module.exports = NodeHelper.create({
           console.log("Starting node_helper for: " + this.name);
   },
 
-getMHWP: function(url) {
+getMHW: function(url) {
         // Make a GET request using the Fetch API
         fetch(url)
           .then(response => {
