@@ -13,6 +13,7 @@ Module.register('MMM-MyHomeWizard', {
 	// Default values
 	defaults: {
 		P1_IP: null,				// IP Address P1 Meter
+		WM_IP: null,				// IP Address Water Meter
 		maxWidth: "500px",			// Max width wrapper
 		initialLoadDelay: 1000,
 		retryDelay: 2500,
@@ -23,11 +24,6 @@ Module.register('MMM-MyHomeWizard', {
 	getStyles: function () {
 		return ["MMM-MyHomeWizard.css"];
 	},  
-
-	// Define required scripts.
-	getScripts: function () {
-		return ["moment.js"];
-	},
 
 	// Define required translations.
   	getTranslations: function () {
@@ -43,7 +39,8 @@ Module.register('MMM-MyHomeWizard', {
 			
 		// Set locales
 		this.url = "http://" + this.config.P1_IP + "/api/v1/data/";
-    		this.MHW = [];	        	// <-- Create empty MHW-P1 array
+    		this.MHWP1 = [];	        // <-- Create empty MHW-P1 array
+		this.MWHWM = [];		// <-- Create empty MHW-WM array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
 	},
 
@@ -66,8 +63,10 @@ Module.register('MMM-MyHomeWizard', {
 		}	
 
 		this.loaded = true;
-		var MHW = this.MHW;
-		console.log(JSON.stringify(MHW));
+		var MHWP1 = this.MHWP1;
+		var MHWWM = this.MWHWM;
+		console.log(JSON.stringify(MHWP1));
+		console.log(JSON.stringify(MHWWM));
 		
 		// creating the tablerows
 		var CurrentPowerRow = document.createElement("tr");
@@ -81,7 +80,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		var CurrentPowerDataCell = document.createElement("td");
 		CurrentPowerDataCell.className = "normal currentpowerdatacell";
-		CurrentPowerDataCell.innerHTML = Math.round(MHW.active_power_w) + " kWh";
+		CurrentPowerDataCell.innerHTML = Math.round(MHWP1.active_power_w) + " kWh";
 		CurrentPowerRow.appendChild(CurrentPowerDataCell);
 		table.appendChild(CurrentPowerRow);
 
@@ -96,7 +95,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		var TotalPowerDataCell = document.createElement("td");
 		TotalPowerDataCell.className = "normal totalpowerdatacell";
-		TotalPowerDataCell.innerHTML = Math.round(MHW.total_power_import_kwh) + " kWh";
+		TotalPowerDataCell.innerHTML = Math.round(MHWP1.total_power_import_kwh) + " kWh";
 		TotalPowerRow.appendChild(TotalPowerDataCell);
 		table.appendChild(TotalPowerRow);
 
@@ -111,7 +110,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		var TotalGasDataCell = document.createElement("td");
 		TotalGasDataCell.className = "normal totalgasdatacell";
-		TotalGasDataCell.innerHTML = Math.round(MHW.total_gas_m3) + " m³";
+		TotalGasDataCell.innerHTML = Math.round(MHWP1.total_gas_m3) + " m³";
 		TotalGasRow.appendChild(TotalGasDataCell);
 		table.appendChild(TotalGasRow);
 		
@@ -121,34 +120,32 @@ Module.register('MMM-MyHomeWizard', {
 	}, // <-- closes the getDom function from above
 		
 	// this processes your data P1 Meter
-	processMHW: function(data) { 
-		this.MHW = data; 
-		// console.log(JSON.stringify(this.MHW)); // uncomment to see if you're getting data (in dev console)
+	processMHWP1: function(data) { 
+		this.MHWP1 = data; 
+		// console.log(JSON.stringify(this.MHWP1)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 
 	// this tells module when to update
 	scheduleUpdate: function() { 
 		setInterval(() => {
-		    	this.getMHW();
+		    	this.getMHWP1();
 		}, this.config.updateInterval);
-		this.getMHW();
+		this.getMHWP1();
 		var self = this;
 	},
 	  
 	// this asks node_helper for data
-	getMHW: function() { 
-		this.sendSocketNotification('GET_MHW', this.url);
+	getMHWP1: function() { 
+		this.sendSocketNotification('GET_MHWP1', this.url);
 	},
 
 	// this gets data from node_helper
 	socketNotificationReceived: function(notification, payload) { 
-		if (notification === "MHW_RESULT") {
+		if (notification === "MHWP1_RESULT") {
 		// this notification doesn't come back on error..
-		this.processMHW(payload);
-		this.updateDom(this.config.initialLoadDelay);  // or put in processMHW
+		this.processMHWP1(payload);
+		this.updateDom(this.config.initialLoadDelay);  // or put in processMHWP1
 		}
-		// do you want to do updateDom on EVER notification? or only yours
-		//this.updateDom(this.config.initialLoadDelay);
 	},
 });
