@@ -90,7 +90,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 		var TotalGasTextCell = document.createElement("td");
 		TotalGasTextCell.className = "normal totalgastextcell";
-		TotalGasTextCell.innerHTML = this.translate"Total_Gas"; 
+		TotalGasTextCell.innerHTML = this.translate("Total_Gas"); 
 		TotalGasRow.appendChild(TotalGasTextCell);	
 		table.appendChild(TotalGasRow);
 
