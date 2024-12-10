@@ -49,6 +49,10 @@ Module.register('MMM-MyHomeWizard', {
 
 	getDom: function () {
 		
+		// creating the table
+		var table = document.createElement("table");
+		table.className = "small";
+		
 		// creating the wrapper
 		var wrapper = document.createElement("div");
 		wrapper.className = "wrapper";
