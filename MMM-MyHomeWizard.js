@@ -166,12 +166,12 @@ Module.register('MMM-MyHomeWizard', {
 		this.updateDom(this.config.initialLoadDelay);  // or put in processMHWP1
 		}
 	},
-/*	
+	
 //<-- Water Meter Section -->
 	
 	// This processes your data Water Meter
-	processMHWWM: function(data) { 
-		this.MHWWM = data; 
+	processMHWWM: function(wmdata) { 
+		this.MHWWM = wmdata; 
 		console.log(JSON.stringify(this.MHWWM)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
@@ -191,10 +191,10 @@ Module.register('MMM-MyHomeWizard', {
 	},
 
 	// this gets data from node_helper
-	socketNotificationReceived: function(notification, payload) { 
+	socketNotificationReceived: function(notification, wmpayload) { 
 		if (notification === "MHWWM_RESULT") {
 		// this notification doesn't come back on error..
-		this.processMHWWM(payload);
+		this.processMHWWM(wmpayload);
 		this.updateDom(this.config.initialLoadDelay);  // or put in processMHWWM
 		}
 	},
