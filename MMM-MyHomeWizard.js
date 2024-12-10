@@ -63,7 +63,7 @@ Module.register('MMM-MyHomeWizard', {
 	
 		var MHWP = this.result;
 		console.log(JSON.stringify(MHWP));
-		console.log(this.result);
+		console.log(result);
 
 		// creating the tablerows
 		var TotalPowerRow = document.createElement("tr");
