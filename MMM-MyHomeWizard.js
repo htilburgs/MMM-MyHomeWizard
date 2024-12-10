@@ -40,8 +40,8 @@ Module.register('MMM-MyHomeWizard', {
 		// Set locales
 		this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
 		this.urlWM = "http://" + this.config.WM_IP + "/api/v1/data/";
-    		this.MHWP1 = [];	        // <-- Create empty MHW-P1 array
-		this.MHWWM = [];		// <-- Create empty MHW-WM array
+    		this.MHW_P1 = [];	        // <-- Create empty MHW_P1 array
+		this.MHW_WM = [];		// <-- Create empty MHW_WM array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
 	},
 
@@ -64,10 +64,10 @@ Module.register('MMM-MyHomeWizard', {
 		}	
 
 		this.loaded = true;
-		var MHWP1 = this.MHWP1;
-		var MHWWM = this.MHWWM;
-		console.log(JSON.stringify(MHWP1));
-		console.log(JSON.stringify(MHWWM));
+		var MHW_P1 = this.MHW_P1;
+		var MHW_WM = this.MHW_WM;
+		console.log(JSON.stringify(MHW_P1));
+		console.log(JSON.stringify(MHW_WM));
 		
 		// creating the tablerows
 		var CurrentPowerRow = document.createElement("tr");
@@ -81,7 +81,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		var CurrentPowerDataCell = document.createElement("td");
 		CurrentPowerDataCell.className = "normal currentpowerdatacell";
-		CurrentPowerDataCell.innerHTML = Math.round(MHWP1.active_power_w) + " kWh";
+		CurrentPowerDataCell.innerHTML = Math.round(MHW_P1.active_power_w) + " kWh";
 		CurrentPowerRow.appendChild(CurrentPowerDataCell);
 		table.appendChild(CurrentPowerRow);
 
@@ -96,7 +96,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		var TotalPowerDataCell = document.createElement("td");
 		TotalPowerDataCell.className = "normal totalpowerdatacell";
-		TotalPowerDataCell.innerHTML = Math.round(MHWP1.total_power_import_kwh) + " kWh";
+		TotalPowerDataCell.innerHTML = Math.round(MHW_P1.total_power_import_kwh) + " kWh";
 		TotalPowerRow.appendChild(TotalPowerDataCell);
 		table.appendChild(TotalPowerRow);
 
@@ -111,7 +111,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		var TotalGasDataCell = document.createElement("td");
 		TotalGasDataCell.className = "normal totalgasdatacell";
-		TotalGasDataCell.innerHTML = Math.round(MHWP1.total_gas_m3) + " m³";
+		TotalGasDataCell.innerHTML = Math.round(MHW_P1.total_gas_m3) + " m³";
 		TotalGasRow.appendChild(TotalGasDataCell);
 		table.appendChild(TotalGasRow);
 
@@ -126,7 +126,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		var TotalWaterDataCell = document.createElement("td");
 		TotalWaterDataCell.className = "normal totalwaterdatacell";
-		TotalWaterDataCell.innerHTML = Math.round(MHWWM.total_liter_m3) + " m³";
+		TotalWaterDataCell.innerHTML = Math.round(MHW_WM.total_liter_m3) + " m³";
 		TotalWaterRow.appendChild(TotalWaterDataCell);
 		table.appendChild(TotalWaterRow);
 		
@@ -138,31 +138,31 @@ Module.register('MMM-MyHomeWizard', {
 // <-- P1 Meter Section -->
 	
 	// This processes your data P1 Meter
-	processMHWP1: function(data) { 
-		this.MHWP1 = data; 
-		console.log(JSON.stringify(this.MHWP1)); // uncomment to see if you're getting data (in dev console)
+	processMHW_P1: function(dataP1) { 
+		this.MHW_P1 = dataP1; 
+		console.log(JSON.stringify(this.MHW_P1)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 
 	// this tells module when to update
 	scheduleUpdate: function() { 
 		setInterval(() => {
-		    	this.getMHWP1();
+		    	this.getMHW_P1();
 		}, this.config.updateInterval);
-		this.getMHWP1();
+		this.getMHW_P1();
 		var self = this;
 	},
 	  
 	// this asks node_helper for data
-	getMHWP1: function() { 
+	getMHW_P1: function() { 
 		this.sendSocketNotification('GET_MHWP1', this.urlP1);
 	},
 
 	// this gets data from node_helper
-	socketNotificationReceived: function(notification, payload) { 
+	socketNotificationReceived: function(notification, payloadP1) { 
 		if (notification === "MHWP1_RESULT") {
 		// this notification doesn't come back on error..
-		this.processMHWP1(payload);
+		this.processMHW_P1(payloadP1);
 		this.updateDom(this.config.initialLoadDelay);  // or put in processMHWP1
 		}
 	},
@@ -170,32 +170,32 @@ Module.register('MMM-MyHomeWizard', {
 //<-- Water Meter Section -->
 	
 	// This processes your data Water Meter
-	processMHWWM: function(wmdata) { 
-		this.MHWWM = wmdata; 
-		console.log(JSON.stringify(this.MHWWM)); // uncomment to see if you're getting data (in dev console)
+	processMHW_WM: function(dataWM) { 
+		this.MHW_WM = dataWM; 
+		console.log(JSON.stringify(this.MHW_WM)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 
 	// this tells module when to update
 	scheduleUpdate: function() { 
 		setInterval(() => {
-		    	this.getMHWWM();
+		    	this.getMHW_WM();
 		}, this.config.updateInterval);
-		this.getMHWWM();
+		this.getMHW_WM();
 		var self = this;
 	},
 	  
 	// this asks node_helper for data
-	getMHWWM: function() { 
+	getMHW_WM: function() { 
 		this.sendSocketNotification('GET_MHWWM', this.urlWM);
 	},
 
 	// this gets data from node_helper
-	socketNotificationReceived: function(notification, wmpayload) { 
+	socketNotificationReceived: function(notification, payloadWM) { 
 		if (notification === "MHWWM_RESULT") {
 		// this notification doesn't come back on error..
-		this.processMHWWM(wmpayload);
-		this.updateDom(this.config.initialLoadDelay);  // or put in processMHWWM
+		this.processMHW_WM(payloadWM);
+		this.updateDom(this.config.initialLoadDelay);
 		}
 	},
  */
