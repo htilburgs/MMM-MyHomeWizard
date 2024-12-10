@@ -19,7 +19,7 @@ Module.register('MMM-MyHomeWizard', {
 		updateInterval: 5000			// Every 5 seconds
 	},
 		
-/*	// Define stylesheet
+	// Define stylesheet
 	getStyles: function () {
 		return ["MMM-MyHomeWizard.css"];
 	},  
@@ -32,10 +32,10 @@ Module.register('MMM-MyHomeWizard', {
 	// Define required translations.
   	getTranslations: function () {
     		return {
-      		nl: "translations/nl.json"
+      		nl: "translations/nl.json",
+		en: "translations/en.json"
     		}
   	},
-*/
 	
 	start: function () {
 		Log.info("Starting module: " + this.name);
@@ -75,7 +75,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 		var TotalPowerTextCell = document.createElement("td");
 		TotalPowerTextCell.className = "normal totalpowertextcell";
-		TotalPowerTextCell.innerHTML = "Total Power: "; 
+		TotalPowerTextCell.innerHTML = this.translate("Total_Pwr"); 
 		TotalPowerRow.appendChild(TotalPowerTextCell);	
 		table.appendChild(TotalPowerRow);
 
@@ -90,7 +90,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 		var TotalGasTextCell = document.createElement("td");
 		TotalGasTextCell.className = "normal totalgastextcell";
-		TotalGasTextCell.innerHTML = "Total Gas: "; 
+		TotalGasTextCell.innerHTML = this.translate"Total_Gas"; 
 		TotalGasRow.appendChild(TotalGasTextCell);	
 		table.appendChild(TotalGasRow);
 
