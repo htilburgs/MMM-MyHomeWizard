@@ -22,11 +22,11 @@ module.exports = NodeHelper.create({
 getMHWP1: function(urlP1) {
         // Make a GET request using the Fetch API for the P1 Meter
         fetch(urlP1)
-          .then(response => {
-            if (!response.ok) {
+          .then(responseP1 => {
+            if (!responseP1.ok) {
               console.error('MMM-MyHomeWizard: Network response was not ok');
             }
-            return response.json();
+            return responseP1.json();
           })
 
           .then(resultP1 => {
@@ -35,8 +35,8 @@ getMHWP1: function(urlP1) {
             this.sendSocketNotification('MHWP1_RESULT', resultP1);
           })
 
-          .catch(error => {
-            console.error('Error:', error);
+          .catch(errorP1 => {
+            console.errorP1('Error:', errorP1);
           });
   },
 
@@ -51,11 +51,11 @@ getMHWP1: function(urlP1) {
   getMHWWM: function(urlWM) {
         // Make a GET request using the Fetch API for the Water Meter
         fetch(urlWM)
-          .then(response => {
-            if (!response.ok) {
+          .then(responseWM => {
+            if (!responseWM.ok) {
               console.error('MMM-MyHomeWizard: Network response was not ok');
             }
-            return response.json();
+            return responseWM.json();
           })
 
           .then(resultWM => {
@@ -64,8 +64,8 @@ getMHWP1: function(urlP1) {
             this.sendSocketNotification('MHWWM_RESULT', resultWM);
           })
 
-          .catch(error => {
-            console.error('Error:', error);
+          .catch(errorWM => {
+            console.errorWM('Error:', errorWM);
           });
   },
 
