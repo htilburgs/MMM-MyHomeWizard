@@ -137,7 +137,7 @@ Module.register('MMM-MyHomeWizard', {
 			table.appendChild(spacer);
 
 			var WifiRow = document.createElement("tr");
-			FailureRow.className = "wifi-row";
+			WifiRow.className = "wifi-row";
 		
 			var WifiTextCell = document.createElement("td");
 			WifiTextCell.className = "normal wifitextcell";
