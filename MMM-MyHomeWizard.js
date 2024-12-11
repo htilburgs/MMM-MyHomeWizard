@@ -130,6 +130,28 @@ Module.register('MMM-MyHomeWizard', {
 		TotalWaterDataCell.innerHTML = Math.round(MHW_WM.total_liter_m3) + " m³";
 		TotalWaterRow.appendChild(TotalWaterDataCell);
 		table.appendChild(TotalWaterRow);
+
+		if (this.config.extraInfo != false) {
+			var spacer = document.createElement("span");
+			spacer.innerHTML = "&nbsp;";
+			table.appendChild(spacer);
+
+			var HuidigWattRow = document.createElement("tr");
+			HuidigWattRow.className = "huidig-watt-row";
+		
+			var HuidigWattTextCell = document.createElement("td");
+			HuidigWattTextCell.className = "normal huidigwatttextcell";
+			HuidigWattTextCell.innerHTML = '<i class="fa-solid fa-bolt-lightning"></i>' +  "&nbsp;" + this.translate("Active_PwrW"); 
+			HuidigWattRow.appendChild(HuidigWattTextCell);	
+			table.appendChild(HuidigWattRow);
+
+			var HuidigWattDataCell = document.createElement("td");
+			HuidigWattDataCell.className = "normal huidigwattdatacell";
+			HuidigWattDataCell.innerHTML = Math.round(MHW_WM.active_power_w) + " Watt";
+			HuidigWattRow.appendChild(HuidigWattDataCell);
+			table.appendChild(HuidigWattRow);
+
+		}
 		
 		wrapper.appendChild(table);
 		return table;		
