@@ -136,21 +136,6 @@ Module.register('MMM-MyHomeWizard', {
 			spacer.innerHTML = "&nbsp;";
 			table.appendChild(spacer);
 
-			var MeterRow = document.createElement("tr");
-			MeterRow.className = "meter-row";
-		
-			var MeterTextCell = document.createElement("td");
-			MeterTextCell.className = "normal metertextcell";
-			MeterTextCell.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + "Meter:"; 
-			MeterRow.appendChild(MeterTextCell);	
-			table.appendChild(MeterRow);
-
-			var MeterDataCell = document.createElement("td");
-			MeterDataCell.className = "normal meterdatacell";
-			MeterDataCell.innerHTML = MHW_P1.meter_model;
-			MeterRow.appendChild(MeterDataCell);
-			table.appendChild(MeterRow);
-
 			var WifiRow = document.createElement("tr");
 			WifiRow.className = "wifi-row";
 		
@@ -165,8 +150,24 @@ Module.register('MMM-MyHomeWizard', {
 			WifiDataCell.innerHTML = MHW_P1.wifi_strength + " %";
 			WifiRow.appendChild(WifiDataCell);
 			table.appendChild(WifiRow);
+			
+			var MeterRow = document.createElement("tr");
+			MeterRow.className = "meter-row";
+			MeterRow.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + MHW_P1.meter_model; 
+			table.appendChild(MeterRow);
+/*		
+			var MeterTextCell = document.createElement("td");
+			MeterTextCell.className = "normal metertextcell";
+			MeterTextCell.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + "Meter:"; 
+			MeterRow.appendChild(MeterTextCell);	
+			table.appendChild(MeterRow);
 
-
+			var MeterDataCell = document.createElement("td");
+			MeterDataCell.className = "normal meterdatacell";
+			MeterDataCell.innerHTML = MHW_P1.meter_model;
+			MeterRow.appendChild(MeterDataCell);
+			table.appendChild(MeterRow);
+*/		
 		}
 		
 		wrapper.appendChild(table);
