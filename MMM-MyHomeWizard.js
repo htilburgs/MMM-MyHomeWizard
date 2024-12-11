@@ -178,15 +178,6 @@ Module.register('MMM-MyHomeWizard', {
 		this.loaded = true;
 	},
 
-/*	// this tells module when to update
-	scheduleUpdate: function() { 
-		setInterval(() => {
-		    	this.getMHW_WM();
-		}, this.config.updateInterval);
-		this.getMHW_WM();
-		var self = this;
-	},
-*/	  
 	// this asks node_helper for data - P1
 	getMHW_P1: function() { 
 		this.sendSocketNotification('GET_MHWP1', this.urlP1);
@@ -196,16 +187,5 @@ Module.register('MMM-MyHomeWizard', {
 	getMHW_WM: function() { 
 		this.sendSocketNotification('GET_MHWWM', this.urlWM);
 	},
-
-/*
-	// this gets data from node_helper
-	socketNotificationReceived: function(notification_WM, payload_WM) { 
-		if (notification_WM === "MHWWM_RESULT") {
-		// this notification doesn't come back on error..
-		this.processMHW_WM(payload_WM);
-		this.updateDom(this.config.initialLoadDelay);
-		}
-	},
-*/
 	
 });
