@@ -22,7 +22,7 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 
 .currentpowertextcell {
      color: white !important;               
-     text-align: left !important;       
+     text-align: right !important;       
 }
 
 .currentpowerdatacell { 
