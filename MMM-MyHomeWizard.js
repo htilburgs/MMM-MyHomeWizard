@@ -162,11 +162,16 @@ Module.register('MMM-MyHomeWizard', {
 	},
 
 	// this gets data from node_helper
-	socketNotificationReceived: function(notification_P1, payload_P1) { 
-		if (notification_P1 === "MHWP1_RESULT") {
+	socketNotificationReceived: function(notification, payload) { 
+		if (notification === "MHWP1_RESULT") {
 		// this notification doesn't come back on error..
-		this.processMHW_P1(payload_P1);
+		this.processMHW_P1(payload);
 		this.updateDom(this.config.initialLoadDelay); 
+		}
+		else if (notification === "MHWWM_RESULT") {
+		// this notification doesn't come back on error..
+		this.processMHW_WM(payload);
+		this.updateDom(this.config.initialLoadDelay);
 		}
 	},
 	
@@ -193,6 +198,7 @@ Module.register('MMM-MyHomeWizard', {
 		this.sendSocketNotification('GET_MHWWM', this.urlWM);
 	},
 
+/*
 	// this gets data from node_helper
 	socketNotificationReceived: function(notification_WM, payload_WM) { 
 		if (notification_WM === "MHWWM_RESULT") {
@@ -201,5 +207,6 @@ Module.register('MMM-MyHomeWizard', {
 		this.updateDom(this.config.initialLoadDelay);
 		}
 	},
-
+*/
+	
 });
