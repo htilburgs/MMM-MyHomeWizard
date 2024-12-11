@@ -12,13 +12,13 @@ Module.register('MMM-MyHomeWizard', {
 
 	// Default values
 	defaults: {
-		P1_IP: null,				// IP Address P1 Meter
-		WM_IP: null,				// IP Address Water Meter
+		P1_IP: "0.0.0.0",			// IP Address P1 Meter
+		WM_IP: "0.0.0.0",			// IP Address Water Meter
 		maxWidth: "500px",			// Max width wrapper
+		extraInfo: false,			// Show extra information
+		showFooter: false,			// Show footer (name Power Meter)
+		currentPower: true,			// Show current power usage
 		initialLoadDelay: 1000,
-		extraInfo: false,
-		showFooter: false,
-		currentPower: true,
 		updateInterval: 10000			// Every 10 seconds
 	},
 		
@@ -73,7 +73,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 		// creating the tablerows
 
-		if (this.config.P1_IP != null) {
+		if (this.config.P1_IP != "0.0.0.0") {
 
 			if (this.config.currentPower != false) {
 				var CurrentPowerRow = document.createElement("tr");
@@ -123,7 +123,7 @@ Module.register('MMM-MyHomeWizard', {
 			table.appendChild(TotalGasRow);
 		}
 			
-		if (this.config.WM_IP != null) {
+		if (this.config.WM_IP != "0.0.0.0") {
 			var TotalWaterRow = document.createElement("tr");
 			TotalWaterRow.className = "total-water-row";
 			
