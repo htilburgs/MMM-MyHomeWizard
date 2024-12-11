@@ -40,9 +40,13 @@ getMHW_P1: function(urlP1) {
           });
   },
 
-  socketNotificationReceived: function(notification, payload_P1) {
+  socketNotificationReceived: function(notification, payload) {
             if (notification === 'GET_MHWP1') {
-            this.getMHW_P1(payload_P1);
+            this.getMHW_P1(payload);
+            }
+            else if socketNotificationReceived: function(notification, payload) {
+            if (notification === 'GET_MHWWM') {
+            this.getMHW_WM(payload);
             }
   },
   
@@ -69,10 +73,11 @@ getMHW_P1: function(urlP1) {
           });
   },
 
+/*
   socketNotificationReceived: function(notification, payload_WM) {
             if (notification === 'GET_MHWWM') {
             this.getMHW_WM(payload_WM);
             }
   },
-  
+*/  
 });
