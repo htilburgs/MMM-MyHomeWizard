@@ -151,7 +151,7 @@ Module.register('MMM-MyHomeWizard', {
 			WifiRow.appendChild(WifiDataCell);
 			table.appendChild(WifiRow);
 			
-			var MeterRow = document.createElement("tr");
+			var MeterRow = document.createElement("td");
 			MeterRow.className = "meter-row";
 			MeterRow.setAttribute('colspan', 2);
 			MeterRow.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + MHW_P1.meter_model; 
