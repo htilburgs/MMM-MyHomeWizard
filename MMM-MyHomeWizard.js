@@ -136,20 +136,20 @@ Module.register('MMM-MyHomeWizard', {
 			spacer.innerHTML = "&nbsp;";
 			table.appendChild(spacer);
 
-			var HuidigWattRow = document.createElement("tr");
-			HuidigWattRow.className = "huidig-watt-row";
+			var MeterRow = document.createElement("tr");
+			HuidigWattRow.className = "meterrow";
 		
-			var HuidigWattTextCell = document.createElement("td");
-			HuidigWattTextCell.className = "normal huidigwatttextcell";
-			HuidigWattTextCell.innerHTML = '<i class="fa-solid fa-bolt-lightning"></i>' +  "&nbsp;" + this.translate("Active_PwrW"); 
-			HuidigWattRow.appendChild(HuidigWattTextCell);	
-			table.appendChild(HuidigWattRow);
+			var MeterTextCell = document.createElement("td");
+			MeterTextCell.className = "normal metertextcell";
+			MeterTextCell.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + MHW_P1.meter_model; 
+			MeterRow.appendChild(MeterTextCell);	
+			table.appendChild(MeterRow);
 
-			var HuidigWattDataCell = document.createElement("td");
-			HuidigWattDataCell.className = "normal huidigwattdatacell";
-			HuidigWattDataCell.innerHTML = Math.round(MHW_P1.active_power_w) + " Watt";
-			HuidigWattRow.appendChild(HuidigWattDataCell);
-			table.appendChild(HuidigWattRow);
+			var MeterDataCell = document.createElement("td");
+			MeterDataCell.className = "normal meterdatacell";
+			MeterDataCell.innerHTML = Math.round(MHW_P1.active_power_w) + " Watt";
+			MeterRow.appendChild(MeterDataCell);
+			table.appendChild(MeterRow);
 
 		}
 		
