@@ -32,7 +32,11 @@ Add the module to your modules array in your config.js.
   position: 'top_left',
   header: 'HomeWizard',
   config: {
-	        updateInterval: 5000      //Update every 5 seconds
+		P1_IP: "0.0.0.0",	//IP Address HomeWizard P1 meter
+		WM_IP: "0.0.0.0",	//IP Address HomeWizrd Water meter - Remove when not used
+		extraInfo: "false", 	
+		updateInterval: 5000,   //Update every 5 seconds
+		maxWidth: "500px"	// Max Module width
           }
 },
 ```
@@ -45,7 +49,6 @@ Here is the documentation of options for the modules configuration
 | `WM_IP`           | **REQUIRED** - The IP Address of your HomeWizard Water meter <br /><br />**Number** <br />Default: `0.0.0.0`
 | `updateInterval`		| **REQUIRED** - The interval the information is updated (in milliseconds)<br /><br />**Number** <br/>Default: `5000`
 | `extraInfo`		| Show extra information <br /><br />**True/False**<br />Default: `false`
-| `ff`		| Extra option <br /><br />**True/False**<br />Default: `false`
 | `maxWidth`		| The maximum width of the module <br /><br />Default: `500px`
 
 ## Version
