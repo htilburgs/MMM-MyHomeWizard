@@ -12,8 +12,8 @@ Module.register('MMM-MyHomeWizard', {
 
 	// Default values
 	defaults: {
-		P1_IP: "0.0.0.0",			// IP Address P1 Meter
-		WM_IP: "0.0.0.0",			// IP Address Water Meter
+		P1_IP: null,				// IP Address P1 Meter
+		WM_IP: null,				// IP Address Water Meter
 		maxWidth: "500px",			// Max width wrapper
 		extraInfo: false,			// Show extra information
 		showFooter: false,			// Show footer (name Power Meter)
@@ -40,8 +40,14 @@ Module.register('MMM-MyHomeWizard', {
 		requiresVersion: "2.9.0",	
 			
 		// Set locales
-		this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
+		if (this.config.P1_IP != null) {
+			this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
+			}
+		else {
+			this.urlP1 = "https://dummyjson.com/c/7e24-36ab-48e0-a96d";
+		}
 		this.urlWM = "http://" + this.config.WM_IP + "/api/v1/data/";
+		
     		this.MHW_P1 = [];	        // <-- Create empty MHW_P1 array
 		this.MHW_WM = [];		// <-- Create empty MHW_WM array
 		this.scheduleUpdate();       	// <-- When the module updates (see below)
@@ -73,7 +79,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 		// creating the tablerows
 
-		if (this.config.P1_IP != "0.0.0.0") {
+		if (this.config.P1_IP != null) {
 
 			if (this.config.currentPower != false) {
 				var CurrentPowerRow = document.createElement("tr");
