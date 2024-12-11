@@ -136,14 +136,8 @@ Module.register('MMM-MyHomeWizard', {
 
 	}, // <-- closes the getDom function from above
 
-// <-- P1 Meter Section -->
 	
-	// This processes your data P1 Meter
-	processMHW_P1: function(data_P1) { 
-		this.MHW_P1 = data_P1; 
-		console.log(JSON.stringify(this.MHW_P1)); // uncomment to see if you're getting data (in dev console)
-		this.loaded = true;
-	},
+// <-- Updating and information gathering
 
 	// this tells module when to update
 	scheduleUpdate: function() { 
@@ -156,11 +150,6 @@ Module.register('MMM-MyHomeWizard', {
 		var self = this;
 	},
 	  
-	// this asks node_helper for data
-	getMHW_P1: function() { 
-		this.sendSocketNotification('GET_MHWP1', this.urlP1);
-	},
-
 	// this gets data from node_helper
 	socketNotificationReceived: function(notification, payload) { 
 		if (notification === "MHWP1_RESULT") {
@@ -174,8 +163,13 @@ Module.register('MMM-MyHomeWizard', {
 		this.updateDom(this.config.initialLoadDelay);
 		}
 	},
-	
-//<-- Water Meter Section -->
+
+	// This processes your data P1 Meter
+	processMHW_P1: function(data_P1) { 
+		this.MHW_P1 = data_P1; 
+		console.log(JSON.stringify(this.MHW_P1)); // uncomment to see if you're getting data (in dev console)
+		this.loaded = true;
+	},
 	
 	// This processes your data Water Meter
 	processMHW_WM: function(data_WM) { 
@@ -193,7 +187,12 @@ Module.register('MMM-MyHomeWizard', {
 		var self = this;
 	},
 */	  
-	// this asks node_helper for data
+	// this asks node_helper for data - P1
+	getMHW_P1: function() { 
+		this.sendSocketNotification('GET_MHWP1', this.urlP1);
+	},
+	
+	// this asks node_helper for data - WM
 	getMHW_WM: function() { 
 		this.sendSocketNotification('GET_MHWWM', this.urlWM);
 	},
