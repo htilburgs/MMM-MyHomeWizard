@@ -153,6 +153,7 @@ Module.register('MMM-MyHomeWizard', {
 			
 			var MeterRow = document.createElement("tr");
 			MeterRow.className = "meter-row";
+			MeterRow.setAttribute('colspan', 2);
 			MeterRow.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + MHW_P1.meter_model; 
 			table.appendChild(MeterRow);
 /*		
