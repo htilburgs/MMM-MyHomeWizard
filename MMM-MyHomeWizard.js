@@ -217,26 +217,26 @@ Module.register('MMM-MyHomeWizard', {
 		}
 	},
 
-	// This processes your data P1 Meter
+	// This processes your P1 Meter data
 	processMHW_P1: function(data_P1) { 
 		this.MHW_P1 = data_P1; 
 		console.log(JSON.stringify(this.MHW_P1)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 	
-	// This processes your data Water Meter
+	// This processes your Water Meter data
 	processMHW_WM: function(data_WM) { 
 		this.MHW_WM = data_WM; 
 		console.log(JSON.stringify(this.MHW_WM)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 
-	// this asks node_helper for data - P1
+	// this asks node_helper for data - P1 Meter
 	getMHW_P1: function() { 
 		this.sendSocketNotification('GET_MHWP1', this.urlP1);
 	},
 	
-	// this asks node_helper for data - WM
+	// this asks node_helper for data - Water Meter
 	getMHW_WM: function() { 
 		this.sendSocketNotification('GET_MHWWM', this.urlWM);
 	},
