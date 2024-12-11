@@ -136,39 +136,28 @@ Module.register('MMM-MyHomeWizard', {
 			spacer.innerHTML = "&nbsp;";
 			table.appendChild(spacer);
 
-			var WifiRow = document.createElement("tr");
-			WifiRow.className = "wifi-row";
+			stroomstoringen 
+			
+			var FailureRow = document.createElement("tr");
+			FailureRow.className = "failure-row";
 		
-			var WifiTextCell = document.createElement("td");
-			WifiTextCell.className = "normal metertextcell";
-			WifiTextCell.innerHTML = '<i class="fa-solid fa-wifi"></i>' +  "&nbsp;" + "Wifi Signaal:"; 
-			WifiRow.appendChild(WifiTextCell);	
-			table.appendChild(WifiRow);
+			var FailureTextCell = document.createElement("td");
+			FailureTextCell.className = "normal metertextcell";
+			FailureTextCell.innerHTML = '<i class="fa-solid fa-plug-circle-exclamation"></i>' +  "&nbsp;" + "Stroomstoringen"; 
+			FailureRow.appendChild(FailureTextCell);	
+			table.appendChild(FailureRow);
 
-			var WifiDataCell = document.createElement("td");
-			WifiDataCell.className = "normal meterdatacell";
-			WifiDataCell.innerHTML = MHW_P1.wifi_strength + " %";
-			WifiRow.appendChild(WifiDataCell);
-			table.appendChild(WifiRow);
+			var FailureDataCell = document.createElement("td");
+			FailureDataCell.className = "normal meterdatacell";
+			FailureDataCell.innerHTML = MHW_P1.any_power_fail_count;
+			FailureRow.appendChild(FailureDataCell);
+			table.appendChild(FailureRow);
 			
 			var MeterRow = document.createElement("td");
 			MeterRow.className = "meter-row";
 			MeterRow.setAttribute('colspan', 2);
 			MeterRow.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + MHW_P1.meter_model; 
-			table.appendChild(MeterRow);
-/*		
-			var MeterTextCell = document.createElement("td");
-			MeterTextCell.className = "normal metertextcell";
-			MeterTextCell.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + "Meter:"; 
-			MeterRow.appendChild(MeterTextCell);	
-			table.appendChild(MeterRow);
-
-			var MeterDataCell = document.createElement("td");
-			MeterDataCell.className = "normal meterdatacell";
-			MeterDataCell.innerHTML = MHW_P1.meter_model;
-			MeterRow.appendChild(MeterDataCell);
-			table.appendChild(MeterRow);
-*/		
+			table.appendChild(MeterRow);	
 		}
 		
 		wrapper.appendChild(table);
