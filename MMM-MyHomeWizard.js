@@ -165,13 +165,12 @@ Module.register('MMM-MyHomeWizard', {
 			FailureDataCell.innerHTML = MHW_P1.any_power_fail_count;
 			FailureRow.appendChild(FailureDataCell);
 			table.appendChild(FailureRow);
-			
-			var MeterRow = document.createElement("td");
-			MeterRow.className = "meter-row";
-			MeterRow.setAttribute('colspan', 2);
-			MeterRow.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + MHW_P1.meter_model; 
-			table.appendChild(MeterRow);	
 		}
+
+		var FooterRow = document.createElement("tr");
+		FooterRow.className = "footer";
+		FooterRow.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + MHW_P1.meter_model;
+		table.appendChild(FooterRow);
 		
 		wrapper.appendChild(table);
 		return table;		
