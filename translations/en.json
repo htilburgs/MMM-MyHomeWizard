@@ -2,5 +2,6 @@
   "Current_Pwr": "Current Power:",
   "Total_Pwr": "Total Power:",
   "Total_Gas": "Total Gas:",
-  "Total_Wtr": "Total Water:"
+  "Total_Wtr": "Total Water:",
+  "Active_PwrW": "Current usage:"
 }
