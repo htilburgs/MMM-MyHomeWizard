@@ -41,7 +41,12 @@ Module.register('MMM-MyHomeWizard', {
 			
 		// Set locales
 
-		this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
+		function(urlP1) {
+			if (this.config.P1_IP != null) {
+				this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
+			} else {
+				this.urlP1 = "https://dummyjson.com/c/7e24-36ab-48e0-a96d";
+			}
 		this.urlWM = "http://" + this.config.WM_IP + "/api/v1/data/";
 		
     		this.MHW_P1 = [];	        // <-- Create empty MHW_P1 array
@@ -222,14 +227,14 @@ Module.register('MMM-MyHomeWizard', {
 	// This processes your P1 Meter data
 	processMHW_P1: function(data_P1) { 
 		this.MHW_P1 = data_P1; 
-		console.log(JSON.stringify(this.MHW_P1)); // uncomment to see if you're getting data (in dev console)
+		// console.log(JSON.stringify(this.MHW_P1)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 	
 	// This processes your Water Meter data
 	processMHW_WM: function(data_WM) { 
 		this.MHW_WM = data_WM; 
-		console.log(JSON.stringify(this.MHW_WM)); // uncomment to see if you're getting data (in dev console)
+		// console.log(JSON.stringify(this.MHW_WM)); // uncomment to see if you're getting data (in dev console)
 		this.loaded = true;
 	},
 
