@@ -104,6 +104,8 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
      color: bisque;
 }
 
-.meter-row {
-     text-align: center;
+.footer {
+     font-size: 11px;
+     line-height: 16px;
+     text-align: center !important;
 }
