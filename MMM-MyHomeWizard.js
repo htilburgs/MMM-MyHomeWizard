@@ -120,7 +120,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 		var TotalWaterTextCell = document.createElement("td");
 		TotalWaterTextCell.className = "normal totalwatertextcell";
-		TotalWaterTextCell.innerHTML = '<i class="fa-solid fa-droplet"></i>' + "&nbsp;" + this.translate("Total_Wtr"); 
+		TotalWaterTextCell.innerHTML = '<i class="fa-solid fa-water"></i>' + "&nbsp;" + this.translate("Total_Wtr"); 
 		TotalWaterRow.appendChild(TotalWaterTextCell);	
 		table.appendChild(TotalWaterRow);
 
