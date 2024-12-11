@@ -75,7 +75,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		var CurrentPowerTextCell = document.createElement("td");
 		CurrentPowerTextCell.className = "normal currentpowertextcell";
-		CurrentPowerTextCell.innerHTML = this.translate("Current_Pwr"); 
+		CurrentPowerTextCell.innerHTML = '<i class="fa-solid fa-plug"></i>' + "&nbsp;" + this.translate("Current_Pwr"); 
 		CurrentPowerRow.appendChild(CurrentPowerTextCell);	
 		table.appendChild(CurrentPowerRow);
 
@@ -90,7 +90,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 		var TotalPowerTextCell = document.createElement("td");
 		TotalPowerTextCell.className = "normal totalpowertextcell";
-		TotalPowerTextCell.innerHTML = this.translate("Total_Pwr"); 
+		TotalPowerTextCell.innerHTML = '<i class="fa-solid fa-plug-circle-bolt"></i>' + "&nbsp;" + this.translate("Total_Pwr"); 
 		TotalPowerRow.appendChild(TotalPowerTextCell);	
 		table.appendChild(TotalPowerRow);
 
@@ -105,7 +105,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 		var TotalGasTextCell = document.createElement("td");
 		TotalGasTextCell.className = "normal totalgastextcell";
-		TotalGasTextCell.innerHTML = this.translate("Total_Gas"); 
+		TotalGasTextCell.innerHTML = '<i class="fa-solid fa-fire-flame-simple"></i>' + "&nbsp;" + this.translate("Total_Gas"); 
 		TotalGasRow.appendChild(TotalGasTextCell);	
 		table.appendChild(TotalGasRow);
 
@@ -120,7 +120,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 		var TotalWaterTextCell = document.createElement("td");
 		TotalWaterTextCell.className = "normal totalwatertextcell";
-		TotalWaterTextCell.innerHTML = this.translate("Total_Wtr"); 
+		TotalWaterTextCell.innerHTML = '<i class="fa-solid fa-droplet"></i>' + "&nbsp;" + this.translate("Total_Wtr"); 
 		TotalWaterRow.appendChild(TotalWaterTextCell);	
 		table.appendChild(TotalWaterRow);
 
