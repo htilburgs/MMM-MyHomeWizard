@@ -136,7 +136,20 @@ Module.register('MMM-MyHomeWizard', {
 			spacer.innerHTML = "&nbsp;";
 			table.appendChild(spacer);
 
-			stroomstoringen 
+			var WifiRow = document.createElement("tr");
+			FailureRow.className = "wifi-row";
+		
+			var WifiTextCell = document.createElement("td");
+			WifiTextCell.className = "normal wifitextcell";
+			WifiTextCell.innerHTML = '<i class="fa-solid fa-wifi"></i>' +  "&nbsp;" + "Wifi signaal"; 
+			WifiRow.appendChild(WifiTextCell);	
+			table.appendChild(WifiRow);
+
+			var WifiDataCell = document.createElement("td");
+			WifiDataCell.className = "normal wifidatacell";
+			WifiDataCell.innerHTML = MHW_P1.wifi_strength + " %";
+			WifiRow.appendChild(WifiDataCell);
+			table.appendChild(WifiRow);
 			
 			var FailureRow = document.createElement("tr");
 			FailureRow.className = "failure-row";
