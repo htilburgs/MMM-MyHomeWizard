@@ -130,11 +130,6 @@ Module.register('MMM-MyHomeWizard', {
 		TotalWaterDataCell.innerHTML = Math.round(MHW_WM.total_liter_m3) + " m³";
 		TotalWaterRow.appendChild(TotalWaterDataCell);
 		table.appendChild(TotalWaterRow);
-
-		var FooterRow = document.createElement("tr");
-		FooterRow.className = "footer";
-		FooterRow.innerHTML = HomeWizard P1 / Water Meter;
-		table.appendChild(FooterRow);
 		
 		wrapper.appendChild(table);
 		return table;		
