@@ -76,13 +76,13 @@ Module.register('MMM-MyHomeWizard', {
 
 		var CurrentPowerTextCell = document.createElement("td");
 		CurrentPowerTextCell.className = "normal currentpowertextcell";
-		CurrentPowerTextCell.innerHTML = '<i class="fa-solid fa-plug"></i>' + "&nbsp;" + this.translate("Current_Pwr"); 
+		CurrentPowerTextCell.innerHTML = '<i class="fa-solid fa-bolt-lightning"></i>' + "&nbsp;" + this.translate("Current_Pwr"); 
 		CurrentPowerRow.appendChild(CurrentPowerTextCell);	
 		table.appendChild(CurrentPowerRow);
 
 		var CurrentPowerDataCell = document.createElement("td");
 		CurrentPowerDataCell.className = "normal currentpowerdatacell";
-		CurrentPowerDataCell.innerHTML = Math.round(MHW_P1.active_power_w) + " kWh";
+		CurrentPowerDataCell.innerHTML = Math.round(MHW_P1.active_power_w) + " Watt";
 		CurrentPowerRow.appendChild(CurrentPowerDataCell);
 		table.appendChild(CurrentPowerRow);
 
