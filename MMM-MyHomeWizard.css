@@ -15,22 +15,77 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
      text-align: left;           /* Align header text. (left, center, right) */
 }
 
-.total-power-row {
+
+.current-power-row {
      line-height: 25px;
 }
 
-.TotalPowerTextCell {
+.currentpowertextcell {
      color: white !important;               
      text-align: left !important;       
 }
 
-.TotalPowerDataCell { 
+.currentpowerdatacell { 
      color: white !important;               
      text-align: right !important;   
 }
 
 .fa-plug {
-     color: blue;
+     color: bisque;
+}
+
+.total-power-row {
+     line-height: 25px;
+}
+
+.totalpowertextcell {
+     color: white !important;               
+     text-align: left !important;       
+}
+
+.totalpowerdatacell { 
+     color: white !important;               
+     text-align: right !important;   
+}
+
+.fa-plug-circle-bolt {
+     color: bisque;
+}
+
+.total-gas-row {
+     line-height: 25px;
+}
+
+.totalgastextcell {
+     color: white !important;               
+     text-align: left !important;       
+}
+
+.totalgasdatacell { 
+     color: white !important;               
+     text-align: right !important;   
+}
+
+.fa-fire {
+     color: bisque;
+}
+
+.total-water-row {
+     line-height: 25px;
+}
+
+.totalwatertextcell {
+     color: white !important;               
+     text-align: left !important;       
+}
+
+.totalwaterdatacell { 
+     color: white !important;               
+     text-align: right !important;   
+}
+
+.fa-droplet {
+     color: bisque;
 }
 
 .footer {
