@@ -31,11 +31,13 @@ Add the module to your modules array in your config.js.
   module: 'MMM-MyHomeWizard',
   position: 'top_left',
   header: 'HomeWizard',
+  disabled: false,
   config: {
 		P1_IP: "0.0.0.0",	//IP Address HomeWizard P1 meter
 		WM_IP: "0.0.0.0",	//IP Address HomeWizrd Water meter - Remove when not used
 		extraInfo: false, 	//Show extra information from P1 meter
 		currentPower: true,	//Show the current Power Consumption
+		showFooter: true,
 		updateInterval: 5000,   //Update every 5 seconds
 		maxWidth: "500px"	// Max Module width
           }
