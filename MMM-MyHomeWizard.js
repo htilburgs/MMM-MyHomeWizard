@@ -17,6 +17,7 @@ Module.register('MMM-MyHomeWizard', {
 		maxWidth: "500px",			// Max width wrapper
 		initialLoadDelay: 1000,
 		retryDelay: 2500,
+		extraInfo: false,
 		updateInterval: 5000			// Every 5 seconds
 	},
 		
