@@ -169,7 +169,7 @@ Module.register('MMM-MyHomeWizard', {
 
 		var FooterRow = document.createElement("tr");
 		FooterRow.className = "footer";
-		FooterRow.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + MHW_P1.meter_model;
+		FooterRow.innerHTML = '<hr />'+'<br />'+'<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + MHW_P1.meter_model;
 		table.appendChild(FooterRow);
 		
 		wrapper.appendChild(table);
