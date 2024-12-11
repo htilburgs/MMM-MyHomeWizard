@@ -141,13 +141,13 @@ Module.register('MMM-MyHomeWizard', {
 		
 			var MeterTextCell = document.createElement("td");
 			MeterTextCell.className = "normal metertextcell";
-			MeterTextCell.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + MHW_P1.meter_model; 
+			MeterTextCell.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + "Meter:"; 
 			MeterRow.appendChild(MeterTextCell);	
 			table.appendChild(MeterRow);
 
 			var MeterDataCell = document.createElement("td");
 			MeterDataCell.className = "normal meterdatacell";
-			MeterDataCell.innerHTML = Math.round(MHW_P1.active_power_w) + " Watt";
+			MeterDataCell.innerHTML = MHW_P1.meter_model;
 			MeterRow.appendChild(MeterDataCell);
 			table.appendChild(MeterRow);
 
