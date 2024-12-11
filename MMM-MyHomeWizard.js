@@ -16,11 +16,10 @@ Module.register('MMM-MyHomeWizard', {
 		WM_IP: null,				// IP Address Water Meter
 		maxWidth: "500px",			// Max width wrapper
 		initialLoadDelay: 1000,
-		retryDelay: 2500,
 		extraInfo: false,
 		showFooter: false,
 		currentPower: true,
-		updateInterval: 5000			// Every 5 seconds
+		updateInterval: 10000			// Every 10 seconds
 	},
 		
 	// Define stylesheet
