@@ -72,65 +72,70 @@ Module.register('MMM-MyHomeWizard', {
 		console.log(JSON.stringify(MHW_WM));
 		
 		// creating the tablerows
-		var CurrentPowerRow = document.createElement("tr");
-		CurrentPowerRow.className = "current-power-row";
 
-		var CurrentPowerTextCell = document.createElement("td");
-		CurrentPowerTextCell.className = "normal currentpowertextcell";
-		CurrentPowerTextCell.innerHTML = '<i class="fa-solid fa-bolt-lightning"></i>' + "&nbsp;" + this.translate("Current_Pwr"); 
-		CurrentPowerRow.appendChild(CurrentPowerTextCell);	
-		table.appendChild(CurrentPowerRow);
-
-		var CurrentPowerDataCell = document.createElement("td");
-		CurrentPowerDataCell.className = "normal currentpowerdatacell";
-		CurrentPowerDataCell.innerHTML = Math.round(MHW_P1.active_power_w) + " Watt";
-		CurrentPowerRow.appendChild(CurrentPowerDataCell);
-		table.appendChild(CurrentPowerRow);
-
-		var TotalPowerRow = document.createElement("tr");
-		TotalPowerRow.className = "total-power-row";
-		
-		var TotalPowerTextCell = document.createElement("td");
-		TotalPowerTextCell.className = "normal totalpowertextcell";
-		TotalPowerTextCell.innerHTML = '<i class="fa-solid fa-plug-circle-bolt"></i>' + "&nbsp;" + this.translate("Total_Pwr"); 
-		TotalPowerRow.appendChild(TotalPowerTextCell);	
-		table.appendChild(TotalPowerRow);
-
-		var TotalPowerDataCell = document.createElement("td");
-		TotalPowerDataCell.className = "normal totalpowerdatacell";
-		TotalPowerDataCell.innerHTML = Math.round(MHW_P1.total_power_import_kwh) + " kWh";
-		TotalPowerRow.appendChild(TotalPowerDataCell);
-		table.appendChild(TotalPowerRow);
-
-		var TotalGasRow = document.createElement("tr");
-		TotalGasRow.className = "total-gas-row";
-		
-		var TotalGasTextCell = document.createElement("td");
-		TotalGasTextCell.className = "normal totalgastextcell";
-		TotalGasTextCell.innerHTML = '<i class="fa-solid fa-fire"></i>' + "&nbsp;" + this.translate("Total_Gas"); 
-		TotalGasRow.appendChild(TotalGasTextCell);	
-		table.appendChild(TotalGasRow);
-
-		var TotalGasDataCell = document.createElement("td");
-		TotalGasDataCell.className = "normal totalgasdatacell";
-		TotalGasDataCell.innerHTML = Math.round(MHW_P1.total_gas_m3) + " m³";
-		TotalGasRow.appendChild(TotalGasDataCell);
-		table.appendChild(TotalGasRow);
-
-		var TotalWaterRow = document.createElement("tr");
-		TotalWaterRow.className = "total-water-row";
-		
-		var TotalWaterTextCell = document.createElement("td");
-		TotalWaterTextCell.className = "normal totalwatertextcell";
-		TotalWaterTextCell.innerHTML = '<i class="fa-solid fa-droplet"></i>' + "&nbsp;" + this.translate("Total_Wtr"); 
-		TotalWaterRow.appendChild(TotalWaterTextCell);	
-		table.appendChild(TotalWaterRow);
-
-		var TotalWaterDataCell = document.createElement("td");
-		TotalWaterDataCell.className = "normal totalwaterdatacell";
-		TotalWaterDataCell.innerHTML = Math.round(MHW_WM.total_liter_m3) + " m³";
-		TotalWaterRow.appendChild(TotalWaterDataCell);
-		table.appendChild(TotalWaterRow);
+		if (this.config.P1_IP != null) {
+			var CurrentPowerRow = document.createElement("tr");
+			CurrentPowerRow.className = "current-power-row";
+	
+			var CurrentPowerTextCell = document.createElement("td");
+			CurrentPowerTextCell.className = "normal currentpowertextcell";
+			CurrentPowerTextCell.innerHTML = '<i class="fa-solid fa-bolt-lightning"></i>' + "&nbsp;" + this.translate("Current_Pwr"); 
+			CurrentPowerRow.appendChild(CurrentPowerTextCell);	
+			table.appendChild(CurrentPowerRow);
+	
+			var CurrentPowerDataCell = document.createElement("td");
+			CurrentPowerDataCell.className = "normal currentpowerdatacell";
+			CurrentPowerDataCell.innerHTML = Math.round(MHW_P1.active_power_w) + " Watt";
+			CurrentPowerRow.appendChild(CurrentPowerDataCell);
+			table.appendChild(CurrentPowerRow);
+	
+			var TotalPowerRow = document.createElement("tr");
+			TotalPowerRow.className = "total-power-row";
+			
+			var TotalPowerTextCell = document.createElement("td");
+			TotalPowerTextCell.className = "normal totalpowertextcell";
+			TotalPowerTextCell.innerHTML = '<i class="fa-solid fa-plug-circle-bolt"></i>' + "&nbsp;" + this.translate("Total_Pwr"); 
+			TotalPowerRow.appendChild(TotalPowerTextCell);	
+			table.appendChild(TotalPowerRow);
+	
+			var TotalPowerDataCell = document.createElement("td");
+			TotalPowerDataCell.className = "normal totalpowerdatacell";
+			TotalPowerDataCell.innerHTML = Math.round(MHW_P1.total_power_import_kwh) + " kWh";
+			TotalPowerRow.appendChild(TotalPowerDataCell);
+			table.appendChild(TotalPowerRow);
+	
+			var TotalGasRow = document.createElement("tr");
+			TotalGasRow.className = "total-gas-row";
+			
+			var TotalGasTextCell = document.createElement("td");
+			TotalGasTextCell.className = "normal totalgastextcell";
+			TotalGasTextCell.innerHTML = '<i class="fa-solid fa-fire"></i>' + "&nbsp;" + this.translate("Total_Gas"); 
+			TotalGasRow.appendChild(TotalGasTextCell);	
+			table.appendChild(TotalGasRow);
+	
+			var TotalGasDataCell = document.createElement("td");
+			TotalGasDataCell.className = "normal totalgasdatacell";
+			TotalGasDataCell.innerHTML = Math.round(MHW_P1.total_gas_m3) + " m³";
+			TotalGasRow.appendChild(TotalGasDataCell);
+			table.appendChild(TotalGasRow);
+		}
+			
+		if (this.config.WM_IP != null) {
+			var TotalWaterRow = document.createElement("tr");
+			TotalWaterRow.className = "total-water-row";
+			
+			var TotalWaterTextCell = document.createElement("td");
+			TotalWaterTextCell.className = "normal totalwatertextcell";
+			TotalWaterTextCell.innerHTML = '<i class="fa-solid fa-droplet"></i>' + "&nbsp;" + this.translate("Total_Wtr"); 
+			TotalWaterRow.appendChild(TotalWaterTextCell);	
+			table.appendChild(TotalWaterRow);
+	
+			var TotalWaterDataCell = document.createElement("td");
+			TotalWaterDataCell.className = "normal totalwaterdatacell";
+			TotalWaterDataCell.innerHTML = Math.round(MHW_WM.total_liter_m3) + " m³";
+			TotalWaterRow.appendChild(TotalWaterDataCell);
+			table.appendChild(TotalWaterRow);
+		}
 
 		if (this.config.extraInfo != false) {
 			var spacer = document.createElement("span");
