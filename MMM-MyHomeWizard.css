@@ -40,7 +40,7 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 
 .totalpowertextcell {
      color: white !important;               
-     text-align: left !important;       
+     text-align: right !important;       
 }
 
 .totalpowerdatacell { 
@@ -58,7 +58,7 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 
 .totalgastextcell {
      color: white !important;               
-     text-align: left !important;       
+     text-align: right !important;       
 }
 
 .totalgasdatacell { 
@@ -76,7 +76,7 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 
 .totalwatertextcell {
      color: white !important;               
-     text-align: left !important;       
+     text-align: right !important;       
 }
 
 .totalwaterdatacell { 
