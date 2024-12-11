@@ -17,8 +17,6 @@ module.exports = NodeHelper.create({
           console.log("Starting node_helper for: " + this.name);
   },
 
-// P1 Meter section
-//
 getMHW_P1: function(urlP1) {
         // Make a GET request using the Fetch API for the P1 Meter
         fetch(urlP1)
@@ -40,17 +38,6 @@ getMHW_P1: function(urlP1) {
           });
   },
 
-  socketNotificationReceived: function(notification, payload) {
-            if (notification === 'GET_MHWP1') {
-            this.getMHW_P1(payload);
-            }
-            else if (notification === 'GET_MHWWM') {
-            this.getMHW_WM(payload);
-            }
-  },
-  
-  // Water Meter Section
-  //
   getMHW_WM: function(urlWM) {
         // Make a GET request using the Fetch API for the Water Meter
         fetch(urlWM)
@@ -71,12 +58,14 @@ getMHW_P1: function(urlP1) {
             console.error('Error:', error);
           });
   },
-
-/*
-  socketNotificationReceived: function(notification, payload_WM) {
-            if (notification === 'GET_MHWWM') {
-            this.getMHW_WM(payload_WM);
+  
+  socketNotificationReceived: function(notification, payload) {
+            if (notification === 'GET_MHWP1') {
+            this.getMHW_P1(payload);
+            }
+            else if (notification === 'GET_MHWWM') {
+            this.getMHW_WM(payload);
             }
   },
-*/  
+  
 });
