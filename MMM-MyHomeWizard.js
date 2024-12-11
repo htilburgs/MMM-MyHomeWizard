@@ -19,6 +19,7 @@ Module.register('MMM-MyHomeWizard', {
 		retryDelay: 2500,
 		extraInfo: false,
 		showFooter: false,
+		currentPower: true,
 		updateInterval: 5000			// Every 5 seconds
 	},
 		
@@ -74,21 +75,24 @@ Module.register('MMM-MyHomeWizard', {
 		// creating the tablerows
 
 		if (this.config.P1_IP != null) {
-			var CurrentPowerRow = document.createElement("tr");
-			CurrentPowerRow.className = "current-power-row";
-	
-			var CurrentPowerTextCell = document.createElement("td");
-			CurrentPowerTextCell.className = "normal currentpowertextcell";
-			CurrentPowerTextCell.innerHTML = '<i class="fa-solid fa-bolt-lightning"></i>' + "&nbsp;" + this.translate("Current_Pwr"); 
-			CurrentPowerRow.appendChild(CurrentPowerTextCell);	
-			table.appendChild(CurrentPowerRow);
-	
-			var CurrentPowerDataCell = document.createElement("td");
-			CurrentPowerDataCell.className = "normal currentpowerdatacell";
-			CurrentPowerDataCell.innerHTML = Math.round(MHW_P1.active_power_w) + " Watt";
-			CurrentPowerRow.appendChild(CurrentPowerDataCell);
-			table.appendChild(CurrentPowerRow);
-	
+
+			if (this.config.currentPower != false) {
+				var CurrentPowerRow = document.createElement("tr");
+				CurrentPowerRow.className = "current-power-row";
+		
+				var CurrentPowerTextCell = document.createElement("td");
+				CurrentPowerTextCell.className = "normal currentpowertextcell";
+				CurrentPowerTextCell.innerHTML = '<i class="fa-solid fa-bolt-lightning"></i>' + "&nbsp;" + this.translate("Current_Pwr"); 
+				CurrentPowerRow.appendChild(CurrentPowerTextCell);	
+				table.appendChild(CurrentPowerRow);
+		
+				var CurrentPowerDataCell = document.createElement("td");
+				CurrentPowerDataCell.className = "normal currentpowerdatacell";
+				CurrentPowerDataCell.innerHTML = Math.round(MHW_P1.active_power_w) + " Watt";
+				CurrentPowerRow.appendChild(CurrentPowerDataCell);
+				table.appendChild(CurrentPowerRow);
+			}
+			
 			var TotalPowerRow = document.createElement("tr");
 			TotalPowerRow.className = "total-power-row";
 			
