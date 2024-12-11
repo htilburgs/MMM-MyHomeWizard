@@ -1,4 +1,4 @@
-# MMM-MyHomeWizard (STILL DEVELOPMENT!!)
+# MMM-MyHomeWizard
 This a module for [Magic Mirror²](https://github.com/MichMich/MagicMirror) smart mirror project.</br>
 This modules is for use with the HomeWizard P1 meter and WaterMeter. 
 
