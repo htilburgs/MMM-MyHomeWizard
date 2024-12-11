@@ -44,8 +44,7 @@ getMHW_P1: function(urlP1) {
             if (notification === 'GET_MHWP1') {
             this.getMHW_P1(payload);
             }
-            else if socketNotificationReceived: function(notification, payload) {
-            if (notification === 'GET_MHWWM') {
+            else if (notification === 'GET_MHWWM') {
             this.getMHW_WM(payload);
             }
   },
