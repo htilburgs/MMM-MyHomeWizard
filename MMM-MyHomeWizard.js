@@ -40,13 +40,7 @@ Module.register('MMM-MyHomeWizard', {
 		requiresVersion: "2.9.0",	
 			
 		// Set locales
-
-		function(urlP1) {
-			if (this.config.P1_IP != null) {
-				this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
-			} else {
-				this.urlP1 = "https://dummyjson.com/c/7e24-36ab-48e0-a96d";
-			}
+		this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
 		this.urlWM = "http://" + this.config.WM_IP + "/api/v1/data/";
 		
     		this.MHW_P1 = [];	        // <-- Create empty MHW_P1 array
