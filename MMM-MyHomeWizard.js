@@ -40,9 +40,18 @@ Module.register('MMM-MyHomeWizard', {
 		requiresVersion: "2.9.0",	
 			
 		// Set locales
-			
-		this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
-		this.urlWM = "http://" + this.config.WM_IP + "/api/v1/data/";
+
+		if (this.config.P1_IP != null {	
+			this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
+		} else {
+			this.urlP1 = "https://dummyjson.com/c/7e24-36ab-48e0-a96d";
+		}
+
+		if (this.config.WM_IP != null {	
+			this.urlWM = "http://" + this.config.WM_IP + "/api/v1/data/";
+		} else {
+			this.urlWM = "https://dummyjson.com/c/704a-9a96-4845-bc72";
+		}
 		
     		this.MHW_P1 = [];	        // <-- Create empty MHW_P1 array
 		this.MHW_WM = [];		// <-- Create empty MHW_WM array
@@ -125,7 +134,7 @@ Module.register('MMM-MyHomeWizard', {
 			table.appendChild(TotalGasRow);
 		}
 			
-		if (this.config.WM_IP != "0.0.0.0") {
+		if (this.config.WM_IP != null) {
 			var TotalWaterRow = document.createElement("tr");
 			TotalWaterRow.className = "total-water-row";
 			
