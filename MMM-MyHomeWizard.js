@@ -18,6 +18,7 @@ Module.register('MMM-MyHomeWizard', {
 		initialLoadDelay: 1000,
 		retryDelay: 2500,
 		extraInfo: false,
+		showFooter: false,
 		updateInterval: 5000			// Every 5 seconds
 	},
 		
@@ -167,11 +168,13 @@ Module.register('MMM-MyHomeWizard', {
 			table.appendChild(FailureRow);
 		}
 
-		var FooterRow = document.createElement("td");
-		FooterRow.setAttribute('colspan', 2);
-		FooterRow.className = "footer";
-		FooterRow.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + MHW_P1.meter_model;
-		table.appendChild(FooterRow);
+		if (this.config.showFooter != false) {
+			var FooterRow = document.createElement("td");
+			FooterRow.setAttribute('colspan', 2);
+			FooterRow.className = "footer";
+			FooterRow.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + MHW_P1.meter_model;
+			table.appendChild(FooterRow);
+		}
 		
 		wrapper.appendChild(table);
 		return table;		
