@@ -106,7 +106,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 		var TotalGasTextCell = document.createElement("td");
 		TotalGasTextCell.className = "normal totalgastextcell";
-		TotalGasTextCell.innerHTML = '<i class="fa-solid fa-fire-flame-simple"></i>' + "&nbsp;" + this.translate("Total_Gas"); 
+		TotalGasTextCell.innerHTML = '<i class="fa-solid fa-fire"></i>' + "&nbsp;" + this.translate("Total_Gas"); 
 		TotalGasRow.appendChild(TotalGasTextCell);	
 		table.appendChild(TotalGasRow);
 
@@ -121,7 +121,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 		var TotalWaterTextCell = document.createElement("td");
 		TotalWaterTextCell.className = "normal totalwatertextcell";
-		TotalWaterTextCell.innerHTML = '<i class="fa-solid fa-water"></i>' + "&nbsp;" + this.translate("Total_Wtr"); 
+		TotalWaterTextCell.innerHTML = '<i class="fa-solid fa-droplet"></i>' + "&nbsp;" + this.translate("Total_Wtr"); 
 		TotalWaterRow.appendChild(TotalWaterTextCell);	
 		table.appendChild(TotalWaterRow);
 
