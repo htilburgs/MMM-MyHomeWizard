@@ -137,7 +137,7 @@ Module.register('MMM-MyHomeWizard', {
 			table.appendChild(spacer);
 
 			var MeterRow = document.createElement("tr");
-			MeterRow.className = "meterrow";
+			MeterRow.className = "meter-row";
 		
 			var MeterTextCell = document.createElement("td");
 			MeterTextCell.className = "normal metertextcell";
@@ -150,6 +150,22 @@ Module.register('MMM-MyHomeWizard', {
 			MeterDataCell.innerHTML = MHW_P1.meter_model;
 			MeterRow.appendChild(MeterDataCell);
 			table.appendChild(MeterRow);
+
+			var WifiRow = document.createElement("tr");
+			WifiRow.className = "wifi-row";
+		
+			var WifiTextCell = document.createElement("td");
+			WifiTextCell.className = "normal metertextcell";
+			WifiTextCell.innerHTML = '<i class="fa-solid fa-wifi"></i>' +  "&nbsp;" + "Wifi Signaal:"; 
+			WifiRow.appendChild(WifiTextCell);	
+			table.appendChild(WifiRow);
+
+			var WifiDataCell = document.createElement("td");
+			WifiDataCell.className = "normal meterdatacell";
+			WifiDataCell.innerHTML = MHW_P1.wifi_strength + " %";
+			WifiRow.appendChild(WifiDataCell);
+			table.appendChild(WifiRow);
+
 
 		}
 		
