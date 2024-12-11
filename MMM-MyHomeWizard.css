@@ -105,5 +105,5 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 }
 
 .meter-row {
-     allign: center;
+     text-align: center;
 }
