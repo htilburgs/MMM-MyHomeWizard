@@ -147,7 +147,7 @@ Module.register('MMM-MyHomeWizard', {
 
 			var HuidigWattDataCell = document.createElement("td");
 			HuidigWattDataCell.className = "normal huidigwattdatacell";
-			HuidigWattDataCell.innerHTML = Math.round(MHW_WM.active_power_w) + " Watt";
+			HuidigWattDataCell.innerHTML = Math.round(MHW_P1.active_power_w) + " Watt";
 			HuidigWattRow.appendChild(HuidigWattDataCell);
 			table.appendChild(HuidigWattRow);
 
