@@ -137,7 +137,7 @@ Module.register('MMM-MyHomeWizard', {
 			table.appendChild(spacer);
 
 			var MeterRow = document.createElement("tr");
-			HuidigWattRow.className = "meterrow";
+			MeterRow.className = "meterrow";
 		
 			var MeterTextCell = document.createElement("td");
 			MeterTextCell.className = "normal metertextcell";
