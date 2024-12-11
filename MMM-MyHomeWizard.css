@@ -21,11 +21,15 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 }
 
 .currentpowertextcell {
+     display: table-cell;
+     width: 50%;
      color: white !important;               
      text-align: right !important;       
 }
 
-.currentpowerdatacell { 
+.currentpowerdatacell {
+     display: table-cell;
+     width: 50%;
      color: white !important;               
      text-align: right !important;   
 }
@@ -39,11 +43,15 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 }
 
 .totalpowertextcell {
+     display: table-cell;
+     width: 50%;
      color: white !important;               
      text-align: right !important;       
 }
 
 .totalpowerdatacell { 
+     display: table-cell;
+     width: 50%;
      color: white !important;               
      text-align: right !important;   
 }
@@ -57,11 +65,15 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 }
 
 .totalgastextcell {
+     display: table-cell;
+     width: 50%;     
      color: white !important;               
      text-align: right !important;       
 }
 
-.totalgasdatacell { 
+.totalgasdatacell {
+     display: table-cell;
+     width: 50%;
      color: white !important;               
      text-align: right !important;   
 }
@@ -75,11 +87,15 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 }
 
 .totalwatertextcell {
+     display: table-cell;
+     width: 50%;
      color: white !important;               
      text-align: right !important;       
 }
 
-.totalwaterdatacell { 
+.totalwaterdatacell {
+     display: table-cell;
+     width: 50%;
      color: white !important;               
      text-align: right !important;   
 }
