@@ -108,7 +108,31 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
      text-align: right !important;   
 }
 
+}
 .fa-droplet {
+     color: bisque;
+}
+
+.current-water-row {
+     line-height: 25px;
+}
+
+.currentwatertextcell {
+     display: table-cell;
+     width: 50%;
+     font-size: 20px;
+     color: darkgrey !important;               
+     text-align: right !important;       
+}
+
+.currentwaterdatacell {
+     display: table-cell;
+     width: 50%;
+     font-size: 20px;
+     color: white !important;               
+     text-align: right !important;   
+}
+.fa-water {
      color: bisque;
 }
 
