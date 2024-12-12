@@ -153,7 +153,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 				var CurrentWaterDataCell = document.createElement("td");
 				CurrentWaterDataCell.className = "normal currentwaterdatacell";
-				CurrentWaterDataCell.innerHTML = Math.round(MHW_P1.active_liter_lpm) + " Lpm";
+				CurrentWaterDataCell.innerHTML = Math.round(MHW_WM.active_liter_lpm) + " Lpm";
 				CurrentWaterRow.appendChild(CurrentWaterDataCell);
 				table.appendChild(CurrentWaterRow);
 			}
