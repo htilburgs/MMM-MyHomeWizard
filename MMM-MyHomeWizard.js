@@ -147,13 +147,13 @@ Module.register('MMM-MyHomeWizard', {
 		
 				var CurrentWaterTextCell = document.createElement("td");
 				CurrentWaterTextCell.className = "normal currentwatertextcell";
-				CurrentWaterTextCell.innerHTML = '<i class="fa-solid fa-bolt-lightning"></i>' + "&nbsp;" + this.translate("Current_Pwr"); 
+				CurrentWaterTextCell.innerHTML = '<i class="fa-solid fa-water"></i>' + "&nbsp;" + this.translate("Current_Wtr"); 
 				CurrentWaterRow.appendChild(CurrentWaterTextCell);	
 				table.appendChild(CurrentWaterRow);
 		
 				var CurrentWaterDataCell = document.createElement("td");
 				CurrentWaterDataCell.className = "normal currentwaterdatacell";
-				CurrentWaterDataCell.innerHTML = Math.round(MHW_P1.active_power_w) + " Watt";
+				CurrentWaterDataCell.innerHTML = Math.round(MHW_P1.active_liter_lpm) + " Lpm";
 				CurrentWaterRow.appendChild(CurrentWaterDataCell);
 				table.appendChild(CurrentWaterRow);
 			}
