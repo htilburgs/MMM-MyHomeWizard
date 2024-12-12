@@ -17,8 +17,8 @@ Module.register('MMM-MyHomeWizard', {
 		maxWidth: "500px",			// Max width wrapper
 		extraInfo: false,			// Show extra information
 		showFooter: false,			// Show footer (name Power Meter)
-		currentPower: true,			// Show current power usage
-		currentWater: true,			// Show current water usage
+		currentPower: false,			// Show current power usage
+		currentWater: false,			// Show current water usage
 		initialLoadDelay: 1000,
 		updateInterval: 10000			// Every 10 seconds
 	},
@@ -173,9 +173,9 @@ Module.register('MMM-MyHomeWizard', {
 			
 		if (this.config.WM_IP != null) {
 			
-			var spacer = document.createElement("span");
-			spacer.innerHTML = "&nbsp;";
-			table.appendChild(spacer);
+		//	var spacer = document.createElement("span");
+		//	spacer.innerHTML = "&nbsp;";
+		//	table.appendChild(spacer);
 
 			if (this.config.currentWater != false) {
 				var CurrentWaterRow = document.createElement("tr");
