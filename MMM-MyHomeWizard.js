@@ -184,7 +184,7 @@ Module.register('MMM-MyHomeWizard', {
 		
 			var WifiTextCell = document.createElement("td");
 			WifiTextCell.className = "normal wifitextcell";
-			WifiTextCell.innerHTML = '<i class="fa-solid fa-wifi"></i>' +  "&nbsp;" + "Wifi signaal"; 
+			WifiTextCell.innerHTML = '<i class="fa-solid fa-wifi"></i>' +  "&nbsp;" + "Wifi signaal P1 Meter"; 
 			WifiRow.appendChild(WifiTextCell);	
 			table.appendChild(WifiRow);
 
