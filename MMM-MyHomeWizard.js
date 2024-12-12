@@ -144,7 +144,7 @@ Module.register('MMM-MyHomeWizard', {
 			
 				var WifiTextCellP1 = document.createElement("td");
 				WifiTextCellP1.className = "normal wifitextcellP1";
-				WifiTextCellP1.innerHTML = '<i class="fa-solid fa-wifi"></i>' +  "&nbsp;" + "Wifi signaal P1 Meter"; 
+				WifiTextCellP1.innerHTML = '<i class="fa-solid fa-wifi"></i>' +  "&nbsp;" + this.translate("Wifi_P1"); 
 				WifiRowP1.appendChild(WifiTextCellP1);	
 				table.appendChild(WifiRowP1);
 	
@@ -219,7 +219,7 @@ Module.register('MMM-MyHomeWizard', {
 			
 				var WifiTextCellWM = document.createElement("td");
 				WifiTextCellWM.className = "normal wifitextcellWM";
-				WifiTextCellWM.innerHTML = '<i class="fa-solid fa-wifi"></i>' +  "&nbsp;" + "Wifi signaal P1 Meter"; 
+				WifiTextCellWM.innerHTML = '<i class="fa-solid fa-wifi"></i>' +  "&nbsp;" + this.translate("Wifi_WM"); 
 				WifiRowWM.appendChild(WifiTextCellWM);	
 				table.appendChild(WifiRowWM);
 	
