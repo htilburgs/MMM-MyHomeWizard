@@ -23,6 +23,7 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 .currentpowertextcell {
      display: table-cell;
      width: 50%;
+     font-size: 20px;
      color: white !important;               
      text-align: right !important;       
 }
@@ -30,6 +31,7 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 .currentpowerdatacell {
      display: table-cell;
      width: 50%;
+     font-size: 20px;
      color: white !important;               
      text-align: right !important;   
 }
@@ -45,6 +47,7 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 .totalpowertextcell {
      display: table-cell;
      width: 50%;
+     font-size: 20px;
      color: white !important;               
      text-align: right !important;       
 }
@@ -52,6 +55,7 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 .totalpowerdatacell { 
      display: table-cell;
      width: 50%;
+     font-size: 20px;
      color: white !important;               
      text-align: right !important;   
 }
@@ -67,6 +71,7 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 .totalgastextcell {
      display: table-cell;
      width: 50%;     
+     font-size: 20px;
      color: white !important;               
      text-align: right !important;       
 }
@@ -74,6 +79,7 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 .totalgasdatacell {
      display: table-cell;
      width: 50%;
+     font-size: 20px;
      color: white !important;               
      text-align: right !important;   
 }
@@ -89,6 +95,7 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 .totalwatertextcell {
      display: table-cell;
      width: 50%;
+     font-size: 20px;
      color: white !important;               
      text-align: right !important;       
 }
@@ -96,11 +103,52 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 .totalwaterdatacell {
      display: table-cell;
      width: 50%;
+     font-size: 20px;
      color: white !important;               
      text-align: right !important;   
 }
 
 .fa-droplet {
+     color: bisque;
+}
+
+.wifitextcell {
+     display: table-cell;
+     width: 50%;
+     font-size: 20px;
+     color: white !important;               
+     text-align: right !important;       
+}
+
+.wifidatacell {
+     display: table-cell;
+     width: 50%;
+     font-size: 20px;
+     color: white !important;               
+     text-align: right !important;   
+}
+
+.fa-wifi {
+     color: bisque;
+}
+
+.failuretextcell {
+     display: table-cell;
+     width: 50%;
+     font-size: 20px;
+     color: white !important;               
+     text-align: right !important;       
+}
+
+.failuredatacell {
+     display: table-cell;
+     width: 50%;
+     font-size: 20px;
+     color: white !important;               
+     text-align: right !important;   
+}
+
+.fa-plug-circle-exclamation {
      color: bisque;
 }
 
