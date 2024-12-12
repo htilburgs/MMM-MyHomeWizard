@@ -37,7 +37,7 @@ Module.register('MMM-MyHomeWizard', {
 	
 	start: function () {
 		Log.info("Starting module: " + this.name);
-		requiresVersion: "2.9.0",	
+		requiresVersion: "2.9.0";	
 			
 		// Set locales
 
