@@ -43,7 +43,9 @@ Add the module to your modules array in your config.js.
           }
 },
 ```
-![image](https://github.com/user-attachments/assets/20ad92fc-1ff0-40fe-9d3c-dc6527a62572)
+## Images
+![image](https://github.com/user-attachments/assets/089be5f5-7d7c-4827-8014-6ae294883b1f)
+
 
 ## Module configuration
 Here is the documentation of options for the modules configuration
