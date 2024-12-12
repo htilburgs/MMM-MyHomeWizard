@@ -140,7 +140,7 @@ Module.register('MMM-MyHomeWizard', {
 				table.appendChild(spacer);
 	
 				var WifiRowP1 = document.createElement("tr");
-				WifiRow.className = "wifi-row-p1";
+				WifiRowP1.className = "wifi-row-p1";
 			
 				var WifiTextCellP1 = document.createElement("td");
 				WifiTextCellP1.className = "normal wifitextcellP1";
@@ -215,7 +215,7 @@ Module.register('MMM-MyHomeWizard', {
 				table.appendChild(spacer);
 	
 				var WifiRowWM = document.createElement("tr");
-				WifiRow.className = "wifi-row-wm";
+				WifiRowWM.className = "wifi-row-wm";
 			
 				var WifiTextCellWM = document.createElement("td");
 				WifiTextCellWM.className = "normal wifitextcellWM";
