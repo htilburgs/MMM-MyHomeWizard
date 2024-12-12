@@ -228,8 +228,7 @@ Module.register('MMM-MyHomeWizard', {
 				WifiDataCellWM.innerHTML = MHW_WM.wifi_strength + " %";
 				WifiRowWM.appendChild(WifiDataCellWM);
 				table.appendChild(WifiRowWM);
-	
-		}
+			}
 
 		if (this.config.showFooter != false) {
 			var FooterRow = document.createElement("td");
@@ -237,8 +236,8 @@ Module.register('MMM-MyHomeWizard', {
 			FooterRow.className = "footer";
 			FooterRow.innerHTML = '<i class="fa-solid fa-charging-station"></i>' +  "&nbsp;" + MHW_P1.meter_model;
 			table.appendChild(FooterRow);
+			}
 		}
-		
 		wrapper.appendChild(table);
 		return table;		
 
