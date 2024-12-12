@@ -44,7 +44,7 @@ Module.register('MMM-MyHomeWizard', {
 		if (this.config.P1_IP != null) {
 			this.urlP1 = "http://" + this.config.P1_IP + "/api/v1/data/";
 		} else {
-			this.urlP1 = "https://dummyjson.com/c/7e24-36ab-48e0-a96d";
+			this.urlP1 = "https://dummyjson.com/c/f8b2-91c3-400b-8709";
 		}
 
 		if (this.config.WM_IP != null) {
