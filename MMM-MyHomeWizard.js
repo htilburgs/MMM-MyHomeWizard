@@ -165,13 +165,13 @@ Module.register('MMM-MyHomeWizard', {
 			FailureRow.className = "failure-row";
 		
 			var FailureTextCell = document.createElement("td");
-			FailureTextCell.className = "normal metertextcell";
+			FailureTextCell.className = "normal failuretextcell";
 			FailureTextCell.innerHTML = '<i class="fa-solid fa-plug-circle-exclamation"></i>' +  "&nbsp;" + "Stroomstoringen"; 
 			FailureRow.appendChild(FailureTextCell);	
 			table.appendChild(FailureRow);
 
 			var FailureDataCell = document.createElement("td");
-			FailureDataCell.className = "normal meterdatacell";
+			FailureDataCell.className = "normal failuredatacell";
 			FailureDataCell.innerHTML = MHW_P1.any_power_fail_count;
 			FailureRow.appendChild(FailureDataCell);
 			table.appendChild(FailureRow);
