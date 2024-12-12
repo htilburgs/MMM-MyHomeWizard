@@ -133,6 +133,42 @@ Module.register('MMM-MyHomeWizard', {
 			TotalGasDataCell.innerHTML = Math.round(MHW_P1.total_gas_m3) + " m³";
 			TotalGasRow.appendChild(TotalGasDataCell);
 			table.appendChild(TotalGasRow);
+
+			if (this.config.extraInfo != false) {
+				var spacer = document.createElement("span");
+				spacer.innerHTML = "&nbsp;";
+				table.appendChild(spacer);
+	
+				var WifiRowP1 = document.createElement("tr");
+				WifiRow.className = "wifi-row-p1";
+			
+				var WifiTextCellP1 = document.createElement("td");
+				WifiTextCellP1.className = "normal wifitextcellP1";
+				WifiTextCellP1.innerHTML = '<i class="fa-solid fa-wifi"></i>' +  "&nbsp;" + "Wifi signaal P1 Meter"; 
+				WifiRowP1.appendChild(WifiTextCellP1);	
+				table.appendChild(WifiRowP1);
+	
+				var WifiDataCellP1 = document.createElement("td");
+				WifiDataCellP1.className = "normal wifidatacellP1";
+				WifiDataCellP1.innerHTML = MHW_P1.wifi_strength + " %";
+				WifiRowP1.appendChild(WifiDataCellP1);
+				table.appendChild(WifiRowP1);
+				
+				var FailureRow = document.createElement("tr");
+				FailureRow.className = "failure-row";
+			
+				var FailureTextCell = document.createElement("td");
+				FailureTextCell.className = "normal failuretextcell";
+				FailureTextCell.innerHTML = '<i class="fa-solid fa-plug-circle-exclamation"></i>' +  "&nbsp;" + "Stroomstoringen"; 
+				FailureRow.appendChild(FailureTextCell);	
+				table.appendChild(FailureRow);
+	
+				var FailureDataCell = document.createElement("td");
+				FailureDataCell.className = "normal failuredatacell";
+				FailureDataCell.innerHTML = MHW_P1.any_power_fail_count;
+				FailureRow.appendChild(FailureDataCell);
+				table.appendChild(FailureRow);
+			}
 		}
 			
 		if (this.config.WM_IP != null) {
@@ -172,42 +208,27 @@ Module.register('MMM-MyHomeWizard', {
 			TotalWaterDataCell.innerHTML = Math.round(MHW_WM.total_liter_m3) + " m³";
 			TotalWaterRow.appendChild(TotalWaterDataCell);
 			table.appendChild(TotalWaterRow);
-		}
 
-		if (this.config.extraInfo != false) {
-			var spacer = document.createElement("span");
-			spacer.innerHTML = "&nbsp;";
-			table.appendChild(spacer);
-
-			var WifiRow = document.createElement("tr");
-			WifiRow.className = "wifi-row";
-		
-			var WifiTextCell = document.createElement("td");
-			WifiTextCell.className = "normal wifitextcell";
-			WifiTextCell.innerHTML = '<i class="fa-solid fa-wifi"></i>' +  "&nbsp;" + "Wifi signaal P1 Meter"; 
-			WifiRow.appendChild(WifiTextCell);	
-			table.appendChild(WifiRow);
-
-			var WifiDataCell = document.createElement("td");
-			WifiDataCell.className = "normal wifidatacell";
-			WifiDataCell.innerHTML = MHW_P1.wifi_strength + " %";
-			WifiRow.appendChild(WifiDataCell);
-			table.appendChild(WifiRow);
+			if (this.config.extraInfo != false) {
+				var spacer = document.createElement("span");
+				spacer.innerHTML = "&nbsp;";
+				table.appendChild(spacer);
+	
+				var WifiRowWM = document.createElement("tr");
+				WifiRow.className = "wifi-row-wm";
 			
-			var FailureRow = document.createElement("tr");
-			FailureRow.className = "failure-row";
-		
-			var FailureTextCell = document.createElement("td");
-			FailureTextCell.className = "normal failuretextcell";
-			FailureTextCell.innerHTML = '<i class="fa-solid fa-plug-circle-exclamation"></i>' +  "&nbsp;" + "Stroomstoringen"; 
-			FailureRow.appendChild(FailureTextCell);	
-			table.appendChild(FailureRow);
-
-			var FailureDataCell = document.createElement("td");
-			FailureDataCell.className = "normal failuredatacell";
-			FailureDataCell.innerHTML = MHW_P1.any_power_fail_count;
-			FailureRow.appendChild(FailureDataCell);
-			table.appendChild(FailureRow);
+				var WifiTextCellWM = document.createElement("td");
+				WifiTextCellWM.className = "normal wifitextcellWM";
+				WifiTextCellWM.innerHTML = '<i class="fa-solid fa-wifi"></i>' +  "&nbsp;" + "Wifi signaal P1 Meter"; 
+				WifiRowWM.appendChild(WifiTextCellWM);	
+				table.appendChild(WifiRowWM);
+	
+				var WifiDataCellWM = document.createElement("td");
+				WifiDataCellWM.className = "normal wifidatacellWM";
+				WifiDataCellWM.innerHTML = MHW_WM.wifi_strength + " %";
+				WifiRowWM.appendChild(WifiDataCellWM);
+				table.appendChild(WifiRowWM);
+	
 		}
 
 		if (this.config.showFooter != false) {
