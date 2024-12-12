@@ -159,7 +159,7 @@ Module.register('MMM-MyHomeWizard', {
 			
 				var FailureTextCell = document.createElement("td");
 				FailureTextCell.className = "normal failuretextcell";
-				FailureTextCell.innerHTML = '<i class="fa-solid fa-plug-circle-exclamation"></i>' +  "&nbsp;" + "Stroomstoringen"; 
+				FailureTextCell.innerHTML = '<i class="fa-solid fa-plug-circle-exclamation"></i>' +  "&nbsp;" + this.translate("Fail_Pwr"); 
 				FailureRow.appendChild(FailureTextCell);	
 				table.appendChild(FailureRow);
 	
