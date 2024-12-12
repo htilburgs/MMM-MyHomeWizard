@@ -5,5 +5,6 @@
   "Total_Wtr": "Total Water:",
   "Current_Wtr": "Current Water:",
   "Wifi_P1": "Wifi P1 Meter:",
-  "Wifi_WM": "Wifi Water Meter:"
+  "Wifi_WM": "Wifi Water Meter:",
+  "Fail_Pwr": "Power Failures:"
 }
