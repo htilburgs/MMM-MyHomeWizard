@@ -29,7 +29,7 @@ getMHW_P1: function(urlP1) {
 
           .then(result_P1 => {
             // Process the retrieved user data
-            console.log(result_P1); // Remove trailing slashes to display data in Console for testing
+            // console.log(result_P1);           // --> Remove trailing slashes to display data in Console for testing
             this.sendSocketNotification('MHWP1_RESULT', result_P1);
           })
 
@@ -50,7 +50,7 @@ getMHW_P1: function(urlP1) {
 
           .then(result_WM => {
             // Process the retrieved user data
-            console.log(result_WM); // Remove trailing slashes to display data in Console for testing
+            // console.log(result_WM);         // --> Remove trailing slashes to display data in Console for testing
             this.sendSocketNotification('MHWWM_RESULT', result_WM);
           })
 
