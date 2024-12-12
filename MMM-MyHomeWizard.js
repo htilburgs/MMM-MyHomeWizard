@@ -18,6 +18,7 @@ Module.register('MMM-MyHomeWizard', {
 		extraInfo: false,			// Show extra information
 		showFooter: false,			// Show footer (name Power Meter)
 		currentPower: true,			// Show current power usage
+		currentWater: true,			// Show current water usage
 		initialLoadDelay: 1000,
 		updateInterval: 10000			// Every 10 seconds
 	},
@@ -135,15 +136,37 @@ Module.register('MMM-MyHomeWizard', {
 		}
 			
 		if (this.config.WM_IP != null) {
+			
+			var spacer = document.createElement("span");
+			spacer.innerHTML = "&nbsp;";
+			table.appendChild(spacer);
+
+			if (this.config.currentWater != false) {
+				var CurrentWaterRow = document.createElement("tr");
+				CurrentPowerRow.className = "current-water-row";
+		
+				var CurrentWaterTextCell = document.createElement("td");
+				CurrentWaterTextCell.className = "normal currentwatertextcell";
+				CurrentWaterTextCell.innerHTML = '<i class="fa-solid fa-bolt-lightning"></i>' + "&nbsp;" + this.translate("Current_Pwr"); 
+				CurrentWaterRow.appendChild(CurrentWaterTextCell);	
+				table.appendChild(CurrentWaterRow);
+		
+				var CurrentWaterDataCell = document.createElement("td");
+				CurrentWaterDataCell.className = "normal currentwaterdatacell";
+				CurrentWaterDataCell.innerHTML = Math.round(MHW_P1.active_power_w) + " Watt";
+				CurrentWaterRow.appendChild(CurrentWaterDataCell);
+				table.appendChild(CurrentWaterRow);
+			}
+				
 			var TotalWaterRow = document.createElement("tr");
 			TotalWaterRow.className = "total-water-row";
-			
+				
 			var TotalWaterTextCell = document.createElement("td");
 			TotalWaterTextCell.className = "normal totalwatertextcell";
 			TotalWaterTextCell.innerHTML = '<i class="fa-solid fa-droplet"></i>' + "&nbsp;" + this.translate("Total_Wtr"); 
 			TotalWaterRow.appendChild(TotalWaterTextCell);	
 			table.appendChild(TotalWaterRow);
-	
+			
 			var TotalWaterDataCell = document.createElement("td");
 			TotalWaterDataCell.className = "normal totalwaterdatacell";
 			TotalWaterDataCell.innerHTML = Math.round(MHW_WM.total_liter_m3) + " m³";
