@@ -136,7 +136,11 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
      color: bisque;
 }
 
-.wifitextcell {
+.current-wifi-rowP1 {
+     line-height: 25px;
+}
+
+.wifitextcellP1 {
      display: table-cell;
      width: 50%;
      font-size: 20px;
@@ -144,7 +148,7 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
      text-align: right !important;       
 }
 
-.wifidatacell {
+.wifidatacellP1 {
      display: table-cell;
      width: 50%;
      font-size: 20px;
@@ -174,6 +178,26 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 
 .fa-plug-circle-exclamation {
      color: bisque;
+}
+
+.current-wifi-rowWM {
+     line-height: 25px;
+}
+
+.wifitextcellWM {
+     display: table-cell;
+     width: 50%;
+     font-size: 20px;
+     color: darkgrey !important;               
+     text-align: right !important;       
+}
+
+.wifidatacellWM {
+     display: table-cell;
+     width: 50%;
+     font-size: 20px;
+     color: white !important;               
+     text-align: right !important;   
 }
 
 .footer {
