@@ -48,8 +48,8 @@ Here is the documentation of options for the modules configuration
 
 | Option                | Description
 |:----------------------|:-------------
-| `P1_IP`            | **REQUIRED** - The IP Address of your HomeWizard P1 meter <br /><br />**Number** <br />Default: `0.0.0.0`
-| `WM_IP`           | **REQUIRED** - The IP Address of your HomeWizard Water meter <br /><br />**Number** <br />Default: `0.0.0.0`
+| `P1_IP`            | **REQUIRED if use P1 meter** - The IP Address of your HomeWizard P1 meter <br /><br />**Number** <br />Default: `0.0.0.0`
+| `WM_IP`           | **REQUIRED if use Water meter** - The IP Address of your HomeWizard Water meter <br /><br />**Number** <br />Default: `0.0.0.0`
 | `updateInterval`		| **REQUIRED** - The interval the information is updated (in milliseconds)<br /><br />**Number** <br/>Default: `5000`
 | `extraInfo`		| Show extra information from P1 meter<br /><br />**True/False**<br />Default: `false`
 | `currentPower`	| Show the current power consumption<br /><br />**True/False**<br />Default: `false`
