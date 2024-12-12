@@ -168,6 +168,10 @@ Module.register('MMM-MyHomeWizard', {
 				FailureDataCell.innerHTML = MHW_P1.any_power_fail_count;
 				FailureRow.appendChild(FailureDataCell);
 				table.appendChild(FailureRow);
+
+				var spacer = document.createElement("span");
+				spacer.innerHTML = "&nbsp;";
+				table.appendChild(spacer);
 			}
 		}
 			
