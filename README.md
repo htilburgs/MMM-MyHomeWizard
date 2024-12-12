@@ -44,7 +44,8 @@ Add the module to your modules array in your config.js.
 },
 ```
 ## Images
-![image](https://github.com/user-attachments/assets/dc57048e-db45-4201-8f5e-ac09e9b2e429)
+![image](https://github.com/user-attachments/assets/2404bb70-d6c3-4e97-87d4-85965181edd0)
+
 
 
 
