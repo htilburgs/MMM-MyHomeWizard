@@ -3,5 +3,7 @@
   "Total_Pwr": "Total Power:",
   "Total_Gas": "Total Gas:",
   "Total_Wtr": "Total Water:",
-  "Current_Wtr": "Current Water:"
+  "Current_Wtr": "Current Water:",
+  "Wifi_P1": "Wifi P1 Meter:",
+  "Wifi_WM": "Wifi Water Meter:"
 }
