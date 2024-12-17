@@ -80,8 +80,8 @@ Module.register('MMM-MyHomeWizard', {
 		this.loaded = true;
 		var MHW_P1 = this.MHW_P1;
 		var MHW_WM = this.MHW_WM;
-		console.log(JSON.stringify(MHW_P1));
-		console.log(JSON.stringify(MHW_WM));
+		//console.log(JSON.stringify(MHW_P1));		// Remove trailing // for test-purposes
+		//console.log(JSON.stringify(MHW_WM));		// Remove trailing // for test-purposes
 		
 		// creating the tablerows
 
