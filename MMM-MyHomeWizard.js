@@ -17,6 +17,7 @@ Module.register('MMM-MyHomeWizard', {
 		maxWidth: "500px",			// Max width wrapper
 		extraInfo: false,			// Show extra information
 		showFooter: false,			// Show footer (name Power Meter)
+		showGas: true,				// Show Gas option
 		currentPower: false,			// Show current power usage
 		currentWater: false,			// Show current water usage
 		initialLoadDelay: 1000,
@@ -118,22 +119,24 @@ Module.register('MMM-MyHomeWizard', {
 			TotalPowerDataCell.innerHTML = Math.round(MHW_P1.total_power_import_kwh) + " kWh";
 			TotalPowerRow.appendChild(TotalPowerDataCell);
 			table.appendChild(TotalPowerRow);
-	
-			var TotalGasRow = document.createElement("tr");
-			TotalGasRow.className = "total-gas-row";
-			
-			var TotalGasTextCell = document.createElement("td");
-			TotalGasTextCell.className = "normal totalgastextcell";
-			TotalGasTextCell.innerHTML = '<i class="fa-solid fa-fire"></i>' + "&nbsp;" + this.translate("Total_Gas"); 
-			TotalGasRow.appendChild(TotalGasTextCell);	
-			table.appendChild(TotalGasRow);
-	
-			var TotalGasDataCell = document.createElement("td");
-			TotalGasDataCell.className = "normal totalgasdatacell";
-			TotalGasDataCell.innerHTML = Math.round(MHW_P1.total_gas_m3) + " m³";
-			TotalGasRow.appendChild(TotalGasDataCell);
-			table.appendChild(TotalGasRow);
 
+			if (this.config.showGas != false) {
+				var TotalGasRow = document.createElement("tr");
+				TotalGasRow.className = "total-gas-row";
+			
+				var TotalGasTextCell = document.createElement("td");
+				TotalGasTextCell.className = "normal totalgastextcell";
+				TotalGasTextCell.innerHTML = '<i class="fa-solid fa-fire"></i>' + "&nbsp;" + this.translate("Total_Gas"); 
+				TotalGasRow.appendChild(TotalGasTextCell);	
+				table.appendChild(TotalGasRow);
+	
+				var TotalGasDataCell = document.createElement("td");
+				TotalGasDataCell.className = "normal totalgasdatacell";
+				TotalGasDataCell.innerHTML = Math.round(MHW_P1.total_gas_m3) + " m³";
+				TotalGasRow.appendChild(TotalGasDataCell);
+				table.appendChild(TotalGasRow);
+			}
+				
 			if (this.config.extraInfo != false) {
 				var spacer = document.createElement("span");
 				spacer.innerHTML = "&nbsp;";
