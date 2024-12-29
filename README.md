@@ -38,6 +38,7 @@ Add the module to your modules array in your config.js.
 		extraInfo: false, 	// Show extra information from P1 meter
 		currentPower: false,	// Show the current Power Consumption
 		currentWater: false,	// Show the current Water Consumption
+		showGas: true,		// Show the Gas option
 		showFooter: true,	// Show footer (name Power Meter)
 		updateInterval: 5000,   // Update every 5 seconds
 		maxWidth: "500px"	// Max Module width
@@ -61,11 +62,13 @@ Here is the documentation of options for the modules configuration
 | `extraInfo`		| Show extra information from P1 meter<br /><br />**True/False**<br />Default: `false`
 | `currentPower`	| Show the current power consumption<br /><br />**True/False**<br />Default: `false`
 | `currentWater`	| Show the current water consumption<br /><br />**True/False**<br />Default: `false`
+| `showGas`		| Show the Gas Option of youre PowerMeter <br /><br />**True/False**<br />Default: `true`
 | `showFooter`		| Show the Footer with the name of youre PowerMeter <br /><br />**True/False**<br />Default: `false`
 | `maxWidth`		| The maximum width of the module <br /><br />Default: `500px`
 
 ## Version
 v1.0.0 - 26-11-2024	: Initial version </br>
+v1.0.1 - 29-12-2024	: Add option showGas </br>
 
 ## License
 ### The MIT License (MIT)
