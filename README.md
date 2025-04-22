@@ -50,6 +50,14 @@ Add the module to your modules array in your config.js.
 
 <img width="285" alt="image" src="https://github.com/user-attachments/assets/6286bb00-bf6f-48b1-a6e6-718ae987699e" />
 
+## Explanation
+**Total Power** is the sum of Power usage from T1 and T2 (peak and off-peak rate) <br />
+**Current Power** is the current Power usage (Watt) <br />
+**Total Gas** is the total of Gas usage (m³) <br />
+**Current Water** is the current Water usage (Liters per minute) <br />
+**Total Water** is the total Water usage (m³) <br />
+**Power Failures** are the number of power failures detected by the P1 meter <br />
+**WiFi P1 / Water meter** is the current WiFi Strenght
 
 ## Module configuration
 Here is the documentation of options for the modules configuration
