@@ -138,7 +138,7 @@ Module.register('MMM-MyHomeWizard', {
 				TotalFeedBackDataCell.className = "normal totalfeedbackdatacell";
 				TotalFeedBackDataCell.innerHTML = Math.round(MHW_P1.total_power_export_kwh) + "kWh";
 				TotalFeedBacRow.appendChild(TotalFeedBackDataCell);
-				table.appendChild(TotalFeedBackupRow);
+				table.appendChild(TotalFeedBackRow);
 			}
 				
 			if (this.config.showGas != false) {
