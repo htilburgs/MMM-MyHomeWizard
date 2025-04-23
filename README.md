@@ -39,6 +39,7 @@ Add the module to your modules array in your config.js.
 		currentPower: false,	// Show the current Power Consumption
 		currentWater: false,	// Show the current Water Consumption
 		showGas: true,		// Show the Gas option
+		showFeeback: true,	// Show the 
 		showFooter: true,	// Show footer (name Power Meter)
 		updateInterval: 5000,   // Update every 5 seconds
 		maxWidth: "500px"	// Max Module width
