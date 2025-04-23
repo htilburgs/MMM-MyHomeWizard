@@ -39,7 +39,7 @@ Add the module to your modules array in your config.js.
 		currentPower: false,	// Show the current Power Consumption
 		currentWater: false,	// Show the current Water Consumption
 		showGas: true,		// Show the Gas option
-		showFeeback: true,	// Show the 
+		showFeeback: true,	// Show the Feed back to the grid
 		showFooter: true,	// Show footer (name Power Meter)
 		updateInterval: 5000,   // Update every 5 seconds
 		maxWidth: "500px"	// Max Module width
@@ -54,6 +54,7 @@ Add the module to your modules array in your config.js.
 ## Explanation
 **Total Power** is the sum of Power usage from T1 and T2 (peak and off-peak rate) <br />
 **Current Power** is the current Power usage (Watt) <br />
+**Total Feedback** is the Total Feedback to the grid today (kWH) <br />
 **Total Gas** is the total of Gas usage (m³) <br />
 **Current Water** is the current Water usage (Liters per minute) <br />
 **Total Water** is the total Water usage (m³) <br />
