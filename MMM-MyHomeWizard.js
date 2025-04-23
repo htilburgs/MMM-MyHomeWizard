@@ -4,7 +4,10 @@ MMM-MyHomeWizard
 Copyright (C) 2024 - H. Tilburgs
 MIT License
 
-v1.0.0 - 26-11-2024 - Initial version
+v1.0.0 - 26-11-2024 : Initial version
+v1.0.1 - 29-12-2024 : Add option showGas
+v1.0.2 - 23-04-2025 : Add option Feed back to the grid
+
 //-------------------------------------------
 */
 
@@ -18,6 +21,7 @@ Module.register('MMM-MyHomeWizard', {
 		extraInfo: false,			// Show extra information
 		showFooter: false,			// Show footer (name Power Meter)
 		showGas: true,				// Show Gas option
+		showFeedback: true,			// Show Feed back to the grid
 		currentPower: false,			// Show current power usage
 		currentWater: false,			// Show current water usage
 		initialLoadDelay: 1000,
@@ -120,6 +124,22 @@ Module.register('MMM-MyHomeWizard', {
 			TotalPowerRow.appendChild(TotalPowerDataCell);
 			table.appendChild(TotalPowerRow);
 
+			if (this.showFeedback != false) {
+				var TotalFeedBackRow = document.createElement("tr");
+				TotalFeedBackRow.className = "total-feedback-row";
+
+				var TotalFeedBackTextCell = document.createElement("td");
+				TotalFeedBackTextCell.classname = "normal totalfeedbacktextcell";
+				TotalFeedBackTextCell.innerHTML = '<i class="fa-solid fa-plug-circle-plus"></i>' + "&nbsp;" + this.translate("Total_Feedback");
+				TotalGasRow.appendChild(TotalFeedBackTextCell);
+				table.appendChild(TotalFeedBackRow);
+
+				var TotalFeedBackDataCell = document.createElement("td");
+				TotalFeedBackDataCell.className = "normal totalfeedbackdatacell";
+				TotalFeedBackDataCell.innerHTML = Math.round(MHW_P1.total_power_export_kwh) + "kWh";
+				TotalFeedBacRow.appendChild(TotalFeedBackDataCell);
+				table.appendChild(TotalFeedBackupRow);
+				
 			if (this.config.showGas != false) {
 				var TotalGasRow = document.createElement("tr");
 				TotalGasRow.className = "total-gas-row";
