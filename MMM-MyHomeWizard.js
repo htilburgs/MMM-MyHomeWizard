@@ -129,7 +129,7 @@ Module.register('MMM-MyHomeWizard', {
 				TotalFeedBackRow.className = "total-feedback-row";
 
 				var TotalFeedBackTextCell = document.createElement("td");
-				TotalFeedBackTextCell.classname = "normal totalfeedbacktextcell";
+				TotalFeedBackTextCell.className = "normal totalfeedbacktextcell";
 				TotalFeedBackTextCell.innerHTML = '<i class="fa-solid fa-plug-circle-plus"></i>' + "&nbsp;" + this.translate("Total_Feedback");
 				TotalFeedBackRow.appendChild(TotalFeedBackTextCell);
 				table.appendChild(TotalFeedBackRow);
