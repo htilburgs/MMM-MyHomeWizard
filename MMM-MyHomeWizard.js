@@ -131,13 +131,13 @@ Module.register('MMM-MyHomeWizard', {
 				var TotalFeedBackTextCell = document.createElement("td");
 				TotalFeedBackTextCell.classname = "normal totalfeedbacktextcell";
 				TotalFeedBackTextCell.innerHTML = '<i class="fa-solid fa-plug-circle-plus"></i>' + "&nbsp;" + this.translate("Total_Feedback");
-				TotalGasRow.appendChild(TotalFeedBackTextCell);
+				TotalFeedBackRow.appendChild(TotalFeedBackTextCell);
 				table.appendChild(TotalFeedBackRow);
 
 				var TotalFeedBackDataCell = document.createElement("td");
 				TotalFeedBackDataCell.className = "normal totalfeedbackdatacell";
 				TotalFeedBackDataCell.innerHTML = Math.round(MHW_P1.total_power_export_kwh) + "kWh";
-				TotalFeedBacRow.appendChild(TotalFeedBackDataCell);
+				TotalFeedBackRow.appendChild(TotalFeedBackDataCell);
 				table.appendChild(TotalFeedBackRow);
 			}
 				
