@@ -136,7 +136,7 @@ Module.register('MMM-MyHomeWizard', {
 
 				var TotalFeedBackDataCell = document.createElement("td");
 				TotalFeedBackDataCell.className = "normal totalfeedbackdatacell";
-				TotalFeedBackDataCell.innerHTML = Math.round(MHW_P1.total_power_export_kwh) + "kWh";
+				TotalFeedBackDataCell.innerHTML = Math.round(MHW_P1.total_power_export_kwh) + " kWh";
 				TotalFeedBackRow.appendChild(TotalFeedBackDataCell);
 				table.appendChild(TotalFeedBackRow);
 			}
