@@ -64,6 +64,30 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
      color: bisque;
 }
 
+.Total-feeback-row {
+     line-height: 25px;
+}
+
+.totalfeedbacktextcell {
+     display: table-cell;
+     width: 50%;     
+     font-size: 20px;
+     color: darkgrey !important;               
+     text-align: right !important;       
+}
+
+.totalfeedbackdatacell {
+     display: table-cell;
+     width: 50%;
+     font-size: 20px;
+     color: white !important;               
+     text-align: right !important;   
+}
+
+.fa-plug-circle-plus {
+     color: bisque;
+}
+
 .total-gas-row {
      line-height: 25px;
 }
