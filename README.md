@@ -47,9 +47,9 @@ Add the module to your modules array in your config.js.
 },
 ```
 ## Images
-<img width="285" alt="image" src="https://github.com/user-attachments/assets/b2ef6704-5d26-4705-a692-a268106c30f0" /> <br />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/b2ef6704-5d26-4705-a692-a268106c30f0" /> <br />
 
-<img width="285" alt="image" src="https://github.com/user-attachments/assets/f681c16f-9459-4505-a6a9-3f08fe4750b8" />
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/f681c16f-9459-4505-a6a9-3f08fe4750b8" />
 
 ## Explanation
 **Total Power** is the sum of Power usage from T1 and T2 (peak and off-peak rate) <br />
