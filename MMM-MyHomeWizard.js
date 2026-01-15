@@ -12,8 +12,8 @@ Module.register('MMM-MyHomeWizard', {
         currentWater: false,      
         initialLoadDelay: 1000,  
         updateInterval: 10000,    
-        fetchTimeout: 5000,       // Configurable fetch timeout (ms)
-        retryCount: 2             // Retry failed requests
+        fetchTimeout: 5000,       
+        retryCount: 2             
     },
 
     getStyles: function () {
@@ -31,7 +31,6 @@ Module.register('MMM-MyHomeWizard', {
         Log.info("Starting module: " + this.name);
         this.requiresVersion = "2.9.0";
 
-        // Initialize URLs
         this.urlP1 = this.config.P1_IP
             ? "http://" + this.config.P1_IP + "/api/v1/data/"
             : "https://dummyjson.com/c/f8b2-91c3-400b-8709";
@@ -40,7 +39,6 @@ Module.register('MMM-MyHomeWizard', {
             ? "http://" + this.config.WM_IP + "/api/v1/data/"
             : "https://dummyjson.com/c/704a-9a96-4845-bc72";
 
-        // Initialize data
         this.MHW_P1 = {};
         this.MHW_WM = {};
         this.loadedP1 = false;
@@ -48,7 +46,6 @@ Module.register('MMM-MyHomeWizard', {
         this.errorP1 = false;
         this.errorWM = false;
 
-        // Start fetching data
         this.scheduleUpdate();
     },
 
@@ -58,7 +55,6 @@ Module.register('MMM-MyHomeWizard', {
             this.getMHW_WM();
         }, this.config.updateInterval);
 
-        // Initial fetch after delay
         setTimeout(() => {
             this.getMHW_P1();
             this.getMHW_WM();
@@ -74,7 +70,6 @@ Module.register('MMM-MyHomeWizard', {
         wrapper.className = "wrapper";
         wrapper.style.maxWidth = this.config.maxWidth;
 
-        // Display errors
         if (this.config.P1_IP && this.errorP1) {
             wrapper.innerHTML = '<span class="error">P1 Meter offline</span>';
             return wrapper;
@@ -84,7 +79,6 @@ Module.register('MMM-MyHomeWizard', {
             return wrapper;
         }
 
-        // Loading state
         if ((!this.loadedP1 && this.config.P1_IP) || (!this.loadedWM && this.config.WM_IP)) {
             wrapper.innerHTML = "Loading....";
             wrapper.classList.add("bright", "light", "small");
@@ -94,13 +88,9 @@ Module.register('MMM-MyHomeWizard', {
         var table = document.createElement("table");
         table.className = "small";
 
-        // P1 Meter
         if (this.config.P1_IP) this.addPowerRows(table, this.MHW_P1);
-
-        // Water Meter
         if (this.config.WM_IP) this.addWaterRows(table, this.MHW_WM);
 
-        // Footer
         if (this.config.showFooter && this.MHW_P1?.meter_model) {
             var row = document.createElement("tr");
             var cell = document.createElement("td");
@@ -165,11 +155,11 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
+        var totalLiters = data.total_liter_m3 * 1000;
         var row = document.createElement("tr");
         row.className = "total-water-row";
         row.appendChild(this.createCell('<i class="fa-solid fa-droplet"></i>&nbsp;' + this.translate("Total_Wtr"), "totalwatertextcell"));
-        // Ensure total liters in m³
-        row.appendChild(this.createCell(Math.round(data.total_liter_m3) + " m³", "totalwaterdatacell"));
+        row.appendChild(this.createCell(Math.round(data.total_liter_m3) + " m³ (" + Math.round(totalLiters) + " L)", "totalwaterdatacell"));
         table.appendChild(row);
 
         if (this.config.extraInfo) this.addExtraInfo(table, data, "WM");
