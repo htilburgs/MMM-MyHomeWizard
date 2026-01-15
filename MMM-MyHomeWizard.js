@@ -109,27 +109,22 @@ Module.register('MMM-MyHomeWizard', {
         wrapper.className = "wrapper";
         wrapper.style.maxWidth = this.config.maxWidth;
 
+        // Errors
         if (this.config.P1_IP && this.errorP1) {
             wrapper.innerHTML = '<span class="error">P1 Meter offline</span>';
             return wrapper;
         }
-
         if (this.config.WM_IP && this.errorWM) {
             wrapper.innerHTML = '<span class="error">Water Meter offline</span>';
             return wrapper;
         }
 
-        if ((!this.loadedP1 && this.config.P1_IP) || (!this.loadedWM && this.config.WM_IP)) {
-            wrapper.innerHTML = "Loading....";
-            wrapper.classList.add("bright", "light", "small");
-            return wrapper;
-        }
-
+        // Render altijd, ook bij eerste load
         const table = document.createElement("table");
         table.className = "small";
 
-        if (this.config.P1_IP) this.addPowerRows(table, this.MHW_P1);
-        if (this.config.WM_IP) this.addWaterRows(table, this.MHW_WM);
+        if (this.config.P1_IP) this.addPowerRows(table, this.MHW_P1 || {});
+        if (this.config.WM_IP) this.addWaterRows(table, this.MHW_WM || {});
 
         if (this.config.showFooter && this.MHW_P1?.meter_model) {
             const row = document.createElement("tr");
@@ -154,8 +149,8 @@ Module.register('MMM-MyHomeWizard', {
         return wrapper;
     },
 
-    // … hier komen addPowerRows, addWaterRows, addExtraInfo
-    // zorg dat alle getallen door this.formatNumber() gaan
+    // Functies addPowerRows, addWaterRows en addExtraInfo hier
+    // Zorg dat getallen door this.formatNumber() gaan
 
     getMHW_P1: function(retry = this.config.retryCount) {
         this.sendSocketNotification('GET_MHWP1', { url: this.urlP1, retry });
@@ -166,14 +161,14 @@ Module.register('MMM-MyHomeWizard', {
     },
 
     processMHW_P1: function(data) {
-        this.MHW_P1 = data;
+        this.MHW_P1 = data || {};
         this.loadedP1 = true;
         this.errorP1 = false;
         this.updateDom();
     },
 
     processMHW_WM: function(data) {
-        this.MHW_WM = data;
+        this.MHW_WM = data || {};
         this.loadedWM = true;
         this.errorWM = false;
         this.updateDom();
