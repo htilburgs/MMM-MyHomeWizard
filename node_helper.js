@@ -10,14 +10,17 @@ module.exports = NodeHelper.create({
         this.MHW_WM = null;
         this.firstSnapshotSaved = false;
 
-        // On module start, send the last snapshot date from existing history
+        // Send last snapshot date from existing history (after 1s delay)
         const historyFile = path.join(__dirname, 'history_data.json');
         if (fs.existsSync(historyFile)) {
             try {
                 const content = fs.readFileSync(historyFile, 'utf8');
                 const history = JSON.parse(content);
                 if (history.length > 0) {
-                    this.sendSocketNotification("LAST_SNAPSHOT_DATE", history[history.length - 1].date);
+                    const lastDate = history[history.length - 1].date;
+                    setTimeout(() => {
+                        this.sendSocketNotification("LAST_SNAPSHOT_DATE", lastDate);
+                    }, 1000);
                 }
             } catch (err) {
                 console.error("Failed to read history_data.json:", err.message);
@@ -38,7 +41,7 @@ module.exports = NodeHelper.create({
         ) - now;
 
         setTimeout(() => {
-            this.saveDailyData(); // Save at 23:59
+            this.saveDailyData();
             setInterval(() => this.saveDailyData(), 24 * 60 * 60 * 1000);
         }, millisTillMidnight);
     },
@@ -88,7 +91,6 @@ module.exports = NodeHelper.create({
             console.log("Daily MyHomeWizard snapshot saved to history_data.json");
             this.firstSnapshotSaved = true;
 
-            // Notify front-end
             this.sendSocketNotification("LAST_SNAPSHOT_DATE", snapshot.date);
         } catch (err) {
             console.error("Failed to write history_data.json:", err.message);
