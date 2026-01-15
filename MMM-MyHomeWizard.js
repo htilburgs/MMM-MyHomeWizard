@@ -14,7 +14,7 @@ Module.register('MMM-MyHomeWizard', {
         updateInterval: 10000,    
         fetchTimeout: 5000,       
         retryCount: 2,
-        showLastUpdate: false     // <-- NEW: show last update from history
+        showLastUpdate: true     // <-- NEW: show last update from history
     },
 
     getStyles: function () {
