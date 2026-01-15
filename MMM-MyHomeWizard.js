@@ -72,16 +72,11 @@ Module.register('MMM-MyHomeWizard', {
         wrapper.className = "wrapper";
         wrapper.style.maxWidth = this.config.maxWidth;
 
-        if (this.config.P1_IP && this.errorP1) {
-            wrapper.innerHTML = '<span class="error">P1 Meter offline</span>';
-            return wrapper;
-        }
-        if (this.config.WM_IP && this.errorWM) {
-            wrapper.innerHTML = '<span class="error">Water Meter offline</span>';
-            return wrapper;
-        }
+        // Only show loading if no data exists at all
+        const hasP1Data = this.loadedP1 || Object.keys(this.MHW_P1).length > 0;
+        const hasWMData = this.loadedWM || Object.keys(this.MHW_WM).length > 0;
 
-        if ((!this.loadedP1 && this.config.P1_IP) || (!this.loadedWM && this.config.WM_IP)) {
+        if ((!hasP1Data && this.config.P1_IP) || (!hasWMData && this.config.WM_IP)) {
             wrapper.innerHTML = "Loading....";
             wrapper.classList.add("bright", "light", "small");
             return wrapper;
@@ -124,13 +119,13 @@ Module.register('MMM-MyHomeWizard', {
             this.MHW_P1 = payload;
             this.loadedP1 = true;
             this.errorP1 = false;
-            if (this.loadedP1 && this.loadedWM) this.updateDom(this.config.initialLoadDelay);
+            this.updateDom(this.config.initialLoadDelay);
         }
         else if (notification === "MHWWM_RESULT") {
             this.MHW_WM = payload;
             this.loadedWM = true;
             this.errorWM = false;
-            if (this.loadedP1 && this.loadedWM) this.updateDom(this.config.initialLoadDelay);
+            this.updateDom(this.config.initialLoadDelay);
         }
         else if (notification === "MHWP1_ERROR") {
             if (payload.retry > 0) this.getMHW_P1(payload.retry - 1);
@@ -144,6 +139,14 @@ Module.register('MMM-MyHomeWizard', {
             this.lastSnapshotDate = payload;
             this.updateDom(0);
         }
+    },
+
+    getMHW_P1: function(retry = this.config.retryCount) {
+        this.sendSocketNotification('GET_MHWP1', { url: this.urlP1, retry });
+    },
+
+    getMHW_WM: function(retry = this.config.retryCount) {
+        this.sendSocketNotification('GET_MHWWM', { url: this.urlWM, retry });
     }
 
 });
