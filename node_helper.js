@@ -6,6 +6,8 @@ module.exports = NodeHelper.create({
 
     start: function () {
         console.log("Starting node_helper for: " + this.name);
+
+        // Memory for latest data
         this.MHW_P1 = null;
         this.MHW_WM = null;
 
@@ -15,11 +17,11 @@ module.exports = NodeHelper.create({
 
     scheduleNightlySave: function() {
         const now = new Date();
-        const millisTillMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 0, 0) - now;
+        const millisTillNight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 0, 0) - now;
         setTimeout(() => {
             this.saveDailyData();
             setInterval(() => this.saveDailyData(), 24 * 60 * 60 * 1000); // every 24h
-        }, millisTillMidnight);
+        }, millisTillNight);
     },
 
     saveDailyData: function() {
@@ -29,14 +31,13 @@ module.exports = NodeHelper.create({
         // Load existing data
         if (fs.existsSync(historyFile)) {
             try {
-                const fileContent = fs.readFileSync(historyFile, 'utf8');
-                history = JSON.parse(fileContent);
+                history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
             } catch (err) {
                 console.error("Failed to read history_data.json:", err.message);
             }
         }
 
-        // Build daily summary
+        // Prepare snapshot with summaries
         const snapshot = {
             date: new Date().toISOString().split('T')[0],
             P1: {
@@ -53,11 +54,8 @@ module.exports = NodeHelper.create({
         history.push(snapshot);
 
         // Keep only last 30 days
-        if (history.length > 30) {
-            history = history.slice(history.length - 30);
-        }
+        if (history.length > 30) history = history.slice(history.length - 30);
 
-        // Save back to file
         try {
             fs.writeFileSync(historyFile, JSON.stringify(history, null, 2));
             console.log("Daily MyHomeWizard snapshot saved to history_data.json");
@@ -69,7 +67,7 @@ module.exports = NodeHelper.create({
     getMHW_P1: async function({url, retry}) {
         try {
             const result = await this.fetchWithTimeout(url);
-            this.MHW_P1 = result; // Save in memory
+            this.MHW_P1 = result;
             this.sendSocketNotification('MHWP1_RESULT', result);
         } catch (error) {
             console.error("MMM-MyHomeWizard P1 Error:", error.message);
@@ -80,7 +78,7 @@ module.exports = NodeHelper.create({
     getMHW_WM: async function({url, retry}) {
         try {
             const result = await this.fetchWithTimeout(url);
-            this.MHW_WM = result; // Save in memory
+            this.MHW_WM = result;
             this.sendSocketNotification('MHWWM_RESULT', result);
         } catch (error) {
             console.error("MMM-MyHomeWizard WM Error:", error.message);
