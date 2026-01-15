@@ -27,7 +27,9 @@ Module.register('MMM-MyHomeWizard', {
     getTranslations: function () {
         return {
             nl: "translations/nl.json",
-            en: "translations/en.json"
+            en: "translations/en.json",
+            de: "translations/de.json",
+            fr: "translations/fr.json"
         };
     },
 
@@ -56,7 +58,6 @@ Module.register('MMM-MyHomeWizard', {
 
         this.scheduleUpdate();
 
-        // Request last snapshot on start
         if (this.config.showLastUpdate) this.readLastUpdate();
     },
 
@@ -163,7 +164,6 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // --- Delta rows without color coding ---
         if (this.deltaP1) {
             if (this.config.showDeltaPower) {
                 var row = document.createElement("tr");
