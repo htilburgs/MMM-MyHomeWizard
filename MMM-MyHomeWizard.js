@@ -17,7 +17,8 @@ Module.register('MMM-MyHomeWizard', {
         showLastUpdate: true,
         showDeltaPower: true,
         showDeltaGas: true,
-        showDeltaWater: true
+        showDeltaWater: true,
+        language: "nl" // nl of en
     },
 
     getStyles: function () {
@@ -54,7 +55,7 @@ Module.register('MMM-MyHomeWizard', {
         this.deltaP1 = null;
         this.deltaWM = null;
 
-        // Stuur frontend taal naar NodeHelper
+        // stuur locale naar NodeHelper
         this.sendSocketNotification('SET_LOCALE', { locale: this.config.language });
 
         this.scheduleUpdate();
@@ -82,7 +83,11 @@ Module.register('MMM-MyHomeWizard', {
 
     formatNumber: function(number) {
         const locale = this.config.language || "nl";
-        return Math.round(number).toLocaleString(locale);
+        return new Intl.NumberFormat(locale, {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+            useGrouping: true
+        }).format(Math.round(number));
     },
 
     getDom: function () {
