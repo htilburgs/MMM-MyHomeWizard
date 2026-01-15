@@ -85,7 +85,6 @@ Module.register('MMM-MyHomeWizard', {
         wrapper.className = "wrapper";
         wrapper.style.maxWidth = this.config.maxWidth;
 
-        // Error handling
         if (this.config.P1_IP && this.errorP1) {
             wrapper.innerHTML = '<span class="error">P1 Meter offline</span>';
             return wrapper;
@@ -107,7 +106,7 @@ Module.register('MMM-MyHomeWizard', {
         if (this.config.WM_IP) this.addWaterRows(table, this.MHW_WM);
         wrapper.appendChild(table);
 
-        // Chart
+        // Chart canvas
         if (this.config.showHistoryCharts.electricity || this.config.showHistoryCharts.gas || this.config.showHistoryCharts.water) {
             var canvasWrapper = document.createElement("div");
             canvasWrapper.style.marginTop = "15px";
@@ -118,20 +117,6 @@ Module.register('MMM-MyHomeWizard', {
 
             this.drawHistoryChart();
         }
-
-        // Manual Save Button
-        var buttonWrapper = document.createElement("div");
-        buttonWrapper.style.marginTop = "10px";
-        var saveButton = document.createElement("button");
-        saveButton.innerHTML = "💾 Save Snapshot";
-        saveButton.style.cursor = "pointer";
-        saveButton.onclick = () => {
-            this.sendSocketNotification('MANUAL_SAVE');
-            saveButton.innerHTML = "✅ Saved!";
-            setTimeout(() => { saveButton.innerHTML = "💾 Save Snapshot"; }, 2000);
-        };
-        buttonWrapper.appendChild(saveButton);
-        wrapper.appendChild(buttonWrapper);
 
         return wrapper;
     },
@@ -244,7 +229,7 @@ Module.register('MMM-MyHomeWizard', {
 
         if (history.length === 0) return;
 
-        const labels = history.map(d => d.date);
+        const labels = history.map(day => day.date);
         const datasets = [];
 
         if (this.config.showHistoryCharts.electricity) {
@@ -312,8 +297,6 @@ Module.register('MMM-MyHomeWizard', {
             console.error("MMM-MyHomeWizard WM Error:", payload.error);
             if (payload.retry > 0) this.getMHW_WM(payload.retry - 1);
             else { this.errorWM = true; this.updateDom(this.config.initialLoadDelay); }
-        } else if (notification === "MANUAL_SAVE") {
-            this.sendSocketNotification('MANUAL_SAVE'); // forward to Node Helper
         }
     }
 
