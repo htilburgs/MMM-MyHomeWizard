@@ -8,10 +8,10 @@
   "Wifi_P1": "Wifi P1 Meter:",
   "Wifi_WM": "Wifi Water Meter:",
   "Fail_Pwr": "Stroomstoringen:",
-  "Daily_Electricity": "Dagelijks Elektriciteit",
-  "Daily_Water": "Dagelijks Water",
-  "Daily_Gas": "Dagelijks Gas",
   "Daily_Feedback": "Dagelijks Teruglevering",
   "Last_Update": "Laatste update",
-  "Delta": "Sinds laatste update"
+  "Delta": "Sinds laatste update",
+  "Delta_Pwr": "Verschil Stroom",
+  "Delta_Wtr": "Verschil Water",
+  "Delta_Gas": "Verschil Gas"
 }

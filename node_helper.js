@@ -121,16 +121,31 @@ module.exports = NodeHelper.create({
         else if (notification === 'GET_MHWWM') this.getMHW_WM(payload);
         else if (notification === "GET_LAST_UPDATE") {
             const historyFile = path.join(__dirname, 'history_data.json');
-            let lastDate = null;
+            let lastSnapshot = null;
+            let previousSnapshot = null;
+
             if (fs.existsSync(historyFile)) {
                 try {
                     const history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
-                    if (history.length > 0) lastDate = history[history.length - 1].date;
+                    if (history.length > 0) lastSnapshot = history[history.length - 1];
+                    if (history.length > 1) previousSnapshot = history[history.length - 2];
                 } catch (e) {
                     console.error("Failed to read last update from history_data.json:", e.message);
                 }
             }
-            this.sendSocketNotification("LAST_UPDATE_RESULT", lastDate);
+
+            this.sendSocketNotification("LAST_UPDATE_RESULT", {
+                lastDate: lastSnapshot ? lastSnapshot.date : null,
+                deltaP1: previousSnapshot && lastSnapshot ? {
+                    total_power_import_kwh: lastSnapshot.P1.total_power_import_kwh - previousSnapshot.P1.total_power_import_kwh,
+                    total_power_export_kwh: lastSnapshot.P1.total_power_export_kwh - previousSnapshot.P1.total_power_export_kwh,
+                    total_gas_m3: lastSnapshot.P1.total_gas_m3 - previousSnapshot.P1.total_gas_m3
+                } : null,
+                deltaWM: previousSnapshot && lastSnapshot ? {
+                    total_liter_m3: lastSnapshot.WM.total_m3 - previousSnapshot.WM.total_m3,
+                    total_liters: lastSnapshot.WM.total_liters - previousSnapshot.WM.total_liters
+                } : null
+            });
         }
     }
 
