@@ -5,7 +5,6 @@ Module.register('MMM-MyHomeWizard', {
         WM_IP: null,
         maxWidth: "500px",
         extraInfo: false,
-        showFooter: true,
         showGas: true,
         showFeedback: true,
         currentPower: false,
@@ -37,11 +36,8 @@ Module.register('MMM-MyHomeWizard', {
         this.MHW_P1 = {};
         this.MHW_WM = {};
 
-        // Flags to control Loading state
-        this.hasP1Data = false;
-        this.hasWMData = false;
-
-        this.lastSnapshotDate = null;
+        this.loadedP1 = false;
+        this.loadedWM = false;
         this.errorP1 = false;
         this.errorWM = false;
 
@@ -65,9 +61,7 @@ Module.register('MMM-MyHomeWizard', {
         wrapper.className = "wrapper";
         wrapper.style.maxWidth = this.config.maxWidth;
 
-        const isLoading = !this.hasP1Data && !this.hasWMData;
-
-        if (isLoading) {
+        if ((!this.loadedP1 && this.urlP1) || (!this.loadedWM && this.urlWM)) {
             wrapper.innerHTML = "Loading....";
             wrapper.classList.add("bright", "light", "small");
             return wrapper;
@@ -76,27 +70,8 @@ Module.register('MMM-MyHomeWizard', {
         const table = document.createElement("table");
         table.className = "small";
 
-        if (this.hasP1Data) this.addPowerRows(table, this.MHW_P1);
-        if (this.hasWMData) this.addWaterRows(table, this.MHW_WM);
-
-        if (this.config.showFooter) {
-            const row = document.createElement("tr");
-            const cell = document.createElement("td");
-            cell.setAttribute("colspan", "2");
-            cell.className = "footer";
-
-            let footerText = '';
-            if (this.MHW_P1?.meter_model) {
-                footerText += '<i class="fa-solid fa-charging-station"></i>&nbsp;' + this.MHW_P1.meter_model;
-            }
-
-            footerText += '<br><i class="fa-solid fa-calendar-check"></i>&nbsp;Last snapshot: ' +
-                (this.lastSnapshotDate || 'unknown');
-
-            cell.innerHTML = footerText;
-            row.appendChild(cell);
-            table.appendChild(row);
-        }
+        if (this.loadedP1) this.addPowerRows(table, this.MHW_P1);
+        if (this.loadedWM) this.addWaterRows(table, this.MHW_WM);
 
         wrapper.appendChild(table);
         return wrapper;
@@ -105,12 +80,14 @@ Module.register('MMM-MyHomeWizard', {
     socketNotificationReceived: function(notification, payload) {
         if (notification === "MHWP1_RESULT") {
             this.MHW_P1 = payload;
-            this.hasP1Data = true;
+            this.loadedP1 = true;
+            this.errorP1 = false;
             this.updateDom(0);
         }
         else if (notification === "MHWWM_RESULT") {
             this.MHW_WM = payload;
-            this.hasWMData = true;
+            this.loadedWM = true;
+            this.errorWM = false;
             this.updateDom(0);
         }
         else if (notification === "MHWP1_ERROR") {
@@ -120,10 +97,6 @@ Module.register('MMM-MyHomeWizard', {
         else if (notification === "MHWWM_ERROR") {
             if (payload.retry > 0) this.getMHW_WM(payload.retry - 1);
             else { this.errorWM = true; this.updateDom(0); }
-        }
-        else if (notification === "LAST_SNAPSHOT_DATE") {
-            this.lastSnapshotDate = payload;
-            this.updateDom(0);
         }
     },
 
