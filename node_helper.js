@@ -127,7 +127,7 @@ module.exports = NodeHelper.create({
 
         try {
             const response = await fetch(url, { signal: controller.signal });
-            if (!response.ok) throw new Error(Network response was not ok (${response.status}));
+            if (!response.ok) throw new Error(`Network response was not ok (${response.status})`);
             return response.json();
         } finally {
             clearTimeout(timer);
