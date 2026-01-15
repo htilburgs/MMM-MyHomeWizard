@@ -27,27 +27,30 @@ Go to the MagicMirror/config directory and edit the config.js file.
 Add the module to your modules array in your config.js.
 
 ```
-defaults: {
-    P1_IP: null,
-    WM_IP: null,
-    maxWidth: "500px",
-    extraInfo: false,
-    showFooter: false,
-    showGas: true,
-    showFeedback: true,
-    currentPower: false,
-    currentWater: false,
-    initialLoadDelay: 1000,
-    updateInterval: 10000,
-    fetchTimeout: 5000,
-    retryCount: 2,
-    showHistoryCharts: {       // NEW: toggle which charts to display
-        electricity: true,
-        gas: true,
-        water: true
-    }
+{
+  module: 'MMM-MyHomeWizard',
+  position: 'top_left',
+  header: 'HomeWizard',
+  disabled: false,
+  config: {
+		P1_IP: "0.0.0.0",	// IP Address HomeWizard P1 meter
+		WM_IP: "0.0.0.0",	// IP Address HomeWizrd Water meter - Remove when not used
+		extraInfo: false, 	// Show extra information from P1 meter
+		currentPower: false,	// Show the current Power Consumption
+		currentWater: false,	// Show the current Water Consumption
+		showGas: true,		// Show the Gas option
+		showFooter: true,	// Show footer (name Power Meter)
+		updateInterval: 5000,   // Update every 5 seconds
+		maxWidth: "500px",	// Max Module width
+        fetchTimeout: 5000,
+        retryCount: 2,
+        showHistoryCharts: {       // NEW: toggle which charts to display
+                            electricity: true,
+                            gas: true,
+                            water: true
+                            }
+          }
 },
-
 ```
 ## Images
 <img width="300" alt="image" src="https://github.com/user-attachments/assets/b2ef6704-5d26-4705-a692-a268106c30f0" /> <br />
