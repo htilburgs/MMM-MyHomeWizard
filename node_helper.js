@@ -9,6 +9,7 @@ module.exports = NodeHelper.create({
         this.MHW_P1 = null;
         this.MHW_WM = null;
         this.firstSnapshotSaved = false;
+        this.snapshotAlreadyLogged = false; // <-- flag for option 1
         this.scheduleNightlySave();
     },
 
@@ -46,8 +47,12 @@ module.exports = NodeHelper.create({
 
         const today = new Date().toISOString().split('T')[0];
 
+        // Only log once per session if snapshot exists
         if (history.some(h => h.date === today)) {
-            console.log("Snapshot for today already exists.");
+            if (!this.snapshotAlreadyLogged) {
+                console.log("Snapshot for today already exists.");
+                this.snapshotAlreadyLogged = true;
+            }
             return;
         }
 
