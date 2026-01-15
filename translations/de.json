@@ -1,0 +1,15 @@
+{
+  "Current_Pwr": "Aktuelle Leistung",
+  "Total_Pwr": "Gesamtleistung",
+  "Total_Feedback": "Gesamtrücklieferung",
+  "Total_Gas": "Gesamtgas",
+  "Delta_Pwr": "Delta Leistung",
+  "Delta_Gas": "Delta Gas",
+  "Delta_Wtr": "Delta Wasser",
+  "Wifi_P1": "Wifi P1",
+  "Fail_Pwr": "Stromausfall",
+  "Current_Wtr": "Aktuelles Wasser",
+  "Total_Wtr": "Gesamtwasser",
+  "Wifi_WM": "Wifi Wasserzähler",
+  "Last_Update": "Letztes Update"
+}
