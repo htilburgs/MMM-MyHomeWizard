@@ -1,6 +1,5 @@
 Module.register('MMM-MyHomeWizard', {
 
-    // Default values
     defaults: {
         P1_IP: null,              // IP Address P1 Meter
         WM_IP: null,              // IP Address Water Meter
@@ -39,19 +38,20 @@ Module.register('MMM-MyHomeWizard', {
             ? "http://" + this.config.WM_IP + "/api/v1/data/"
             : "https://dummyjson.com/c/704a-9a96-4845-bc72";
 
-        // Initialize data and loaded flags
+        // Initialize data and flags
         this.MHW_P1 = [];
         this.MHW_WM = [];
         this.loadedP1 = false;
         this.loadedWM = false;
+        this.errorP1 = false;
+        this.errorWM = false;
 
         // Start fetching data
         this.scheduleUpdate();
     },
 
-    // Schedule updates
     scheduleUpdate: function () {
-        // Save interval ID for possible future cleanup
+        // Save interval ID for potential cleanup
         this.updateIntervalId = setInterval(() => {
             this.getMHW_P1();
             this.getMHW_WM();
@@ -64,38 +64,49 @@ Module.register('MMM-MyHomeWizard', {
         }, this.config.initialLoadDelay);
     },
 
-    // DOM generation
     getDom: function () {
         var wrapper = document.createElement("div");
         wrapper.className = "wrapper";
         wrapper.style.maxWidth = this.config.maxWidth;
 
-        if (!this.loadedP1 && this.config.P1_IP) return this.createLoading(wrapper);
-        if (!this.loadedWM && this.config.WM_IP) return this.createLoading(wrapper);
+        // Display errors if any
+        if (this.config.P1_IP && this.errorP1) {
+            wrapper.innerHTML = '<span class="error">P1 Meter offline</span>';
+            return wrapper;
+        }
+
+        if (this.config.WM_IP && this.errorWM) {
+            wrapper.innerHTML = '<span class="error">Water Meter offline</span>';
+            return wrapper;
+        }
+
+        // Loading check
+        if ((!this.loadedP1 && this.config.P1_IP) || (!this.loadedWM && this.config.WM_IP)) {
+            wrapper.innerHTML = "Loading....";
+            wrapper.classList.add("bright", "light", "small");
+            return wrapper;
+        }
 
         var table = document.createElement("table");
         table.className = "small";
 
-        var MHW_P1 = this.MHW_P1;
-        var MHW_WM = this.MHW_WM;
-
-        // --- P1 Meter Rows ---
+        // Add rows for P1 Meter
         if (this.config.P1_IP) {
-            this.addPowerRows(table, MHW_P1);
+            this.addPowerRows(table, this.MHW_P1);
         }
 
-        // --- Water Meter Rows ---
+        // Add rows for Water Meter
         if (this.config.WM_IP) {
-            this.addWaterRows(table, MHW_WM);
+            this.addWaterRows(table, this.MHW_WM);
         }
 
-        // --- Footer ---
-        if (this.config.showFooter && MHW_P1?.meter_model) {
+        // Footer
+        if (this.config.showFooter && this.MHW_P1?.meter_model) {
             var row = document.createElement("tr");
             var cell = document.createElement("td");
             cell.setAttribute("colspan", "2");
             cell.className = "footer";
-            cell.innerHTML = '<i class="fa-solid fa-charging-station"></i>&nbsp;' + MHW_P1.meter_model;
+            cell.innerHTML = '<i class="fa-solid fa-charging-station"></i>&nbsp;' + this.MHW_P1.meter_model;
             row.appendChild(cell);
             table.appendChild(row);
         }
@@ -104,14 +115,14 @@ Module.register('MMM-MyHomeWizard', {
         return wrapper;
     },
 
-    createLoading: function(wrapper) {
-        wrapper.innerHTML = "Loading....";
-        wrapper.classList.add("bright", "light", "small");
-        return wrapper;
+    createCell: function(content, className) {
+        var cell = document.createElement("td");
+        cell.className = "normal " + className;
+        cell.innerHTML = content;
+        return cell;
     },
 
     addPowerRows: function(table, MHW_P1) {
-        // Current Power
         if (this.config.currentPower) {
             var row = document.createElement("tr");
             row.className = "current-power-row";
@@ -120,14 +131,12 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // Total Power
         var row = document.createElement("tr");
         row.className = "total-power-row";
         row.appendChild(this.createCell('<i class="fa-solid fa-plug-circle-bolt"></i>&nbsp;' + this.translate("Total_Pwr"), "totalpowertextcell"));
         row.appendChild(this.createCell(Math.round(MHW_P1.total_power_import_kwh) + " kWh", "totalpowerdatacell"));
         table.appendChild(row);
 
-        // Feedback
         if (this.config.showFeedback) {
             var row = document.createElement("tr");
             row.className = "total-feedback-row";
@@ -136,7 +145,6 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // Gas
         if (this.config.showGas) {
             var row = document.createElement("tr");
             row.className = "total-gas-row";
@@ -145,14 +153,12 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // Extra Info
         if (this.config.extraInfo) {
             this.addExtraInfo(table, MHW_P1, "P1");
         }
     },
 
     addWaterRows: function(table, MHW_WM) {
-        // Current Water
         if (this.config.currentWater) {
             var row = document.createElement("tr");
             row.className = "current-water-row";
@@ -161,7 +167,6 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // Total Water
         var row = document.createElement("tr");
         row.className = "total-water-row";
         row.appendChild(this.createCell('<i class="fa-solid fa-droplet"></i>&nbsp;' + this.translate("Total_Wtr"), "totalwatertextcell"));
@@ -173,27 +178,17 @@ Module.register('MMM-MyHomeWizard', {
         }
     },
 
-    createCell: function(content, className) {
-        var cell = document.createElement("td");
-        cell.className = "normal " + className;
-        cell.innerHTML = content;
-        return cell;
-    },
-
     addExtraInfo: function(table, data, type) {
-        // Spacer
         var spacer = document.createElement("tr");
         spacer.innerHTML = "<td colspan='2'>&nbsp;</td>";
         table.appendChild(spacer);
 
-        // Wifi
         var row = document.createElement("tr");
         row.className = "wifi-row-" + type.toLowerCase();
         row.appendChild(this.createCell('<i class="fa-solid fa-wifi"></i>&nbsp;' + this.translate("Wifi_" + type), "wifitextcell" + type));
         row.appendChild(this.createCell(data.wifi_strength + " %", "wifidatacell" + type));
         table.appendChild(row);
 
-        // Failures only for P1
         if (type === "P1") {
             var row = document.createElement("tr");
             row.className = "failure-row";
@@ -203,34 +198,41 @@ Module.register('MMM-MyHomeWizard', {
         }
     },
 
-    // Request data from node_helper
-    getMHW_P1: function () {
+    getMHW_P1: function() {
         this.sendSocketNotification('GET_MHWP1', this.urlP1);
     },
 
-    getMHW_WM: function () {
+    getMHW_WM: function() {
         this.sendSocketNotification('GET_MHWWM', this.urlWM);
     },
 
-    // Process returned data
-    processMHW_P1: function (data_P1) {
+    processMHW_P1: function(data_P1) {
         this.MHW_P1 = data_P1;
         this.loadedP1 = true;
+        this.errorP1 = false;
         if (this.loadedP1 && this.loadedWM) this.updateDom(this.config.initialLoadDelay);
     },
 
-    processMHW_WM: function (data_WM) {
+    processMHW_WM: function(data_WM) {
         this.MHW_WM = data_WM;
         this.loadedWM = true;
+        this.errorWM = false;
         if (this.loadedP1 && this.loadedWM) this.updateDom(this.config.initialLoadDelay);
     },
 
-    // Socket notifications from node_helper
-    socketNotificationReceived: function (notification, payload) {
+    socketNotificationReceived: function(notification, payload) {
         if (notification === "MHWP1_RESULT") {
             this.processMHW_P1(payload);
         } else if (notification === "MHWWM_RESULT") {
             this.processMHW_WM(payload);
+        } else if (notification === "MHWP1_ERROR") {
+            console.error("MMM-MyHomeWizard P1 Error:", payload.error);
+            this.errorP1 = true;
+            this.updateDom(this.config.initialLoadDelay);
+        } else if (notification === "MHWWM_ERROR") {
+            console.error("MMM-MyHomeWizard WM Error:", payload.error);
+            this.errorWM = true;
+            this.updateDom(this.config.initialLoadDelay);
         }
     }
 
