@@ -1,5 +1,5 @@
 const NodeHelper = require('node_helper');
-const fetch = require('node-fetch'); // ensure node-fetch is installed
+const fetch = require('node-fetch'); // Make sure node-fetch is installed
 
 module.exports = NodeHelper.create({
 
@@ -8,7 +8,7 @@ module.exports = NodeHelper.create({
     },
 
     // Fetch P1 Meter data
-    getMHW_P1: async function (urlP1) {
+    getMHW_P1: async function(urlP1) {
         try {
             const result_P1 = await this.fetchWithTimeout(urlP1);
             this.sendSocketNotification('MHWP1_RESULT', result_P1);
@@ -19,7 +19,7 @@ module.exports = NodeHelper.create({
     },
 
     // Fetch Water Meter data
-    getMHW_WM: async function (urlWM) {
+    getMHW_WM: async function(urlWM) {
         try {
             const result_WM = await this.fetchWithTimeout(urlWM);
             this.sendSocketNotification('MHWWM_RESULT', result_WM);
@@ -30,28 +30,30 @@ module.exports = NodeHelper.create({
     },
 
     // Generic fetch with timeout
-    fetchWithTimeout: async function (url, timeout = 5000) {
+    fetchWithTimeout: async function(url, timeout = 5000) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeout);
 
-        const response = await fetch(url, { signal: controller.signal });
+        try {
+            const response = await fetch(url, { signal: controller.signal });
 
-        clearTimeout(timer);
+            if (!response.ok) {
+                throw new Error(`Network response was not ok (${response.status})`);
+            }
 
-        if (!response.ok) {
-            throw new Error(`Network response was not ok (${response.status})`);
+            return response.json();
+        } finally {
+            clearTimeout(timer);
         }
-
-        return response.json();
     },
 
-    // Handle socket notifications
-    socketNotificationReceived: function (notification, payload) {
+    // Listen for socket notifications
+    socketNotificationReceived: function(notification, payload) {
         if (notification === 'GET_MHWP1') {
             this.getMHW_P1(payload);
         } else if (notification === 'GET_MHWWM') {
             this.getMHW_WM(payload);
         }
-    },
+    }
 
 });
