@@ -8,18 +8,12 @@ module.exports = NodeHelper.create({
         console.log("Starting node_helper for: " + this.name);
         this.MHW_P1 = null;
         this.MHW_WM = null;
-
-        // Track if first snapshot has been saved today
         this.firstSnapshotSaved = false;
-
-        // Schedule nightly save at 23:59
         this.scheduleNightlySave();
     },
 
     scheduleNightlySave: function() {
         const now = new Date();
-
-        // Calculate milliseconds until 23:59 tonight
         const millisTillMidnight = new Date(
             now.getFullYear(),
             now.getMonth(),
@@ -28,14 +22,12 @@ module.exports = NodeHelper.create({
         ) - now;
 
         setTimeout(() => {
-            this.saveDailyData(); // Save at 23:59
-            // Repeat every 24h
+            this.saveDailyData();
             setInterval(() => this.saveDailyData(), 24 * 60 * 60 * 1000);
         }, millisTillMidnight);
     },
 
     saveDailyData: function() {
-        // Only save if at least one meter has real data
         if (!this.MHW_P1 && !this.MHW_WM) {
             console.log("No meter data yet, skipping daily snapshot.");
             return;
@@ -44,11 +36,9 @@ module.exports = NodeHelper.create({
         const historyFile = path.join(__dirname, 'history_data.json');
         let history = [];
 
-        // Load existing data
         if (fs.existsSync(historyFile)) {
             try {
-                const fileContent = fs.readFileSync(historyFile, 'utf8');
-                history = JSON.parse(fileContent);
+                history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
             } catch (err) {
                 console.error("Failed to read history_data.json:", err.message);
             }
@@ -56,13 +46,11 @@ module.exports = NodeHelper.create({
 
         const today = new Date().toISOString().split('T')[0];
 
-        // Prevent duplicate snapshot for the same day
         if (history.some(h => h.date === today)) {
             console.log("Snapshot for today already exists.");
             return;
         }
 
-        // Build daily snapshot
         const snapshot = {
             date: today,
             P1: {
@@ -78,12 +66,10 @@ module.exports = NodeHelper.create({
 
         history.push(snapshot);
 
-        // Keep only last 30 days
         if (history.length > 30) {
             history = history.slice(history.length - 30);
         }
 
-        // Save to file
         try {
             fs.writeFileSync(historyFile, JSON.stringify(history, null, 2));
             console.log("Daily MyHomeWizard snapshot saved to history_data.json");
@@ -98,8 +84,6 @@ module.exports = NodeHelper.create({
             const result = await this.fetchWithTimeout(url);
             this.MHW_P1 = result;
             this.sendSocketNotification('MHWP1_RESULT', result);
-
-            // Save snapshot immediately after first successful fetch
             if (!this.firstSnapshotSaved) this.saveDailyData();
         } catch (error) {
             console.error("MMM-MyHomeWizard P1 Error:", error.message);
@@ -112,8 +96,6 @@ module.exports = NodeHelper.create({
             const result = await this.fetchWithTimeout(url);
             this.MHW_WM = result;
             this.sendSocketNotification('MHWWM_RESULT', result);
-
-            // Save snapshot immediately after first successful fetch
             if (!this.firstSnapshotSaved) this.saveDailyData();
         } catch (error) {
             console.error("MMM-MyHomeWizard WM Error:", error.message);
@@ -137,6 +119,19 @@ module.exports = NodeHelper.create({
     socketNotificationReceived: function(notification, payload) {
         if (notification === 'GET_MHWP1') this.getMHW_P1(payload);
         else if (notification === 'GET_MHWWM') this.getMHW_WM(payload);
+        else if (notification === "GET_LAST_UPDATE") {
+            const historyFile = path.join(__dirname, 'history_data.json');
+            let lastDate = null;
+            if (fs.existsSync(historyFile)) {
+                try {
+                    const history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
+                    if (history.length > 0) lastDate = history[history.length - 1].date;
+                } catch (e) {
+                    console.error("Failed to read last update from history_data.json:", e.message);
+                }
+            }
+            this.sendSocketNotification("LAST_UPDATE_RESULT", lastDate);
+        }
     }
 
 });
