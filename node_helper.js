@@ -1,71 +1,57 @@
-/*
-//-------------------------------------------
-MMM-MyHomeWizard
-Copyright (C) 2024 - H. Tilburgs
-MIT License
-
-v1.0.0 : Initial version
-
-//-------------------------------------------
-*/
-
 const NodeHelper = require('node_helper');
+const fetch = require('node-fetch'); // ensure node-fetch is installed
 
 module.exports = NodeHelper.create({
 
-  start: function() {
-          console.log("Starting node_helper for: " + this.name);
-  },
+    start: function () {
+        console.log("Starting node_helper for: " + this.name);
+    },
 
-getMHW_P1: function(urlP1) {
-        // Make a GET request using the Fetch API for the P1 Meter
-        fetch(urlP1)
-          .then(response_P1 => {
-            if (!response_P1.ok) {
-              console.error('MMM-MyHomeWizard: Network response was not ok');
-            }
-            return response_P1.json();
-          })
-
-          .then(result_P1 => {
-            // Process the retrieved user data
-            // console.log(result_P1);           // --> Remove trailing slashes to display data in Console for testing
+    // Fetch P1 Meter data
+    getMHW_P1: async function (urlP1) {
+        try {
+            const result_P1 = await this.fetchWithTimeout(urlP1);
             this.sendSocketNotification('MHWP1_RESULT', result_P1);
-          })
+        } catch (error) {
+            console.error('MMM-MyHomeWizard P1 Error:', error.message);
+            this.sendSocketNotification('MHWP1_ERROR', { error: error.message });
+        }
+    },
 
-          .catch(error => {
-            console.error('Error:', error);
-          });
-  },
-
-  getMHW_WM: function(urlWM) {
-        // Make a GET request using the Fetch API for the Water Meter
-        fetch(urlWM)
-          .then(response_WM => {
-            if (!response_WM.ok) {
-              console.error('MMM-MyHomeWizard: Network response was not ok');
-            }
-            return response_WM.json();
-          })
-
-          .then(result_WM => {
-            // Process the retrieved user data
-            // console.log(result_WM);         // --> Remove trailing slashes to display data in Console for testing
+    // Fetch Water Meter data
+    getMHW_WM: async function (urlWM) {
+        try {
+            const result_WM = await this.fetchWithTimeout(urlWM);
             this.sendSocketNotification('MHWWM_RESULT', result_WM);
-          })
+        } catch (error) {
+            console.error('MMM-MyHomeWizard WM Error:', error.message);
+            this.sendSocketNotification('MHWWM_ERROR', { error: error.message });
+        }
+    },
 
-          .catch(error => {
-            console.error('Error:', error);
-          });
-  },
-  
-  socketNotificationReceived: function(notification, payload) {
-            if (notification === 'GET_MHWP1') {
+    // Generic fetch with timeout
+    fetchWithTimeout: async function (url, timeout = 5000) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeout);
+
+        const response = await fetch(url, { signal: controller.signal });
+
+        clearTimeout(timer);
+
+        if (!response.ok) {
+            throw new Error(`Network response was not ok (${response.status})`);
+        }
+
+        return response.json();
+    },
+
+    // Handle socket notifications
+    socketNotificationReceived: function (notification, payload) {
+        if (notification === 'GET_MHWP1') {
             this.getMHW_P1(payload);
-            }
-            else if (notification === 'GET_MHWWM') {
+        } else if (notification === 'GET_MHWWM') {
             this.getMHW_WM(payload);
-            }
-  },
-  
+        }
+    },
+
 });
