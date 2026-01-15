@@ -18,7 +18,7 @@ Module.register('MMM-MyHomeWizard', {
         showDeltaPower: true,
         showDeltaGas: true,
         showDeltaWater: true,
-        language: "nl" // nl of en
+        language: "en" // nl of en
     },
 
     getStyles: function () {
@@ -28,7 +28,9 @@ Module.register('MMM-MyHomeWizard', {
     getTranslations: function () {
         return {
             nl: "translations/nl.json",
-            en: "translations/en.json"
+            en: "translations/en.json",
+            de: "translations/de.json",
+            fr: "tranlations/fr.json"
         };
     },
 
