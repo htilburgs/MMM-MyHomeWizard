@@ -25,12 +25,19 @@ Module.register('MMM-MyHomeWizard', {
     },
 
     getTranslations: function () {
-        return {
+        const availableTranslations = {
             nl: "translations/nl.json",
             en: "translations/en.json",
             de: "translations/de.json",
             fr: "translations/fr.json"
         };
+
+        // Fallback naar EN als taal niet beschikbaar is
+        if (!(config && config.language && availableTranslations[config.language])) {
+            return { en: availableTranslations.en };
+        }
+
+        return availableTranslations;
     },
 
     start: function () {
@@ -78,8 +85,12 @@ Module.register('MMM-MyHomeWizard', {
     },
 
     formatNumber: function(number) {
-        const language = config.language || 'en';
-        return new Intl.NumberFormat(language).format(number);
+        let language = (config && config.language) ? config.language : 'en';
+        try {
+            return new Intl.NumberFormat(language).format(number);
+        } catch (e) {
+            return new Intl.NumberFormat('en').format(number);
+        }
     },
 
     getDom: function () {
