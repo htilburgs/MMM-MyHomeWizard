@@ -8,8 +8,21 @@ module.exports = NodeHelper.create({
         console.log("Starting node_helper for: " + this.name);
         this.MHW_P1 = null;
         this.MHW_WM = null;
+        this.firstSnapshotSaved = false;
 
-        this.firstSnapshotSaved = false; // Track if today's snapshot has been saved
+        // On module start, send the last snapshot date from existing history
+        const historyFile = path.join(__dirname, 'history_data.json');
+        if (fs.existsSync(historyFile)) {
+            try {
+                const content = fs.readFileSync(historyFile, 'utf8');
+                const history = JSON.parse(content);
+                if (history.length > 0) {
+                    this.sendSocketNotification("LAST_SNAPSHOT_DATE", history[history.length - 1].date);
+                }
+            } catch (err) {
+                console.error("Failed to read history_data.json:", err.message);
+            }
+        }
 
         // Schedule nightly snapshot at 23:59
         this.scheduleNightlySave();
@@ -31,7 +44,6 @@ module.exports = NodeHelper.create({
     },
 
     saveDailyData: function() {
-        // Only save if at least one meter has real data
         if (!this.MHW_P1 && !this.MHW_WM) {
             console.log("No meter data yet, skipping daily snapshot.");
             return;
@@ -40,7 +52,6 @@ module.exports = NodeHelper.create({
         const historyFile = path.join(__dirname, 'history_data.json');
         let history = [];
 
-        // Load existing data
         if (fs.existsSync(historyFile)) {
             try {
                 const content = fs.readFileSync(historyFile, 'utf8');
@@ -51,14 +62,11 @@ module.exports = NodeHelper.create({
         }
 
         const today = new Date().toISOString().split('T')[0];
-
-        // Prevent duplicate snapshot for the same day
         if (history.some(h => h.date === today)) {
             console.log("Snapshot for today already exists.");
             return;
         }
 
-        // Build snapshot
         const snapshot = {
             date: today,
             P1: {
@@ -73,19 +81,14 @@ module.exports = NodeHelper.create({
         };
 
         history.push(snapshot);
+        if (history.length > 30) history = history.slice(history.length - 30);
 
-        // Keep only last 30 days
-        if (history.length > 30) {
-            history = history.slice(history.length - 30);
-        }
-
-        // Save to file
         try {
             fs.writeFileSync(historyFile, JSON.stringify(history, null, 2));
             console.log("Daily MyHomeWizard snapshot saved to history_data.json");
             this.firstSnapshotSaved = true;
 
-            // Notify front-end of last snapshot date
+            // Notify front-end
             this.sendSocketNotification("LAST_SNAPSHOT_DATE", snapshot.date);
         } catch (err) {
             console.error("Failed to write history_data.json:", err.message);
@@ -98,7 +101,6 @@ module.exports = NodeHelper.create({
             this.MHW_P1 = result;
             this.sendSocketNotification('MHWP1_RESULT', result);
 
-            // Save snapshot immediately after first successful fetch
             if (!this.firstSnapshotSaved) this.saveDailyData();
         } catch (error) {
             console.error("MMM-MyHomeWizard P1 Error:", error.message);
@@ -122,7 +124,6 @@ module.exports = NodeHelper.create({
     fetchWithTimeout: async function(url, timeout = 5000) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeout);
-
         try {
             const response = await fetch(url, { signal: controller.signal });
             if (!response.ok) throw new Error(`Network response was not ok (${response.status})`);
