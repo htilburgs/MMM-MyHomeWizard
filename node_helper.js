@@ -10,8 +10,9 @@ module.exports = NodeHelper.create({
         this.MHW_WM = null;
         this.firstSnapshotSaved = false;
 
-        // Send last snapshot date from existing history (after short delay)
         const historyFile = path.join(__dirname, 'history_data.json');
+
+        // Send last snapshot date if available
         if (fs.existsSync(historyFile)) {
             try {
                 const content = fs.readFileSync(historyFile, 'utf8');
@@ -27,7 +28,29 @@ module.exports = NodeHelper.create({
             }
         }
 
-        // Schedule nightly snapshot at 23:59
+        // If no real meter, send dummy results immediately
+        if (!process.env.P1_IP) {
+            this.MHW_P1 = {
+                total_power_import_kwh: 123,
+                total_power_export_kwh: 10,
+                total_gas_m3: 5,
+                active_power_w: 100,
+                meter_model: "Dummy P1",
+                wifi_strength: 80,
+                any_power_fail_count: 0
+            };
+            this.sendSocketNotification('MHWP1_RESULT', this.MHW_P1);
+        }
+
+        if (!process.env.WM_IP) {
+            this.MHW_WM = {
+                total_liter_m3: 2,
+                active_liter_lpm: 5,
+                wifi_strength: 75
+            };
+            this.sendSocketNotification('MHWWM_RESULT', this.MHW_WM);
+        }
+
         this.scheduleNightlySave();
     },
 
@@ -88,9 +111,8 @@ module.exports = NodeHelper.create({
 
         try {
             fs.writeFileSync(historyFile, JSON.stringify(history, null, 2));
-            console.log("Daily MyHomeWizard snapshot saved to history_data.json");
+            console.log("Daily snapshot saved");
             this.firstSnapshotSaved = true;
-
             this.sendSocketNotification("LAST_SNAPSHOT_DATE", snapshot.date);
         } catch (err) {
             console.error("Failed to write history_data.json:", err.message);
@@ -102,10 +124,9 @@ module.exports = NodeHelper.create({
             const result = await this.fetchWithTimeout(url);
             this.MHW_P1 = result;
             this.sendSocketNotification('MHWP1_RESULT', result);
-
             if (!this.firstSnapshotSaved) this.saveDailyData();
         } catch (error) {
-            console.error("MMM-MyHomeWizard P1 Error:", error.message);
+            console.error("P1 Error:", error.message);
             this.sendSocketNotification('MHWP1_ERROR', { error: error.message, retry });
         }
     },
@@ -115,10 +136,9 @@ module.exports = NodeHelper.create({
             const result = await this.fetchWithTimeout(url);
             this.MHW_WM = result;
             this.sendSocketNotification('MHWWM_RESULT', result);
-
             if (!this.firstSnapshotSaved) this.saveDailyData();
         } catch (error) {
-            console.error("MMM-MyHomeWizard WM Error:", error.message);
+            console.error("WM Error:", error.message);
             this.sendSocketNotification('MHWWM_ERROR', { error: error.message, retry });
         }
     },
