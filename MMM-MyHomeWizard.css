@@ -227,11 +227,13 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
      font-size: 11px;
      text-align: right !important;
 }
+
 .last-update {
      font-size: 11px;
      text-align: right !important; 
 }
-fa-arrow-up {
+
+.fa-arrow-up {
     --fa: "\f062";
     color: bisque;
 }
