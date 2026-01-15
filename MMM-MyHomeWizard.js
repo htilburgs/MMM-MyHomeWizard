@@ -1,17 +1,19 @@
 Module.register('MMM-MyHomeWizard', {
 
     defaults: {
-        P1_IP: null,              // IP Address P1 Meter
-        WM_IP: null,              // IP Address Water Meter
-        maxWidth: "500px",        // Max width wrapper
-        extraInfo: false,         // Show extra information
-        showFooter: false,        // Show footer (name Power Meter)
-        showGas: true,            // Show Gas option
-        showFeedback: true,       // Show Feed back to the grid
-        currentPower: false,      // Show current power usage
-        currentWater: false,      // Show current water usage
-        initialLoadDelay: 1000,
-        updateInterval: 10000     // Every 10 seconds
+        P1_IP: null,              
+        WM_IP: null,              
+        maxWidth: "500px",        
+        extraInfo: false,         
+        showFooter: false,        
+        showGas: true,            
+        showFeedback: true,       
+        currentPower: false,      
+        currentWater: false,      
+        initialLoadDelay: 1000,  
+        updateInterval: 10000,    
+        fetchTimeout: 5000,       // Configurable fetch timeout (ms)
+        retryCount: 2             // Retry failed requests
     },
 
     getStyles: function () {
@@ -38,9 +40,9 @@ Module.register('MMM-MyHomeWizard', {
             ? "http://" + this.config.WM_IP + "/api/v1/data/"
             : "https://dummyjson.com/c/704a-9a96-4845-bc72";
 
-        // Initialize data and flags
-        this.MHW_P1 = [];
-        this.MHW_WM = [];
+        // Initialize data
+        this.MHW_P1 = {};
+        this.MHW_WM = {};
         this.loadedP1 = false;
         this.loadedWM = false;
         this.errorP1 = false;
@@ -51,17 +53,20 @@ Module.register('MMM-MyHomeWizard', {
     },
 
     scheduleUpdate: function () {
-        // Save interval ID for potential cleanup
         this.updateIntervalId = setInterval(() => {
             this.getMHW_P1();
             this.getMHW_WM();
         }, this.config.updateInterval);
 
-        // Initial fetch after initialLoadDelay
+        // Initial fetch after delay
         setTimeout(() => {
             this.getMHW_P1();
             this.getMHW_WM();
         }, this.config.initialLoadDelay);
+    },
+
+    stop: function () {
+        if (this.updateIntervalId) clearInterval(this.updateIntervalId);
     },
 
     getDom: function () {
@@ -69,18 +74,17 @@ Module.register('MMM-MyHomeWizard', {
         wrapper.className = "wrapper";
         wrapper.style.maxWidth = this.config.maxWidth;
 
-        // Display errors if any
+        // Display errors
         if (this.config.P1_IP && this.errorP1) {
             wrapper.innerHTML = '<span class="error">P1 Meter offline</span>';
             return wrapper;
         }
-
         if (this.config.WM_IP && this.errorWM) {
             wrapper.innerHTML = '<span class="error">Water Meter offline</span>';
             return wrapper;
         }
 
-        // Loading check
+        // Loading state
         if ((!this.loadedP1 && this.config.P1_IP) || (!this.loadedWM && this.config.WM_IP)) {
             wrapper.innerHTML = "Loading....";
             wrapper.classList.add("bright", "light", "small");
@@ -90,15 +94,11 @@ Module.register('MMM-MyHomeWizard', {
         var table = document.createElement("table");
         table.className = "small";
 
-        // Add rows for P1 Meter
-        if (this.config.P1_IP) {
-            this.addPowerRows(table, this.MHW_P1);
-        }
+        // P1 Meter
+        if (this.config.P1_IP) this.addPowerRows(table, this.MHW_P1);
 
-        // Add rows for Water Meter
-        if (this.config.WM_IP) {
-            this.addWaterRows(table, this.MHW_WM);
-        }
+        // Water Meter
+        if (this.config.WM_IP) this.addWaterRows(table, this.MHW_WM);
 
         // Footer
         if (this.config.showFooter && this.MHW_P1?.meter_model) {
@@ -122,26 +122,26 @@ Module.register('MMM-MyHomeWizard', {
         return cell;
     },
 
-    addPowerRows: function(table, MHW_P1) {
+    addPowerRows: function(table, data) {
         if (this.config.currentPower) {
             var row = document.createElement("tr");
             row.className = "current-power-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-bolt-lightning"></i>&nbsp;' + this.translate("Current_Pwr"), "currentpowertextcell"));
-            row.appendChild(this.createCell(Math.round(MHW_P1.active_power_w) + " Watt", "currentpowerdatacell"));
+            row.appendChild(this.createCell(Math.round(data.active_power_w) + " Watt", "currentpowerdatacell"));
             table.appendChild(row);
         }
 
         var row = document.createElement("tr");
         row.className = "total-power-row";
         row.appendChild(this.createCell('<i class="fa-solid fa-plug-circle-bolt"></i>&nbsp;' + this.translate("Total_Pwr"), "totalpowertextcell"));
-        row.appendChild(this.createCell(Math.round(MHW_P1.total_power_import_kwh) + " kWh", "totalpowerdatacell"));
+        row.appendChild(this.createCell(Math.round(data.total_power_import_kwh) + " kWh", "totalpowerdatacell"));
         table.appendChild(row);
 
         if (this.config.showFeedback) {
             var row = document.createElement("tr");
             row.className = "total-feedback-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-plug-circle-plus"></i>&nbsp;' + this.translate("Total_Feedback"), "totalfeedbacktextcell"));
-            row.appendChild(this.createCell(Math.round(MHW_P1.total_power_export_kwh) + " kWh", "totalfeedbackdatacell"));
+            row.appendChild(this.createCell(Math.round(data.total_power_export_kwh) + " kWh", "totalfeedbackdatacell"));
             table.appendChild(row);
         }
 
@@ -149,33 +149,30 @@ Module.register('MMM-MyHomeWizard', {
             var row = document.createElement("tr");
             row.className = "total-gas-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-fire"></i>&nbsp;' + this.translate("Total_Gas"), "totalgastextcell"));
-            row.appendChild(this.createCell(Math.round(MHW_P1.total_gas_m3) + " m³", "totalgasdatacell"));
+            row.appendChild(this.createCell(Math.round(data.total_gas_m3) + " m³", "totalgasdatacell"));
             table.appendChild(row);
         }
 
-        if (this.config.extraInfo) {
-            this.addExtraInfo(table, MHW_P1, "P1");
-        }
+        if (this.config.extraInfo) this.addExtraInfo(table, data, "P1");
     },
 
-    addWaterRows: function(table, MHW_WM) {
+    addWaterRows: function(table, data) {
         if (this.config.currentWater) {
             var row = document.createElement("tr");
             row.className = "current-water-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-water"></i>&nbsp;' + this.translate("Current_Wtr"), "currentwatertextcell"));
-            row.appendChild(this.createCell(Math.round(MHW_WM.active_liter_lpm) + " Lpm", "currentwaterdatacell"));
+            row.appendChild(this.createCell(Math.round(data.active_liter_lpm) + " Lpm", "currentwaterdatacell"));
             table.appendChild(row);
         }
 
         var row = document.createElement("tr");
         row.className = "total-water-row";
         row.appendChild(this.createCell('<i class="fa-solid fa-droplet"></i>&nbsp;' + this.translate("Total_Wtr"), "totalwatertextcell"));
-        row.appendChild(this.createCell(Math.round(MHW_WM.total_liter_m3) + " m³", "totalwaterdatacell"));
+        // Ensure total liters in m³
+        row.appendChild(this.createCell(Math.round(data.total_liter_m3) + " m³", "totalwaterdatacell"));
         table.appendChild(row);
 
-        if (this.config.extraInfo) {
-            this.addExtraInfo(table, MHW_WM, "WM");
-        }
+        if (this.config.extraInfo) this.addExtraInfo(table, data, "WM");
     },
 
     addExtraInfo: function(table, data, type) {
@@ -198,41 +195,40 @@ Module.register('MMM-MyHomeWizard', {
         }
     },
 
-    getMHW_P1: function() {
-        this.sendSocketNotification('GET_MHWP1', this.urlP1);
+    getMHW_P1: function(retry = this.config.retryCount) {
+        this.sendSocketNotification('GET_MHWP1', { url: this.urlP1, retry });
     },
 
-    getMHW_WM: function() {
-        this.sendSocketNotification('GET_MHWWM', this.urlWM);
+    getMHW_WM: function(retry = this.config.retryCount) {
+        this.sendSocketNotification('GET_MHWWM', { url: this.urlWM, retry });
     },
 
-    processMHW_P1: function(data_P1) {
-        this.MHW_P1 = data_P1;
+    processMHW_P1: function(data) {
+        this.MHW_P1 = data;
         this.loadedP1 = true;
         this.errorP1 = false;
         if (this.loadedP1 && this.loadedWM) this.updateDom(this.config.initialLoadDelay);
     },
 
-    processMHW_WM: function(data_WM) {
-        this.MHW_WM = data_WM;
+    processMHW_WM: function(data) {
+        this.MHW_WM = data;
         this.loadedWM = true;
         this.errorWM = false;
         if (this.loadedP1 && this.loadedWM) this.updateDom(this.config.initialLoadDelay);
     },
 
     socketNotificationReceived: function(notification, payload) {
-        if (notification === "MHWP1_RESULT") {
-            this.processMHW_P1(payload);
-        } else if (notification === "MHWWM_RESULT") {
-            this.processMHW_WM(payload);
-        } else if (notification === "MHWP1_ERROR") {
+        if (notification === "MHWP1_RESULT") this.processMHW_P1(payload);
+        else if (notification === "MHWWM_RESULT") this.processMHW_WM(payload);
+        else if (notification === "MHWP1_ERROR") {
             console.error("MMM-MyHomeWizard P1 Error:", payload.error);
-            this.errorP1 = true;
-            this.updateDom(this.config.initialLoadDelay);
-        } else if (notification === "MHWWM_ERROR") {
+            if (payload.retry > 0) this.getMHW_P1(payload.retry - 1);
+            else { this.errorP1 = true; this.updateDom(this.config.initialLoadDelay); }
+        }
+        else if (notification === "MHWWM_ERROR") {
             console.error("MMM-MyHomeWizard WM Error:", payload.error);
-            this.errorWM = true;
-            this.updateDom(this.config.initialLoadDelay);
+            if (payload.retry > 0) this.getMHW_WM(payload.retry - 1);
+            else { this.errorWM = true; this.updateDom(this.config.initialLoadDelay); }
         }
     }
 
