@@ -61,6 +61,12 @@ Module.register('MMM-MyHomeWizard', {
         }
     },
 
+    // --- Helper: format numbers based on language ---
+    formatNumber: function(number) {
+        const locale = this.config.language || "nl";
+        return Math.round(number).toLocaleString(locale);
+    },
+
     scheduleUpdate: function () {
         this.updateIntervalId = setInterval(() => {
             this.getMHW_P1();
@@ -138,21 +144,21 @@ Module.register('MMM-MyHomeWizard', {
             var row = document.createElement("tr");
             row.className = "current-power-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-bolt-lightning"></i>&nbsp;' + this.translate("Current_Pwr"), "currentpowertextcell"));
-            row.appendChild(this.createCell(Math.round(data.active_power_w) + " Watt", "currentpowerdatacell"));
+            row.appendChild(this.createCell(this.formatNumber(data.active_power_w) + " Watt", "currentpowerdatacell"));
             table.appendChild(row);
         }
 
         var row = document.createElement("tr");
         row.className = "total-power-row";
         row.appendChild(this.createCell('<i class="fa-solid fa-plug-circle-bolt"></i>&nbsp;' + this.translate("Total_Pwr"), "totalpowertextcell"));
-        row.appendChild(this.createCell(Math.round(data.total_power_import_kwh) + " kWh", "totalpowerdatacell"));
+        row.appendChild(this.createCell(this.formatNumber(data.total_power_import_kwh) + " kWh", "totalpowerdatacell"));
         table.appendChild(row);
 
         if (this.config.showFeedback) {
             var row = document.createElement("tr");
             row.className = "total-feedback-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-plug-circle-plus"></i>&nbsp;' + this.translate("Total_Feedback"), "totalfeedbacktextcell"));
-            row.appendChild(this.createCell(Math.round(data.total_power_export_kwh) + " kWh", "totalfeedbackdatacell"));
+            row.appendChild(this.createCell(this.formatNumber(data.total_power_export_kwh) + " kWh", "totalfeedbackdatacell"));
             table.appendChild(row);
         }
 
@@ -160,19 +166,19 @@ Module.register('MMM-MyHomeWizard', {
             var row = document.createElement("tr");
             row.className = "total-gas-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-fire"></i>&nbsp;' + this.translate("Total_Gas"), "totalgastextcell"));
-            row.appendChild(this.createCell(Math.round(data.total_gas_m3) + " m³", "totalgasdatacell"));
+            row.appendChild(this.createCell(this.formatNumber(data.total_gas_m3) + " m³", "totalgasdatacell"));
             table.appendChild(row);
         }
 
-        // --- Delta rijen (optioneel per config) ---
+        // Delta rows
         if (this.deltaP1) {
             if (this.config.showDeltaPower) {
                 var row = document.createElement("tr");
                 row.className = "total-power-row";
                 row.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Pwr"), "totalpowertextcell"));
                 row.appendChild(this.createCell(
-                    Math.round(this.deltaP1.total_power_import_kwh || 0) + " kWh / " +
-                    Math.round(this.deltaP1.total_power_export_kwh || 0) + " kWh",
+                    this.formatNumber(this.deltaP1.total_power_import_kwh || 0) + " kWh / " +
+                    this.formatNumber(this.deltaP1.total_power_export_kwh || 0) + " kWh",
                     "totalpowerdatacell"
                 ));
                 table.appendChild(row);
@@ -183,7 +189,7 @@ Module.register('MMM-MyHomeWizard', {
                 gasRow.className = "total-gas-row";
                 gasRow.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Gas"), "totalgastextcell"));
                 gasRow.appendChild(this.createCell(
-                    Math.round(this.deltaP1.total_gas_m3 || 0) + " m³",
+                    this.formatNumber(this.deltaP1.total_gas_m3 || 0) + " m³",
                     "totalgasdatacell"
                 ));
                 table.appendChild(gasRow);
@@ -198,7 +204,7 @@ Module.register('MMM-MyHomeWizard', {
             var row = document.createElement("tr");
             row.className = "current-water-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-water"></i>&nbsp;' + this.translate("Current_Wtr"), "currentwatertextcell"));
-            row.appendChild(this.createCell(Math.round(data.active_liter_lpm) + " Lpm", "currentwaterdatacell"));
+            row.appendChild(this.createCell(this.formatNumber(data.active_liter_lpm) + " Lpm", "currentwaterdatacell"));
             table.appendChild(row);
         }
 
@@ -206,7 +212,7 @@ Module.register('MMM-MyHomeWizard', {
         var row = document.createElement("tr");
         row.className = "total-water-row";
         row.appendChild(this.createCell('<i class="fa-solid fa-droplet"></i>&nbsp;' + this.translate("Total_Wtr"), "totalwatertextcell"));
-        row.appendChild(this.createCell(Math.round(data.total_liter_m3) + " m³ (" + Math.round(totalLiters) + " L)", "totalwaterdatacell"));
+        row.appendChild(this.createCell(this.formatNumber(data.total_liter_m3) + " m³ (" + this.formatNumber(totalLiters) + " L)", "totalwaterdatacell"));
         table.appendChild(row);
 
         if (this.deltaWM && this.config.showDeltaWater) {
@@ -214,7 +220,7 @@ Module.register('MMM-MyHomeWizard', {
             row.className = "total-water-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Wtr"), "totalwatertextcell"));
             row.appendChild(this.createCell(
-                Math.round(this.deltaWM.total_liter_m3 || 0) + " m³ (" + Math.round(this.deltaWM.total_liters || 0) + " L)",
+                this.formatNumber(this.deltaWM.total_liter_m3 || 0) + " m³ (" + this.formatNumber(this.deltaWM.total_liters || 0) + " L)",
                 "totalwaterdatacell"
             ));
             table.appendChild(row);
