@@ -161,17 +161,28 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
+        // --- Delta rijen ---
         if (this.deltaP1) {
+            // Delta stroom
             var row = document.createElement("tr");
             row.className = "delta-power-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Pwr"), "deltapowertextcell"));
             row.appendChild(this.createCell(
-                Math.round(this.deltaP1.total_power_import_kwh) + " kWh / " +
-                Math.round(this.deltaP1.total_power_export_kwh) + " kWh / " +
-                Math.round(this.deltaP1.total_gas_m3) + " m³",
+                Math.round(this.deltaP1.total_power_import_kwh || 0) + " kWh / " +
+                Math.round(this.deltaP1.total_power_export_kwh || 0) + " kWh",
                 "deltapowerdatacell"
             ));
             table.appendChild(row);
+
+            // Delta gas
+            var gasRow = document.createElement("tr");
+            gasRow.className = "delta-gas-row";
+            gasRow.appendChild(this.createCell('<i class="fa-solid fa-fire"></i>&nbsp;' + this.translate("Delta_Gas"), "deltagasttextcell"));
+            gasRow.appendChild(this.createCell(
+                Math.round(this.deltaP1.total_gas_m3 || 0) + " m³",
+                "deltagasdatacell"
+            ));
+            table.appendChild(gasRow);
         }
 
         if (this.config.extraInfo) this.addExtraInfo(table, data, "P1");
@@ -198,7 +209,7 @@ Module.register('MMM-MyHomeWizard', {
             row.className = "delta-water-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Wtr"), "deltawatertextcell"));
             row.appendChild(this.createCell(
-                Math.round(this.deltaWM.total_liter_m3) + " m³ (" + Math.round(this.deltaWM.total_liters) + " L)",
+                Math.round(this.deltaWM.total_liter_m3 || 0) + " m³ (" + Math.round(this.deltaWM.total_liters || 0) + " L)",
                 "deltawaterdatacell"
             ));
             table.appendChild(row);
@@ -240,7 +251,10 @@ Module.register('MMM-MyHomeWizard', {
         this.loadedP1 = true;
         this.errorP1 = false;
         if ((this.config.P1_IP ? this.loadedP1 : true) &&
-            (this.config.WM_IP ? this.loadedWM : true)) this.updateDom(this.config.initialLoadDelay);
+            (this.config.WM_IP ? this.loadedWM : true)) {
+            if (this.config.showLastUpdate) this.readLastUpdate();
+            else this.updateDom(this.config.initialLoadDelay);
+        }
     },
 
     processMHW_WM: function(data) {
@@ -248,7 +262,10 @@ Module.register('MMM-MyHomeWizard', {
         this.loadedWM = true;
         this.errorWM = false;
         if ((this.config.P1_IP ? this.loadedP1 : true) &&
-            (this.config.WM_IP ? this.loadedWM : true)) this.updateDom(this.config.initialLoadDelay);
+            (this.config.WM_IP ? this.loadedWM : true)) {
+            if (this.config.showLastUpdate) this.readLastUpdate();
+            else this.updateDom(this.config.initialLoadDelay);
+        }
     },
 
     readLastUpdate: function() {
