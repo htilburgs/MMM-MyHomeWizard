@@ -36,11 +36,37 @@ Module.register('MMM-MyHomeWizard', {
 
         this.MHW_P1 = {};
         this.MHW_WM = {};
-        this.loadedP1 = false;
-        this.loadedWM = false;
+
+        // Flags to control loading
+        this.hasP1Data = false;
+        this.hasWMData = false;
+
         this.lastSnapshotDate = null;
         this.errorP1 = false;
         this.errorWM = false;
+
+        // Dummy fallback if no real meter
+        if (!this.urlP1) {
+            this.MHW_P1 = {
+                total_power_import_kwh: 123,
+                total_power_export_kwh: 10,
+                total_gas_m3: 5,
+                active_power_w: 100,
+                meter_model: "Dummy P1",
+                wifi_strength: 80,
+                any_power_fail_count: 0
+            };
+            this.hasP1Data = true;
+        }
+
+        if (!this.urlWM) {
+            this.MHW_WM = {
+                total_liter_m3: 2,
+                active_liter_lpm: 5,
+                wifi_strength: 75
+            };
+            this.hasWMData = true;
+        }
 
         this.scheduleUpdate();
     },
@@ -62,10 +88,9 @@ Module.register('MMM-MyHomeWizard', {
         wrapper.className = "wrapper";
         wrapper.style.maxWidth = this.config.maxWidth;
 
-        const hasP1Data = this.loadedP1 || Object.keys(this.MHW_P1).length > 0;
-        const hasWMData = this.loadedWM || Object.keys(this.MHW_WM).length > 0;
+        const isLoading = !this.hasP1Data && !this.hasWMData;
 
-        if (!hasP1Data && !hasWMData) {
+        if (isLoading) {
             wrapper.innerHTML = "Loading....";
             wrapper.classList.add("bright", "light", "small");
             return wrapper;
@@ -74,8 +99,8 @@ Module.register('MMM-MyHomeWizard', {
         const table = document.createElement("table");
         table.className = "small";
 
-        if (hasP1Data) this.addPowerRows(table, this.MHW_P1);
-        if (hasWMData) this.addWaterRows(table, this.MHW_WM);
+        if (this.hasP1Data) this.addPowerRows(table, this.MHW_P1);
+        if (this.hasWMData) this.addWaterRows(table, this.MHW_WM);
 
         if (this.config.showFooter) {
             const row = document.createElement("tr");
@@ -88,11 +113,8 @@ Module.register('MMM-MyHomeWizard', {
                 footerText += '<i class="fa-solid fa-charging-station"></i>&nbsp;' + this.MHW_P1.meter_model;
             }
 
-            if (this.lastSnapshotDate) {
-                footerText += '<br><i class="fa-solid fa-calendar-check"></i>&nbsp;Last snapshot: ' + this.lastSnapshotDate;
-            } else {
-                footerText += '<br><i class="fa-solid fa-calendar-exclamation"></i>&nbsp;Last snapshot: unknown';
-            }
+            footerText += '<br><i class="fa-solid fa-calendar-check"></i>&nbsp;Last snapshot: ' +
+                (this.lastSnapshotDate || 'unknown');
 
             cell.innerHTML = footerText;
             row.appendChild(cell);
@@ -106,14 +128,12 @@ Module.register('MMM-MyHomeWizard', {
     socketNotificationReceived: function(notification, payload) {
         if (notification === "MHWP1_RESULT") {
             this.MHW_P1 = payload;
-            this.loadedP1 = true;
-            this.errorP1 = false;
+            this.hasP1Data = true;
             this.updateDom(0);
         }
         else if (notification === "MHWWM_RESULT") {
             this.MHW_WM = payload;
-            this.loadedWM = true;
-            this.errorWM = false;
+            this.hasWMData = true;
             this.updateDom(0);
         }
         else if (notification === "MHWP1_ERROR") {
