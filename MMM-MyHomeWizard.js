@@ -14,7 +14,7 @@ Module.register('MMM-MyHomeWizard', {
         updateInterval: 10000,
         fetchTimeout: 5000,
         retryCount: 2,
-        showLastUpdate: true   // <-- toon laatste update regel
+        showLastUpdate: true
     },
 
     getStyles: function () {
@@ -47,11 +47,12 @@ Module.register('MMM-MyHomeWizard', {
         this.errorP1 = false;
         this.errorWM = false;
 
-        this.lastUpdateDate = null; // <-- datum van laatste update uit history_data.json
+        this.lastUpdateDate = null;
+        this.deltaP1 = null;
+        this.deltaWM = null;
 
         this.scheduleUpdate();
 
-        // Vraag direct laatste update op
         if (this.config.showLastUpdate) {
             this.readLastUpdate();
         }
@@ -111,7 +112,6 @@ Module.register('MMM-MyHomeWizard', {
 
         wrapper.appendChild(table);
 
-        // Laatste update regel
         if (this.config.showLastUpdate && this.lastUpdateDate) {
             var updateRow = document.createElement("div");
             updateRow.className = "last-update small light";
@@ -161,6 +161,19 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
+        if (this.deltaP1) {
+            var row = document.createElement("tr");
+            row.className = "delta-power-row";
+            row.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Pwr"), "deltapowertextcell"));
+            row.appendChild(this.createCell(
+                Math.round(this.deltaP1.total_power_import_kwh) + " kWh / " +
+                Math.round(this.deltaP1.total_power_export_kwh) + " kWh / " +
+                Math.round(this.deltaP1.total_gas_m3) + " m³",
+                "deltapowerdatacell"
+            ));
+            table.appendChild(row);
+        }
+
         if (this.config.extraInfo) this.addExtraInfo(table, data, "P1");
     },
 
@@ -179,6 +192,17 @@ Module.register('MMM-MyHomeWizard', {
         row.appendChild(this.createCell('<i class="fa-solid fa-droplet"></i>&nbsp;' + this.translate("Total_Wtr"), "totalwatertextcell"));
         row.appendChild(this.createCell(Math.round(data.total_liter_m3) + " m³ (" + Math.round(totalLiters) + " L)", "totalwaterdatacell"));
         table.appendChild(row);
+
+        if (this.deltaWM) {
+            var row = document.createElement("tr");
+            row.className = "delta-water-row";
+            row.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Wtr"), "deltawatertextcell"));
+            row.appendChild(this.createCell(
+                Math.round(this.deltaWM.total_liter_m3) + " m³ (" + Math.round(this.deltaWM.total_liters) + " L)",
+                "deltawaterdatacell"
+            ));
+            table.appendChild(row);
+        }
 
         if (this.config.extraInfo) this.addExtraInfo(table, data, "WM");
     },
@@ -215,14 +239,16 @@ Module.register('MMM-MyHomeWizard', {
         this.MHW_P1 = data;
         this.loadedP1 = true;
         this.errorP1 = false;
-        if (this.loadedP1 && this.loadedWM) this.updateDom(this.config.initialLoadDelay);
+        if ((this.config.P1_IP ? this.loadedP1 : true) &&
+            (this.config.WM_IP ? this.loadedWM : true)) this.updateDom(this.config.initialLoadDelay);
     },
 
     processMHW_WM: function(data) {
         this.MHW_WM = data;
         this.loadedWM = true;
         this.errorWM = false;
-        if (this.loadedP1 && this.loadedWM) this.updateDom(this.config.initialLoadDelay);
+        if ((this.config.P1_IP ? this.loadedP1 : true) &&
+            (this.config.WM_IP ? this.loadedWM : true)) this.updateDom(this.config.initialLoadDelay);
     },
 
     readLastUpdate: function() {
@@ -232,7 +258,12 @@ Module.register('MMM-MyHomeWizard', {
     socketNotificationReceived: function(notification, payload) {
         if (notification === "MHWP1_RESULT") this.processMHW_P1(payload);
         else if (notification === "MHWWM_RESULT") this.processMHW_WM(payload);
-        else if (notification === "LAST_UPDATE_RESULT") this.lastUpdateDate = payload;
+        else if (notification === "LAST_UPDATE_RESULT") {
+            this.lastUpdateDate = payload.lastDate;
+            this.deltaP1 = payload.deltaP1;
+            this.deltaWM = payload.deltaWM;
+            this.updateDom();
+        }
         else if (notification === "MHWP1_ERROR") {
             console.error("MMM-MyHomeWizard P1 Error:", payload.error);
             if (payload.retry > 0) this.getMHW_P1(payload.retry - 1);
