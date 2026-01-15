@@ -7,15 +7,16 @@ module.exports = NodeHelper.create({
     start: function () {
         console.log("Starting node_helper for: " + this.name);
 
-        // Laatste data bewaren voor dagelijkse opslag
+        // Laatste data bewaren voor opslag
         this.lastP1 = {};
         this.lastWM = {};
 
-        // Start dagelijkse opslag
-        this.scheduleDailySave();
+        // Start dagelijkse opslag om 12:05
+        this.scheduleDailySaveAtNoon();
     },
 
-    // Fetch P1 Meter data
+    // --- FETCH FUNCTIES --- //
+
     getMHW_P1: async function(urlP1) {
         try {
             const result_P1 = await this.fetchWithTimeout(urlP1);
@@ -27,7 +28,6 @@ module.exports = NodeHelper.create({
         }
     },
 
-    // Fetch Water Meter data
     getMHW_WM: async function(urlWM) {
         try {
             const result_WM = await this.fetchWithTimeout(urlWM);
@@ -39,7 +39,6 @@ module.exports = NodeHelper.create({
         }
     },
 
-    // Generic fetch with timeout
     fetchWithTimeout: async function(url, timeout = 5000) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeout);
@@ -57,7 +56,6 @@ module.exports = NodeHelper.create({
         }
     },
 
-    // Listen for socket notifications
     socketNotificationReceived: function(notification, payload) {
         if (notification === 'GET_MHWP1') {
             this.getMHW_P1(payload);
@@ -66,12 +64,12 @@ module.exports = NodeHelper.create({
         }
     },
 
-    // --- DAGELIJKSE OPSLAG --- //
+    // --- DAGELIJKSE OPSLAG OM 12:05 --- //
 
-    scheduleDailySave: function() {
+    scheduleDailySaveAtNoon: function() {
         const now = new Date();
         const next = new Date();
-        next.setHours(23, 59, 0, 0); // 23:59 van vandaag
+        next.setHours(12, 5, 0, 0); // plan voor 12:05 vandaag
 
         if (now > next) {
             next.setDate(next.getDate() + 1); // plan morgen als tijd voorbij is
@@ -82,7 +80,7 @@ module.exports = NodeHelper.create({
         setTimeout(() => {
             this.saveDataToFile({ MHW_P1: this.lastP1, MHW_WM: this.lastWM });
 
-            // Daarna elke 24 uur herhalen
+            // Daarna elke 24 uur
             setInterval(() => {
                 this.saveDataToFile({ MHW_P1: this.lastP1, MHW_WM: this.lastWM });
             }, 24 * 60 * 60 * 1000);
