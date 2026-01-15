@@ -1,4 +1,4 @@
-Module.register('MMM-MyHomeWizard', {
+Module.register("MMM-MyHomeWizard", {
 
     defaults: {
         maxWidth: "500px",
@@ -11,16 +11,8 @@ Module.register('MMM-MyHomeWizard', {
         initialLoadDelay: 1000
     },
 
-    getStyles: function() {
-        return ["MMM-MyHomeWizard.css"];
-    },
-
-    getTranslations: function() {
-        return { nl: "translations/nl.json", en: "translations/en.json" };
-    },
-
     start: function() {
-        Log.info("Starting module: " + this.name);
+        Log.info("Module started: " + this.name);
 
         this.MHW_P1 = {};
         this.MHW_WM = {};
@@ -30,18 +22,16 @@ Module.register('MMM-MyHomeWizard', {
     },
 
     socketNotificationReceived: function(notification, payload) {
-        console.log("Received notification:", notification, payload); // <-- Debug log
-        if (notification === "MHWP1_RESULT") {
+        console.log("Module received:", notification, payload);
+        if(notification === "MHWP1_RESULT") {
             this.MHW_P1 = payload || {};
             this.loadedP1 = Object.keys(this.MHW_P1).length > 0;
             this.updateDom(this.config.initialLoadDelay);
-        }
-        else if (notification === "MHWWM_RESULT") {
+        } else if(notification === "MHWWM_RESULT") {
             this.MHW_WM = payload || {};
             this.loadedWM = Object.keys(this.MHW_WM).length > 0;
             this.updateDom(this.config.initialLoadDelay);
-        }
-        else if (notification === "DAILY_USAGE") {
+        } else if(notification === "DAILY_USAGE") {
             this.dailyUsage = payload || {};
             this.updateDom(this.config.initialLoadDelay);
         }
@@ -59,8 +49,8 @@ Module.register('MMM-MyHomeWizard', {
         wrapper.className = "wrapper";
         wrapper.style.maxWidth = this.config.maxWidth;
 
-        if (!this.loadedP1 || !this.loadedWM) {
-            wrapper.innerHTML = "Loading....";
+        if(!this.loadedP1 || !this.loadedWM) {
+            wrapper.innerHTML = "Loading...";
             wrapper.classList.add("bright", "light", "small");
             return wrapper;
         }
@@ -68,29 +58,29 @@ Module.register('MMM-MyHomeWizard', {
         const table = document.createElement("table");
         table.className = "small";
 
-        // --- Actuele P1 data ---
+        // Actuele P1 data
         const rowP1 = document.createElement("tr");
         rowP1.appendChild(this.createCell("Total Power", "textcell"));
         rowP1.appendChild(this.createCell(this.MHW_P1.total_power_import_kwh + " kWh", "datacell"));
         table.appendChild(rowP1);
 
-        // --- Actuele Water data ---
+        // Actuele Water data
         const rowWM = document.createElement("tr");
         rowWM.appendChild(this.createCell("Total Water", "textcell"));
         rowWM.appendChild(this.createCell(this.MHW_WM.total_liter_m3 + " m³", "datacell"));
         table.appendChild(rowWM);
 
-        // --- Dagelijks verbruik ---
-        if (this.dailyUsage) {
+        // Dagelijks verbruik
+        if(this.dailyUsage) {
             const items = [
-                {label: "Daily_Electricity", value: this.dailyUsage.electricity_kwh, unit: "kWh"},
-                {label: "Daily_Water", value: this.dailyUsage.water_m3, unit: "m³"},
-                {label: "Daily_Gas", value: this.dailyUsage.gas_m3, unit: "m³"},
-                {label: "Daily_Feedback", value: this.dailyUsage.feed_kwh, unit: "kWh"}
+                {label: "Daily Electricity", value: this.dailyUsage.electricity_kwh, unit: "kWh"},
+                {label: "Daily Water", value: this.dailyUsage.water_m3, unit: "m³"},
+                {label: "Daily Gas", value: this.dailyUsage.gas_m3, unit: "m³"},
+                {label: "Daily Feedback", value: this.dailyUsage.feed_kwh, unit: "kWh"}
             ];
 
             items.forEach(item => {
-                if (item.value !== undefined) {
+                if(item.value !== undefined) {
                     const row = document.createElement("tr");
                     row.appendChild(this.createCell(item.label, "dailytextcell"));
                     row.appendChild(this.createCell(Math.round(item.value*100)/100 + " " + item.unit, "dailydatacell"));
