@@ -224,9 +224,7 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
 }
 
 .footer {
-     border-top: 1px solid;
      font-size: 11px;
-/*     line-height: 16px; */
      text-align: right !important;
 }
 .last-update {
