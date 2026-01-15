@@ -1,19 +1,20 @@
 Module.register('MMM-MyHomeWizard', {
 
     defaults: {
-        P1_IP: null,              
-        WM_IP: null,              
-        maxWidth: "500px",        
-        extraInfo: false,         
-        showFooter: false,        
-        showGas: true,            
-        showFeedback: true,       
-        currentPower: false,      
-        currentWater: false,      
-        initialLoadDelay: 1000,  
-        updateInterval: 10000,    
-        fetchTimeout: 5000,       
-        retryCount: 2             
+        P1_IP: null,
+        WM_IP: null,
+        maxWidth: "500px",
+        extraInfo: false,
+        showFooter: false,
+        showGas: true,
+        showFeedback: true,
+        currentPower: false,
+        currentWater: false,
+        initialLoadDelay: 1000,
+        updateInterval: 10000,
+        fetchTimeout: 5000,
+        retryCount: 2,
+        showLastUpdate: true   // <-- toon laatste update regel
     },
 
     getStyles: function () {
@@ -46,7 +47,14 @@ Module.register('MMM-MyHomeWizard', {
         this.errorP1 = false;
         this.errorWM = false;
 
+        this.lastUpdateDate = null; // <-- datum van laatste update uit history_data.json
+
         this.scheduleUpdate();
+
+        // Vraag direct laatste update op
+        if (this.config.showLastUpdate) {
+            this.readLastUpdate();
+        }
     },
 
     scheduleUpdate: function () {
@@ -102,6 +110,16 @@ Module.register('MMM-MyHomeWizard', {
         }
 
         wrapper.appendChild(table);
+
+        // Laatste update regel
+        if (this.config.showLastUpdate && this.lastUpdateDate) {
+            var updateRow = document.createElement("div");
+            updateRow.className = "last-update small light";
+            updateRow.style.marginTop = "5px";
+            updateRow.innerHTML = this.translate("Last_Update") + ": " + this.lastUpdateDate;
+            wrapper.appendChild(updateRow);
+        }
+
         return wrapper;
     },
 
@@ -207,9 +225,14 @@ Module.register('MMM-MyHomeWizard', {
         if (this.loadedP1 && this.loadedWM) this.updateDom(this.config.initialLoadDelay);
     },
 
+    readLastUpdate: function() {
+        this.sendSocketNotification("GET_LAST_UPDATE");
+    },
+
     socketNotificationReceived: function(notification, payload) {
         if (notification === "MHWP1_RESULT") this.processMHW_P1(payload);
         else if (notification === "MHWWM_RESULT") this.processMHW_WM(payload);
+        else if (notification === "LAST_UPDATE_RESULT") this.lastUpdateDate = payload;
         else if (notification === "MHWP1_ERROR") {
             console.error("MMM-MyHomeWizard P1 Error:", payload.error);
             if (payload.retry > 0) this.getMHW_P1(payload.retry - 1);
