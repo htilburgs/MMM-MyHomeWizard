@@ -9,17 +9,14 @@ module.exports = NodeHelper.create({
         this.MHW_P1 = null;
         this.MHW_WM = null;
 
-        // Track if first snapshot has been saved today
-        this.firstSnapshotSaved = false;
+        this.firstSnapshotSaved = false; // Track if today's snapshot has been saved
 
-        // Schedule nightly save at 23:59
+        // Schedule nightly snapshot at 23:59
         this.scheduleNightlySave();
     },
 
     scheduleNightlySave: function() {
         const now = new Date();
-
-        // Calculate milliseconds until 23:59 tonight
         const millisTillMidnight = new Date(
             now.getFullYear(),
             now.getMonth(),
@@ -29,7 +26,6 @@ module.exports = NodeHelper.create({
 
         setTimeout(() => {
             this.saveDailyData(); // Save at 23:59
-            // Repeat every 24h
             setInterval(() => this.saveDailyData(), 24 * 60 * 60 * 1000);
         }, millisTillMidnight);
     },
@@ -47,8 +43,8 @@ module.exports = NodeHelper.create({
         // Load existing data
         if (fs.existsSync(historyFile)) {
             try {
-                const fileContent = fs.readFileSync(historyFile, 'utf8');
-                history = JSON.parse(fileContent);
+                const content = fs.readFileSync(historyFile, 'utf8');
+                history = JSON.parse(content);
             } catch (err) {
                 console.error("Failed to read history_data.json:", err.message);
             }
@@ -62,7 +58,7 @@ module.exports = NodeHelper.create({
             return;
         }
 
-        // Build daily snapshot
+        // Build snapshot
         const snapshot = {
             date: today,
             P1: {
@@ -88,6 +84,9 @@ module.exports = NodeHelper.create({
             fs.writeFileSync(historyFile, JSON.stringify(history, null, 2));
             console.log("Daily MyHomeWizard snapshot saved to history_data.json");
             this.firstSnapshotSaved = true;
+
+            // Notify front-end of last snapshot date
+            this.sendSocketNotification("LAST_SNAPSHOT_DATE", snapshot.date);
         } catch (err) {
             console.error("Failed to write history_data.json:", err.message);
         }
@@ -113,7 +112,6 @@ module.exports = NodeHelper.create({
             this.MHW_WM = result;
             this.sendSocketNotification('MHWWM_RESULT', result);
 
-            // Save snapshot immediately after first successful fetch
             if (!this.firstSnapshotSaved) this.saveDailyData();
         } catch (error) {
             console.error("MMM-MyHomeWizard WM Error:", error.message);
