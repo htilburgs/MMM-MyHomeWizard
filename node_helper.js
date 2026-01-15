@@ -6,13 +6,14 @@ module.exports = NodeHelper.create({
 
     start: function () {
         console.log("Starting node_helper for: " + this.name);
+
         this.MHW_P1 = null;
         this.MHW_WM = null;
         this.firstSnapshotSaved = false;
 
         const historyFile = path.join(__dirname, 'history_data.json');
 
-        // Send last snapshot date if available
+        // Send last snapshot date if exists
         if (fs.existsSync(historyFile)) {
             try {
                 const content = fs.readFileSync(historyFile, 'utf8');
@@ -28,29 +29,7 @@ module.exports = NodeHelper.create({
             }
         }
 
-        // If no real meter, send dummy results immediately
-        if (!process.env.P1_IP) {
-            this.MHW_P1 = {
-                total_power_import_kwh: 123,
-                total_power_export_kwh: 10,
-                total_gas_m3: 5,
-                active_power_w: 100,
-                meter_model: "Dummy P1",
-                wifi_strength: 80,
-                any_power_fail_count: 0
-            };
-            this.sendSocketNotification('MHWP1_RESULT', this.MHW_P1);
-        }
-
-        if (!process.env.WM_IP) {
-            this.MHW_WM = {
-                total_liter_m3: 2,
-                active_liter_lpm: 5,
-                wifi_strength: 75
-            };
-            this.sendSocketNotification('MHWWM_RESULT', this.MHW_WM);
-        }
-
+        // Schedule nightly snapshot at 23:59
         this.scheduleNightlySave();
     },
 
@@ -70,28 +49,21 @@ module.exports = NodeHelper.create({
     },
 
     saveDailyData: function() {
-        if (!this.MHW_P1 && !this.MHW_WM) {
-            console.log("No meter data yet, skipping daily snapshot.");
-            return;
-        }
+        if (!this.MHW_P1 && !this.MHW_WM) return;
 
         const historyFile = path.join(__dirname, 'history_data.json');
         let history = [];
 
         if (fs.existsSync(historyFile)) {
             try {
-                const content = fs.readFileSync(historyFile, 'utf8');
-                history = JSON.parse(content);
+                history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
             } catch (err) {
                 console.error("Failed to read history_data.json:", err.message);
             }
         }
 
         const today = new Date().toISOString().split('T')[0];
-        if (history.some(h => h.date === today)) {
-            console.log("Snapshot for today already exists.");
-            return;
-        }
+        if (history.some(h => h.date === today)) return;
 
         const snapshot = {
             date: today,
