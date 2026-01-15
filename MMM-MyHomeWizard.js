@@ -1,19 +1,19 @@
 Module.register('MMM-MyHomeWizard', {
 
     defaults: {
-        P1_IP: null,              
-        WM_IP: null,              
-        maxWidth: "500px",        
-        extraInfo: false,         
-        showFooter: false,        
-        showGas: true,            
-        showFeedback: true,       
-        currentPower: false,      
-        currentWater: false,      
-        initialLoadDelay: 1000,  
-        updateInterval: 10000,    
-        fetchTimeout: 5000,       
-        retryCount: 2             
+        P1_IP: null,
+        WM_IP: null,
+        maxWidth: "500px",
+        extraInfo: false,
+        showFooter: true,
+        showGas: true,
+        showFeedback: true,
+        currentPower: false,
+        currentWater: false,
+        initialLoadDelay: 1000,
+        updateInterval: 10000,
+        fetchTimeout: 5000,
+        retryCount: 2
     },
 
     getStyles: function () {
@@ -45,6 +45,8 @@ Module.register('MMM-MyHomeWizard', {
         this.loadedWM = false;
         this.errorP1 = false;
         this.errorWM = false;
+
+        this.lastSnapshotDate = null;
 
         this.scheduleUpdate();
     },
@@ -91,12 +93,22 @@ Module.register('MMM-MyHomeWizard', {
         if (this.config.P1_IP) this.addPowerRows(table, this.MHW_P1);
         if (this.config.WM_IP) this.addWaterRows(table, this.MHW_WM);
 
-        if (this.config.showFooter && this.MHW_P1?.meter_model) {
+        if (this.config.showFooter) {
             var row = document.createElement("tr");
             var cell = document.createElement("td");
             cell.setAttribute("colspan", "2");
             cell.className = "footer";
-            cell.innerHTML = '<i class="fa-solid fa-charging-station"></i>&nbsp;' + this.MHW_P1.meter_model;
+
+            let footerText = '';
+            if (this.MHW_P1?.meter_model) {
+                footerText += '<i class="fa-solid fa-charging-station"></i>&nbsp;' + this.MHW_P1.meter_model;
+            }
+
+            if (this.lastSnapshotDate) {
+                footerText += '<br><i class="fa-solid fa-calendar-check"></i>&nbsp;Last snapshot: ' + this.lastSnapshotDate;
+            }
+
+            cell.innerHTML = footerText;
             row.appendChild(cell);
             table.appendChild(row);
         }
@@ -219,6 +231,10 @@ Module.register('MMM-MyHomeWizard', {
             console.error("MMM-MyHomeWizard WM Error:", payload.error);
             if (payload.retry > 0) this.getMHW_WM(payload.retry - 1);
             else { this.errorWM = true; this.updateDom(this.config.initialLoadDelay); }
+        }
+        else if (notification === "LAST_SNAPSHOT_DATE") {
+            this.lastSnapshotDate = payload;
+            this.updateDom(0);
         }
     }
 
