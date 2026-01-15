@@ -10,15 +10,14 @@ module.exports = NodeHelper.create({
         this.lastP1 = {};
         this.lastWM = {};
 
-        // Mock data met vertraging zodat frontend klaar is
-        this.mockData();
+        // Verzenden van mock data met voldoende vertraging
+        this.sendMockDataWithDelay();
 
         // Dagelijkse opslag om 12:05
         this.scheduleDailySaveAtNoon();
     },
 
-    // --- MOCK DATA VOOR TESTEN --- //
-    mockData: function() {
+    sendMockDataWithDelay: function() {
         const mockP1 = {
             total_power_import_kwh: 1234.56,
             total_power_export_kwh: 12.34,
@@ -35,18 +34,17 @@ module.exports = NodeHelper.create({
             wifi_strength: 85
         };
 
-        // Vertraging zodat frontend klaar is voor socket
+        // Gebruik arrow function zodat 'this' correct blijft
         setTimeout(() => {
+            console.log("Sending mock data to frontend");
             this.lastP1 = mockP1;
             this.lastWM = mockWM;
 
             this.sendSocketNotification('MHWP1_RESULT', mockP1);
             this.sendSocketNotification('MHWWM_RESULT', mockWM);
 
-            // Voor dagelijks verbruik
             this.sendSocketNotification('DAILY_USAGE', this.calculateDailyConsumptionMock());
-
-        }, 1000); // 1 seconde
+        }, 2000); // 2 seconden vertraging zodat frontend klaar is
     },
 
     calculateDailyConsumptionMock: function() {
@@ -58,7 +56,6 @@ module.exports = NodeHelper.create({
         };
     },
 
-    // --- DAGELIJKSE OPSLAG OM 12:05 --- //
     scheduleDailySaveAtNoon: function() {
         const now = new Date();
         const next = new Date();
