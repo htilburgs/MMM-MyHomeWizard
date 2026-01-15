@@ -174,10 +174,10 @@ Module.register('MMM-MyHomeWizard', {
             ));
             table.appendChild(row);
 
-            // Delta gas
+            // Delta gas (nu met pijl-icoon ⬆)
             var gasRow = document.createElement("tr");
             gasRow.className = "delta-gas-row";
-            gasRow.appendChild(this.createCell('<i class="fa-solid fa-fire"></i>&nbsp;' + this.translate("Delta_Gas"), "deltagasttextcell"));
+            gasRow.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Gas"), "deltagasttextcell"));
             gasRow.appendChild(this.createCell(
                 Math.round(this.deltaP1.total_gas_m3 || 0) + " m³",
                 "deltagasdatacell"
