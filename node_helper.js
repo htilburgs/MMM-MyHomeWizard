@@ -28,7 +28,7 @@ module.exports = NodeHelper.create({
         const historyFile = path.join(__dirname, 'history_data.json');
         let history = [];
 
-        // Load existing history
+        // Load existing data
         if (fs.existsSync(historyFile)) {
             try {
                 history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
@@ -37,7 +37,7 @@ module.exports = NodeHelper.create({
             }
         }
 
-        // Snapshot of today
+        // Prepare snapshot with summaries
         const snapshot = {
             date: new Date().toISOString().split('T')[0],
             P1: {
@@ -102,7 +102,6 @@ module.exports = NodeHelper.create({
     socketNotificationReceived: function(notification, payload) {
         if (notification === 'GET_MHWP1') this.getMHW_P1(payload);
         else if (notification === 'GET_MHWWM') this.getMHW_WM(payload);
-        else if (notification === 'MANUAL_SAVE') this.saveDailyData(); // Manual snapshot
     }
 
 });
