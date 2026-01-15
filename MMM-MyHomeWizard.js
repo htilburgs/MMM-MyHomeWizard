@@ -47,7 +47,7 @@ Module.register('MMM-MyHomeWizard', {
         this.errorP1 = false;
         this.errorWM = false;
 
-        this.lastUpdateDate = null; // <-- datum van laatste update uit history_data.json
+        this.lastUpdateDate = null; // datum van laatste update uit history_data.json
 
         this.scheduleUpdate();
 
@@ -111,11 +111,10 @@ Module.register('MMM-MyHomeWizard', {
 
         wrapper.appendChild(table);
 
-        // Laatste update regel
+        // Laatste update regel met zelfde stijl als footer
         if (this.config.showLastUpdate && this.lastUpdateDate) {
             var updateRow = document.createElement("div");
-            updateRow.className = "last-update small light";
-            updateRow.style.marginTop = "5px";
+            updateRow.className = "last-update footer"; // <-- zelfde stijl als footer
             updateRow.innerHTML = this.translate("Last_Update") + ": " + this.lastUpdateDate;
             wrapper.appendChild(updateRow);
         }
