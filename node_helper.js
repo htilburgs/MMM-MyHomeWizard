@@ -10,7 +10,7 @@ module.exports = NodeHelper.create({
         this.MHW_WM = null;
         this.firstSnapshotSaved = false;
 
-        // Send last snapshot date from existing history (after 1s delay)
+        // Send last snapshot date from existing history (after short delay)
         const historyFile = path.join(__dirname, 'history_data.json');
         if (fs.existsSync(historyFile)) {
             try {
