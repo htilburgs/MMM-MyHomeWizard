@@ -78,10 +78,15 @@ Here is the documentation of options for the modules configuration
 | `showGas`		| Show the Gas Option of youre PowerMeter <br /><br />**True/False**<br />Default: `true`
 | `showFooter`		| Show the Footer with the name of youre PowerMeter <br /><br />**True/False**<br />Default: `false`
 | `maxWidth`		| The maximum width of the module <br /><br />Default: `500px`
+| ` showLastUpdate` | Show last update of the "history_data.json" file as footer<br /><br />**True/False**<br />Default: `true`
+| ` showDeltaPower` | Show Delta between History and Current data (Power)<br /><br />**True/False**<br />Default: `true`
+| ` showDeltaGas`   | Show Delta between History and Current data (Gas)<br /><br />**True/False**<br />Default: `true`
+| ` showDeltaWater` | Show Delta between History and Current data (Water)<br /><br />**True/False**<br />Default: `true`
 
 ## Version
 v1.0.0 - 26-11-2024	: Initial version </br>
 v1.0.1 - 29-12-2024	: Add option showGas </br>
+v2.0.0 - 15-01-2026 : Update with daily saving data to history_data and option for show Deltas
 
 ## License
 ### The MIT License (MIT)
