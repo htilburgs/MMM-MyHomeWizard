@@ -33,23 +33,21 @@ Add the module to your modules array in your config.js.
   header: 'HomeWizard',
   disabled: false,
   config: {
-		P1_IP: "0.0.0.0",	// IP Address HomeWizard P1 meter
-		WM_IP: "0.0.0.0",	// IP Address HomeWizrd Water meter - Remove when not used
-		extraInfo: false, 	// Show extra information from P1 meter
+		P1_IP: "0.0.0.0",	    // IP Address HomeWizard P1 meter
+		WM_IP: "0.0.0.0",	    // IP Address HomeWizrd Water meter - Remove when not used
+		extraInfo: false, 	    // Show extra information from P1 meter
 		currentPower: false,	// Show the current Power Consumption
 		currentWater: false,	// Show the current Water Consumption
-		showGas: true,		// Show the Gas option
-		showFooter: true,	// Show footer (name Power Meter)
+		showGas: true,		    // Show the Gas option
+		showFooter: true,	    // Show footer (name Power Meter)
 		updateInterval: 5000,   // Update every 5 seconds
-		maxWidth: "500px",	// Max Module width
-        fetchTimeout: 5000,
+		maxWidth: "500px",	    // Max Module width
+        fetchTimeout: 5000,		
         retryCount: 2,
-        showHistoryCharts: {       // NEW: toggle which charts to display
-                            electricity: true,
-                            gas: true,
-                            water: true
-                            }
-          }
+        showDeltaPower: true,	// Show Delta between History and Current data (Power)
+        showDeltaGas: true,		// Show Delta between History and Current data (Gas)
+        showDeltaWater: true	// Show Delta between History and Current data (Water)
+  		}
 },
 ```
 ## Images
