@@ -7,15 +7,12 @@ module.exports = NodeHelper.create({
     start: function () {
         console.log("Starting node_helper for: " + this.name);
 
-        // Laatste data bewaren voor opslag
         this.lastP1 = {};
         this.lastWM = {};
 
-        // Start dagelijkse opslag om 12:05
+        // Dagelijkse opslag om 12:05
         this.scheduleDailySaveAtNoon();
     },
-
-    // --- FETCH FUNCTIES --- //
 
     getMHW_P1: async function(urlP1) {
         try {
@@ -57,23 +54,28 @@ module.exports = NodeHelper.create({
         else if (notification === 'GET_MHWWM') this.getMHW_WM(payload);
     },
 
-    // --- DAGELIJKSE OPSLAG OM 12:05 --- //
-
     scheduleDailySaveAtNoon: function() {
         const now = new Date();
         const next = new Date();
         next.setHours(12, 5, 0, 0);
-
         if (now > next) next.setDate(next.getDate() + 1);
 
         const msUntilNext = next - now;
 
         setTimeout(() => {
-            this.saveDataToFile({ MHW_P1: this.lastP1, MHW_WM: this.lastWM });
+            this.saveDataAndCalculate();
             setInterval(() => {
-                this.saveDataToFile({ MHW_P1: this.lastP1, MHW_WM: this.lastWM });
+                this.saveDataAndCalculate();
             }, 24 * 60 * 60 * 1000);
         }, msUntilNext);
+    },
+
+    saveDataAndCalculate: function() {
+        this.saveDataToFile({ MHW_P1: this.lastP1, MHW_WM: this.lastWM });
+        const dailyUsage = this.calculateDailyConsumption();
+        if (dailyUsage) {
+            this.sendSocketNotification('DAILY_USAGE', dailyUsage);
+        }
     },
 
     saveDataToFile: function(data) {
@@ -100,6 +102,38 @@ module.exports = NodeHelper.create({
             console.log("MMM-MyHomeWizard: Data saved to meter_history.json");
         } catch (err) {
             console.error("MMM-MyHomeWizard: Error saving data", err);
+        }
+    },
+
+    calculateDailyConsumption: function() {
+        try {
+            const folderPath = path.resolve(__dirname, 'data');
+            const filePath = path.join(folderPath, 'meter_history.json');
+            if (!fs.existsSync(filePath)) return null;
+
+            const history = JSON.parse(fs.readFileSync(filePath));
+            if (!history.length) return null;
+
+            const today = new Date().toISOString().split('T')[0];
+            const todaysEntries = history.filter(entry => entry.timestamp.startsWith(today));
+            if (todaysEntries.length < 2) return null;
+
+            const first = todaysEntries[0];
+            const last = todaysEntries[todaysEntries.length - 1];
+
+            const result = {};
+            if (first.P1 && last.P1) {
+                result.electricity_kwh = (last.P1.total_power_import_kwh || 0) - (first.P1.total_power_import_kwh || 0);
+                result.feed_kwh = (last.P1.total_power_export_kwh || 0) - (first.P1.total_power_export_kwh || 0);
+                result.gas_m3 = (last.P1.total_gas_m3 || 0) - (first.P1.total_gas_m3 || 0);
+            }
+            if (first.WM && last.WM) {
+                result.water_m3 = (last.WM.total_liter_m3 || 0) - (first.WM.total_liter_m3 || 0);
+            }
+            return result;
+        } catch (err) {
+            console.error("Error calculating daily consumption:", err);
+            return null;
         }
     }
 
