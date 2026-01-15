@@ -8,10 +8,10 @@
   "Wifi_P1": "Wifi P1 Meter:",
   "Wifi_WM": "Wifi Water Meter:",
   "Fail_Pwr": "Power Failures:",
-  "Daily_Electricity": "Daily Electricity",
-  "Daily_Water": "Daily Water",
-  "Daily_Gas": "Daily Gas",
   "Daily_Feedback": "Daily Feedback",
   "Last_Update": "Last update",
-  "Delta": "Since last update"
+  "Delta": "Since last update",
+  "Delta_Pwr": "Delta Power",
+  "Delta_Wtr": "Delta Water",
+  "Delta_Gas": "Delta Gas"
 }
