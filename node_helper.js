@@ -9,17 +9,51 @@ module.exports = NodeHelper.create({
         this.MHW_P1 = null;
         this.MHW_WM = null;
 
-        // Schedule nightly save at 23:59
+        // Schedule nightly save and ensure today's snapshot exists
         this.scheduleNightlySave();
     },
 
     scheduleNightlySave: function() {
         const now = new Date();
-        const millisTillMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 0, 0) - now;
+
+        // Immediately save a snapshot if none exists for today
+        this.saveDailyDataIfMissing();
+
+        // Calculate milliseconds until 23:59 tonight
+        const millisTillMidnight = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            23, 59, 0, 0
+        ) - now;
+
         setTimeout(() => {
-            this.saveDailyData();
-            setInterval(() => this.saveDailyData(), 24 * 60 * 60 * 1000); // every 24h
+            this.saveDailyData(); // Save at 23:59
+            // Repeat every 24h
+            setInterval(() => this.saveDailyData(), 24 * 60 * 60 * 1000);
         }, millisTillMidnight);
+    },
+
+    saveDailyDataIfMissing: function() {
+        const historyFile = path.join(__dirname, 'history_data.json');
+        let history = [];
+
+        // Load existing data
+        if (fs.existsSync(historyFile)) {
+            try {
+                const fileContent = fs.readFileSync(historyFile, 'utf8');
+                history = JSON.parse(fileContent);
+            } catch (err) {
+                console.error("Failed to read history_data.json:", err.message);
+            }
+        }
+
+        // Check if today's snapshot already exists
+        const today = new Date().toISOString().split('T')[0];
+        if (!history.some(h => h.date === today)) {
+            // No snapshot for today yet
+            this.saveDailyData();
+        }
     },
 
     saveDailyData: function() {
@@ -36,7 +70,7 @@ module.exports = NodeHelper.create({
             }
         }
 
-        // Build daily summary
+        // Build daily snapshot
         const snapshot = {
             date: new Date().toISOString().split('T')[0],
             P1: {
