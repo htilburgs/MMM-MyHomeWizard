@@ -9,8 +9,27 @@ module.exports = NodeHelper.create({
         this.MHW_P1 = null;
         this.MHW_WM = null;
         this.firstSnapshotSaved = false;
-        this.snapshotAlreadyLogged = false; // <-- flag for option 1
+        this.snapshotAlreadyLogged = false;
+        this.locale = 'nl'; // default, wordt overschreven door frontend
         this.scheduleNightlySave();
+    },
+
+    // --- Helper: format numbers according to frontend language ---
+    formatNumber: function(number) {
+        return Math.round(number).toLocaleString(this.locale);
+    },
+
+    // --- NodeHelper ontvangt notificaties van frontend ---
+    socketNotificationReceived: function(notification, payload) {
+
+        // Ontvang locale van frontend
+        if (notification === 'SET_LOCALE') {
+            this.locale = payload.locale || 'nl';
+            console.log("NodeHelper locale set to:", this.locale);
+        }
+        else if (notification === 'GET_MHWP1') this.getMHW_P1(payload);
+        else if (notification === 'GET_MHWWM') this.getMHW_WM(payload);
+        else if (notification === "GET_LAST_UPDATE") this.sendLastUpdate();
     },
 
     scheduleNightlySave: function() {
@@ -47,7 +66,6 @@ module.exports = NodeHelper.create({
 
         const today = new Date().toISOString().split('T')[0];
 
-        // Only log once per session if snapshot exists
         if (history.some(h => h.date === today)) {
             if (!this.snapshotAlreadyLogged) {
                 console.log("Snapshot for today already exists.");
@@ -69,6 +87,11 @@ module.exports = NodeHelper.create({
             }
         };
 
+        // Formatted log
+        console.log("Saving snapshot:");
+        console.log(`P1 Import: ${this.formatNumber(snapshot.P1.total_power_import_kwh)}, Export: ${this.formatNumber(snapshot.P1.total_power_export_kwh)}, Gas: ${this.formatNumber(snapshot.P1.total_gas_m3)}`);
+        console.log(`WM: ${this.formatNumber(snapshot.WM.total_m3)} m³ (${this.formatNumber(snapshot.WM.total_liters)} L)`);
+
         history.push(snapshot);
 
         if (history.length > 30) {
@@ -84,7 +107,7 @@ module.exports = NodeHelper.create({
         }
     },
 
-    getMHW_P1: async function({url, retry}) {
+    async getMHW_P1({url, retry}) {
         try {
             const result = await this.fetchWithTimeout(url);
             this.MHW_P1 = result;
@@ -96,7 +119,7 @@ module.exports = NodeHelper.create({
         }
     },
 
-    getMHW_WM: async function({url, retry}) {
+    async getMHW_WM({url, retry}) {
         try {
             const result = await this.fetchWithTimeout(url);
             this.MHW_WM = result;
@@ -121,37 +144,33 @@ module.exports = NodeHelper.create({
         }
     },
 
-    socketNotificationReceived: function(notification, payload) {
-        if (notification === 'GET_MHWP1') this.getMHW_P1(payload);
-        else if (notification === 'GET_MHWWM') this.getMHW_WM(payload);
-        else if (notification === "GET_LAST_UPDATE") {
-            const historyFile = path.join(__dirname, 'history_data.json');
-            let lastSnapshot = null;
-            let previousSnapshot = null;
+    sendLastUpdate: function() {
+        const historyFile = path.join(__dirname, 'history_data.json');
+        let lastSnapshot = null;
+        let previousSnapshot = null;
 
-            if (fs.existsSync(historyFile)) {
-                try {
-                    const history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
-                    if (history.length > 0) lastSnapshot = history[history.length - 1];
-                    if (history.length > 1) previousSnapshot = history[history.length - 2];
-                } catch (e) {
-                    console.error("Failed to read last update from history_data.json:", e.message);
-                }
+        if (fs.existsSync(historyFile)) {
+            try {
+                const history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
+                if (history.length > 0) lastSnapshot = history[history.length - 1];
+                if (history.length > 1) previousSnapshot = history[history.length - 2];
+            } catch (e) {
+                console.error("Failed to read last update from history_data.json:", e.message);
             }
-
-            this.sendSocketNotification("LAST_UPDATE_RESULT", {
-                lastDate: lastSnapshot ? lastSnapshot.date : null,
-                deltaP1: previousSnapshot && lastSnapshot ? {
-                    total_power_import_kwh: lastSnapshot.P1.total_power_import_kwh - previousSnapshot.P1.total_power_import_kwh,
-                    total_power_export_kwh: lastSnapshot.P1.total_power_export_kwh - previousSnapshot.P1.total_power_export_kwh,
-                    total_gas_m3: lastSnapshot.P1.total_gas_m3 - previousSnapshot.P1.total_gas_m3
-                } : null,
-                deltaWM: previousSnapshot && lastSnapshot ? {
-                    total_liter_m3: lastSnapshot.WM.total_m3 - previousSnapshot.WM.total_m3,
-                    total_liters: lastSnapshot.WM.total_liters - previousSnapshot.WM.total_liters
-                } : null
-            });
         }
+
+        this.sendSocketNotification("LAST_UPDATE_RESULT", {
+            lastDate: lastSnapshot ? lastSnapshot.date : null,
+            deltaP1: previousSnapshot && lastSnapshot ? {
+                total_power_import_kwh: lastSnapshot.P1.total_power_import_kwh - previousSnapshot.P1.total_power_import_kwh,
+                total_power_export_kwh: lastSnapshot.P1.total_power_export_kwh - previousSnapshot.P1.total_power_export_kwh,
+                total_gas_m3: lastSnapshot.P1.total_gas_m3 - previousSnapshot.P1.total_gas_m3
+            } : null,
+            deltaWM: previousSnapshot && lastSnapshot ? {
+                total_liter_m3: lastSnapshot.WM.total_m3 - previousSnapshot.WM.total_m3,
+                total_liters: lastSnapshot.WM.total_liters - previousSnapshot.WM.total_liters
+            } : null
+        });
     }
 
 });
