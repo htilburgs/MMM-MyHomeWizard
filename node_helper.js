@@ -10,7 +10,7 @@ module.exports = NodeHelper.create({
         this.MHW_P1 = null;
         this.MHW_WM = null;
         this.firstSnapshotSaved = false;
-        this.locale = "en"; // default fallback
+        this.locale = "en";
         this.scheduleNightlySave();
     },
 
@@ -30,29 +30,19 @@ module.exports = NodeHelper.create({
     },
 
     saveDailyData: function() {
-        if (!this.MHW_P1 && !this.MHW_WM) {
-            console.log("No meter data yet, skipping daily snapshot.");
-            return;
-        }
+        if (!this.MHW_P1 && !this.MHW_WM) return;
 
         const historyFile = path.join(__dirname, 'history_data.json');
         let history = [];
 
         if (fs.existsSync(historyFile)) {
-            try {
-                history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
-            } catch (err) {
-                console.error("Failed to read history_data.json:", err.message);
-            }
+            try { history = JSON.parse(fs.readFileSync(historyFile, 'utf8')); } 
+            catch (err) { console.error("Failed to read history_data.json:", err.message); }
         }
 
         const today = new Date().toISOString().split('T')[0];
 
-        // check of snapshot voor vandaag al bestaat
-        if (history.some(h => h.date === today)) {
-            console.log("Snapshot for today already exists.");
-            return;
-        }
+        if (history.some(h => h.date === today)) return;
 
         const snapshot = {
             date: today,
@@ -69,14 +59,10 @@ module.exports = NodeHelper.create({
 
         history.push(snapshot);
 
-        // houd alleen laatste 30 dagen
-        if (history.length > 30) {
-            history = history.slice(history.length - 30);
-        }
+        if (history.length > 30) history = history.slice(history.length - 30);
 
         try {
             fs.writeFileSync(historyFile, JSON.stringify(history, null, 2));
-            console.log("Daily MyHomeWizard snapshot saved to history_data.json");
             this.firstSnapshotSaved = true;
         } catch (err) {
             console.error("Failed to write history_data.json:", err.message);
@@ -90,7 +76,6 @@ module.exports = NodeHelper.create({
             this.sendSocketNotification('MHWP1_RESULT', result);
             if (!this.firstSnapshotSaved) this.saveDailyData();
         } catch (error) {
-            console.error("MMM-MyHomeWizard P1 Error:", error.message);
             this.sendSocketNotification('MHWP1_ERROR', { error: error.message, retry });
         }
     },
@@ -102,7 +87,6 @@ module.exports = NodeHelper.create({
             this.sendSocketNotification('MHWWM_RESULT', result);
             if (!this.firstSnapshotSaved) this.saveDailyData();
         } catch (error) {
-            console.error("MMM-MyHomeWizard WM Error:", error.message);
             this.sendSocketNotification('MHWWM_ERROR', { error: error.message, retry });
         }
     },
@@ -110,19 +94,15 @@ module.exports = NodeHelper.create({
     fetchWithTimeout: async function(url, timeout = 5000) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeout);
-
         try {
             const response = await fetch(url, { signal: controller.signal });
             if (!response.ok) throw new Error(`Network response was not ok (${response.status})`);
             return response.json();
-        } finally {
-            clearTimeout(timer);
-        }
+        } finally { clearTimeout(timer); }
     },
 
     socketNotificationReceived: function(notification, payload) {
 
-        // frontend stuurt de gewenste locale
         if (notification === 'SET_LOCALE') {
             const supported = ["nl", "en", "fr", "de"];
             this.locale = supported.includes(payload.locale) ? payload.locale : "en";
@@ -142,22 +122,20 @@ module.exports = NodeHelper.create({
                     const history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
                     if (history.length > 0) lastSnapshot = history[history.length - 1];
                     if (history.length > 1) previousSnapshot = history[history.length - 2];
-                } catch (e) {
-                    console.error("Failed to read last update from history_data.json:", e.message);
-                }
+                } catch (e) { console.error("Failed to read last update from history_data.json:", e.message); }
             }
 
             this.sendSocketNotification("LAST_UPDATE_RESULT", {
-                lastDate: lastSnapshot ? lastSnapshot.date : null,
+                lastDate: lastSnapshot ? lastSnapshot.date : new Date().toISOString().split('T')[0],
                 deltaP1: previousSnapshot && lastSnapshot ? {
                     total_power_import_kwh: lastSnapshot.P1.total_power_import_kwh - previousSnapshot.P1.total_power_import_kwh,
                     total_power_export_kwh: lastSnapshot.P1.total_power_export_kwh - previousSnapshot.P1.total_power_export_kwh,
                     total_gas_m3: lastSnapshot.P1.total_gas_m3 - previousSnapshot.P1.total_gas_m3
-                } : null,
+                } : { total_power_import_kwh: 0, total_power_export_kwh: 0, total_gas_m3: 0 },
                 deltaWM: previousSnapshot && lastSnapshot ? {
                     total_liter_m3: lastSnapshot.WM.total_m3 - previousSnapshot.WM.total_m3,
                     total_liters: lastSnapshot.WM.total_liters - previousSnapshot.WM.total_liters
-                } : null
+                } : { total_liter_m3: 0, total_liters: 0 }
             });
         }
     }
