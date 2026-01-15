@@ -7,5 +7,9 @@
   "Current_Wtr": "Current Water:",
   "Wifi_P1": "Wifi P1 Meter:",
   "Wifi_WM": "Wifi Water Meter:",
-  "Fail_Pwr": "Power Failures:"
+  "Fail_Pwr": "Power Failures:",
+  "Daily_Electricity": "Daily Electricity",
+  "Daily_Water": "Daily Water",
+  "Daily_Gas": "Daily Gas",
+  "Daily_Feedback": "Daily Feedback"
 }
