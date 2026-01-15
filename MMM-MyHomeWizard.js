@@ -18,8 +18,10 @@ Module.register('MMM-MyHomeWizard', {
         showDeltaPower: true,
         showDeltaGas: true,
         showDeltaWater: true,
-        language: "nl" // nl of en
+        language: "nl"
     },
+
+    supportedLanguages: ["nl", "en", "fr", "de"],
 
     getStyles: function () {
         return ["MMM-MyHomeWizard.css"];
@@ -28,13 +30,21 @@ Module.register('MMM-MyHomeWizard', {
     getTranslations: function () {
         return {
             nl: "translations/nl.json",
-            en: "translations/en.json"
+            en: "translations/en.json",
+            fr: "translations/fr.json",
+            de: "translations/de.json"
         };
     },
 
     start: function () {
         Log.info("Starting module: " + this.name);
         this.requiresVersion = "2.9.0";
+
+        // Controleer taal en fallback naar en
+        if (!this.supportedLanguages.includes(this.config.language)) {
+            Log.warn(`Unsupported language '${this.config.language}', fallback to 'en'.`);
+            this.config.language = "en";
+        }
 
         this.urlP1 = this.config.P1_IP
             ? "http://" + this.config.P1_IP + "/api/v1/data/"
@@ -82,7 +92,10 @@ Module.register('MMM-MyHomeWizard', {
     },
 
     formatNumber: function(number) {
-        const locale = this.config.language || "nl";
+        const locale = this.supportedLanguages.includes(this.config.language)
+            ? this.config.language
+            : "en";
+
         return new Intl.NumberFormat(locale, {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
