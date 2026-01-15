@@ -1,95 +1,31 @@
 Module.register("MMM-MyHomeWizard", {
 
-    defaults: {
-        maxWidth: "500px",
-        extraInfo: false,
-        showFooter: true,
-        showGas: true,
-        showFeedback: true,
-        currentPower: true,
-        currentWater: true,
-        initialLoadDelay: 1000
-    },
-
     start: function() {
-        Log.info("Module started: " + this.name);
-
-        this.MHW_P1 = {};
-        this.MHW_WM = {};
-        this.dailyUsage = {};
-        this.loadedP1 = false;
-        this.loadedWM = false;
+        console.log("Module started: MMM-MyHomeWizard");
+        this.loaded = false;
+        this.testData = {};
     },
 
     socketNotificationReceived: function(notification, payload) {
-        console.log("Module received:", notification, payload);
-        if(notification === "MHWP1_RESULT") {
-            this.MHW_P1 = payload || {};
-            this.loadedP1 = Object.keys(this.MHW_P1).length > 0;
-            this.updateDom(this.config.initialLoadDelay);
-        } else if(notification === "MHWWM_RESULT") {
-            this.MHW_WM = payload || {};
-            this.loadedWM = Object.keys(this.MHW_WM).length > 0;
-            this.updateDom(this.config.initialLoadDelay);
-        } else if(notification === "DAILY_USAGE") {
-            this.dailyUsage = payload || {};
-            this.updateDom(this.config.initialLoadDelay);
-        }
-    },
+        console.log("Frontend received notification:", notification, payload);
 
-    createCell: function(innerHTML, className) {
-        const td = document.createElement("td");
-        td.className = className;
-        td.innerHTML = innerHTML;
-        return td;
+        if(notification === "TEST_NOTIFICATION") {
+            this.testData = payload;
+            this.loaded = true;
+            this.updateDom(0);
+        }
     },
 
     getDom: function() {
         const wrapper = document.createElement("div");
-        wrapper.className = "wrapper";
-        wrapper.style.maxWidth = this.config.maxWidth;
 
-        if(!this.loadedP1 || !this.loadedWM) {
+        if(!this.loaded) {
             wrapper.innerHTML = "Loading...";
             wrapper.classList.add("bright", "light", "small");
             return wrapper;
         }
 
-        const table = document.createElement("table");
-        table.className = "small";
-
-        // Actuele P1 data
-        const rowP1 = document.createElement("tr");
-        rowP1.appendChild(this.createCell("Total Power", "textcell"));
-        rowP1.appendChild(this.createCell(this.MHW_P1.total_power_import_kwh + " kWh", "datacell"));
-        table.appendChild(rowP1);
-
-        // Actuele Water data
-        const rowWM = document.createElement("tr");
-        rowWM.appendChild(this.createCell("Total Water", "textcell"));
-        rowWM.appendChild(this.createCell(this.MHW_WM.total_liter_m3 + " m³", "datacell"));
-        table.appendChild(rowWM);
-
-        // Dagelijks verbruik
-        if(this.dailyUsage) {
-            const items = [
-                {label: "Daily Electricity", value: this.dailyUsage.electricity_kwh, unit: "kWh"},
-                {label: "Daily Water", value: this.dailyUsage.water_m3, unit: "m³"},
-                {label: "Daily Gas", value: this.dailyUsage.gas_m3, unit: "m³"},
-                {label: "Daily Feedback", value: this.dailyUsage.feed_kwh, unit: "kWh"}
-            ];
-
-            items.forEach(item => {
-                if(item.value !== undefined) {
-                    const row = document.createElement("tr");
-                    row.appendChild(this.createCell(item.label, "dailytextcell"));
-                    row.appendChild(this.createCell(Math.round(item.value*100)/100 + " " + item.unit, "dailydatacell"));
-                    table.appendChild(row);
-                }
-            });
-        }
-
-        wrapper.appendChild(table);
+        wrapper.innerHTML = `Test data received: foo = ${this.testData.foo}`;
         return wrapper;
     }
 
