@@ -20,7 +20,7 @@ module.exports = NodeHelper.create({
     getMHW_P1: async function(urlP1) {
         try {
             const result_P1 = await this.fetchWithTimeout(urlP1);
-            this.lastP1 = result_P1; // bewaar laatste data
+            this.lastP1 = result_P1;
             this.sendSocketNotification('MHWP1_RESULT', result_P1);
         } catch (error) {
             console.error('MMM-MyHomeWizard P1 Error:', error.message);
@@ -31,7 +31,7 @@ module.exports = NodeHelper.create({
     getMHW_WM: async function(urlWM) {
         try {
             const result_WM = await this.fetchWithTimeout(urlWM);
-            this.lastWM = result_WM; // bewaar laatste data
+            this.lastWM = result_WM;
             this.sendSocketNotification('MHWWM_RESULT', result_WM);
         } catch (error) {
             console.error('MMM-MyHomeWizard WM Error:', error.message);
@@ -45,11 +45,7 @@ module.exports = NodeHelper.create({
 
         try {
             const response = await fetch(url, { signal: controller.signal });
-
-            if (!response.ok) {
-                throw new Error(`Network response was not ok (${response.status})`);
-            }
-
+            if (!response.ok) throw new Error(`Network response was not ok (${response.status})`);
             return response.json();
         } finally {
             clearTimeout(timer);
@@ -57,11 +53,8 @@ module.exports = NodeHelper.create({
     },
 
     socketNotificationReceived: function(notification, payload) {
-        if (notification === 'GET_MHWP1') {
-            this.getMHW_P1(payload);
-        } else if (notification === 'GET_MHWWM') {
-            this.getMHW_WM(payload);
-        }
+        if (notification === 'GET_MHWP1') this.getMHW_P1(payload);
+        else if (notification === 'GET_MHWWM') this.getMHW_WM(payload);
     },
 
     // --- DAGELIJKSE OPSLAG OM 12:05 --- //
@@ -69,22 +62,17 @@ module.exports = NodeHelper.create({
     scheduleDailySaveAtNoon: function() {
         const now = new Date();
         const next = new Date();
-        next.setHours(12, 5, 0, 0); // plan voor 12:05 vandaag
+        next.setHours(12, 5, 0, 0);
 
-        if (now > next) {
-            next.setDate(next.getDate() + 1); // plan morgen als tijd voorbij is
-        }
+        if (now > next) next.setDate(next.getDate() + 1);
 
         const msUntilNext = next - now;
 
         setTimeout(() => {
             this.saveDataToFile({ MHW_P1: this.lastP1, MHW_WM: this.lastWM });
-
-            // Daarna elke 24 uur
             setInterval(() => {
                 this.saveDataToFile({ MHW_P1: this.lastP1, MHW_WM: this.lastWM });
             }, 24 * 60 * 60 * 1000);
-
         }, msUntilNext);
     },
 
@@ -108,7 +96,6 @@ module.exports = NodeHelper.create({
             };
 
             history.push(entry);
-
             fs.writeFileSync(filePath, JSON.stringify(history, null, 2));
             console.log("MMM-MyHomeWizard: Data saved to meter_history.json");
         } catch (err) {
