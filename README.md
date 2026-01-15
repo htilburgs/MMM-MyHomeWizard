@@ -42,8 +42,7 @@ Add the module to your modules array in your config.js.
 		showFooter: true,	    // Show footer (name Power Meter)
 		updateInterval: 5000,   // Update every 5 seconds
 		maxWidth: "500px",	    // Max Module width
-        fetchTimeout: 5000,		
-        retryCount: 2,
+        showLastUpdate: true,	// Show the last update for the History Data in the footer
         showDeltaPower: true,	// Show Delta between History and Current data (Power)
         showDeltaGas: true,		// Show Delta between History and Current data (Gas)
         showDeltaWater: true	// Show Delta between History and Current data (Water)
