@@ -30,18 +30,19 @@ Module.register('MMM-MyHomeWizard', {
     },
 
     socketNotificationReceived: function(notification, payload) {
+        console.log("Received notification:", notification, payload); // <-- Debug log
         if (notification === "MHWP1_RESULT") {
-            this.MHW_P1 = payload;
-            this.loadedP1 = true;
+            this.MHW_P1 = payload || {};
+            this.loadedP1 = Object.keys(this.MHW_P1).length > 0;
             this.updateDom(this.config.initialLoadDelay);
         }
         else if (notification === "MHWWM_RESULT") {
-            this.MHW_WM = payload;
-            this.loadedWM = true;
+            this.MHW_WM = payload || {};
+            this.loadedWM = Object.keys(this.MHW_WM).length > 0;
             this.updateDom(this.config.initialLoadDelay);
         }
         else if (notification === "DAILY_USAGE") {
-            this.dailyUsage = payload;
+            this.dailyUsage = payload || {};
             this.updateDom(this.config.initialLoadDelay);
         }
     },
