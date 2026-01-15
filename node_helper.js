@@ -6,53 +6,42 @@ module.exports = NodeHelper.create({
         console.log("Starting node_helper for: " + this.name);
     },
 
-    // Fetch P1 Meter data
-    getMHW_P1: async function(urlP1) {
+    getMHW_P1: async function({url, retry}) {
         try {
-            const result_P1 = await this.fetchWithTimeout(urlP1);
-            this.sendSocketNotification('MHWP1_RESULT', result_P1);
+            const result = await this.fetchWithTimeout(url);
+            this.sendSocketNotification('MHWP1_RESULT', result);
         } catch (error) {
-            console.error('MMM-MyHomeWizard P1 Error:', error.message);
-            this.sendSocketNotification('MHWP1_ERROR', { error: error.message });
+            console.error("MMM-MyHomeWizard P1 Error:", error.message);
+            this.sendSocketNotification('MHWP1_ERROR', { error: error.message, retry });
         }
     },
 
-    // Fetch Water Meter data
-    getMHW_WM: async function(urlWM) {
+    getMHW_WM: async function({url, retry}) {
         try {
-            const result_WM = await this.fetchWithTimeout(urlWM);
-            this.sendSocketNotification('MHWWM_RESULT', result_WM);
+            const result = await this.fetchWithTimeout(url);
+            this.sendSocketNotification('MHWWM_RESULT', result);
         } catch (error) {
-            console.error('MMM-MyHomeWizard WM Error:', error.message);
-            this.sendSocketNotification('MHWWM_ERROR', { error: error.message });
+            console.error("MMM-MyHomeWizard WM Error:", error.message);
+            this.sendSocketNotification('MHWWM_ERROR', { error: error.message, retry });
         }
     },
 
-    // Generic fetch with timeout
     fetchWithTimeout: async function(url, timeout = 5000) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeout);
 
         try {
             const response = await fetch(url, { signal: controller.signal });
-
-            if (!response.ok) {
-                throw new Error(`Network response was not ok (${response.status})`);
-            }
-
+            if (!response.ok) throw new Error(`Network response was not ok (${response.status})`);
             return response.json();
         } finally {
             clearTimeout(timer);
         }
     },
 
-    // Listen for socket notifications
     socketNotificationReceived: function(notification, payload) {
-        if (notification === 'GET_MHWP1') {
-            this.getMHW_P1(payload);
-        } else if (notification === 'GET_MHWWM') {
-            this.getMHW_WM(payload);
-        }
+        if (notification === 'GET_MHWP1') this.getMHW_P1(payload);
+        else if (notification === 'GET_MHWWM') this.getMHW_WM(payload);
     }
 
 });
