@@ -1,0 +1,362 @@
+[
+  {
+    "date": "2026-01-01",
+    "P1": {
+      "total_power_import_kwh": 520,
+      "total_power_export_kwh": 45,
+      "total_gas_m3": 10
+    },
+    "WM": {
+      "total_m3": 3.2,
+      "total_liters": 3200
+    }
+  },
+  {
+    "date": "2026-01-02",
+    "P1": {
+      "total_power_import_kwh": 525,
+      "total_power_export_kwh": 48,
+      "total_gas_m3": 10.5
+    },
+    "WM": {
+      "total_m3": 3.4,
+      "total_liters": 3400
+    }
+  },
+  {
+    "date": "2026-01-03",
+    "P1": {
+      "total_power_import_kwh": 530,
+      "total_power_export_kwh": 50,
+      "total_gas_m3": 11
+    },
+    "WM": {
+      "total_m3": 3.5,
+      "total_liters": 3500
+    }
+  },
+  {
+    "date": "2026-01-04",
+    "P1": {
+      "total_power_import_kwh": 535,
+      "total_power_export_kwh": 52,
+      "total_gas_m3": 11.2
+    },
+    "WM": {
+      "total_m3": 3.6,
+      "total_liters": 3600
+    }
+  },
+  {
+    "date": "2026-01-05",
+    "P1": {
+      "total_power_import_kwh": 540,
+      "total_power_export_kwh": 55,
+      "total_gas_m3": 11.5
+    },
+    "WM": {
+      "total_m3": 3.7,
+      "total_liters": 3700
+    }
+  },
+  {
+    "date": "2026-01-06",
+    "P1": {
+      "total_power_import_kwh": 545,
+      "total_power_export_kwh": 57,
+      "total_gas_m3": 12
+    },
+    "WM": {
+      "total_m3": 3.8,
+      "total_liters": 3800
+    }
+  },
+  {
+    "date": "2026-01-07",
+    "P1": {
+      "total_power_import_kwh": 550,
+      "total_power_export_kwh": 60,
+      "total_gas_m3": 12.5
+    },
+    "WM": {
+      "total_m3": 4,
+      "total_liters": 4000
+    }
+  },
+  {
+    "date": "2026-01-08",
+    "P1": {
+      "total_power_import_kwh": 555,
+      "total_power_export_kwh": 62,
+      "total_gas_m3": 13
+    },
+    "WM": {
+      "total_m3": 4.1,
+      "total_liters": 4100
+    }
+  },
+  {
+    "date": "2026-01-09",
+    "P1": {
+      "total_power_import_kwh": 560,
+      "total_power_export_kwh": 65,
+      "total_gas_m3": 13.2
+    },
+    "WM": {
+      "total_m3": 4.2,
+      "total_liters": 4200
+    }
+  },
+  {
+    "date": "2026-01-10",
+    "P1": {
+      "total_power_import_kwh": 565,
+      "total_power_export_kwh": 68,
+      "total_gas_m3": 13.5
+    },
+    "WM": {
+      "total_m3": 4.3,
+      "total_liters": 4300
+    }
+  },
+  {
+    "date": "2026-01-11",
+    "P1": {
+      "total_power_import_kwh": 570,
+      "total_power_export_kwh": 70,
+      "total_gas_m3": 14
+    },
+    "WM": {
+      "total_m3": 4.4,
+      "total_liters": 4400
+    }
+  },
+  {
+    "date": "2026-01-12",
+    "P1": {
+      "total_power_import_kwh": 575,
+      "total_power_export_kwh": 72,
+      "total_gas_m3": 14.2
+    },
+    "WM": {
+      "total_m3": 4.5,
+      "total_liters": 4500
+    }
+  },
+  {
+    "date": "2026-01-13",
+    "P1": {
+      "total_power_import_kwh": 580,
+      "total_power_export_kwh": 75,
+      "total_gas_m3": 14.5
+    },
+    "WM": {
+      "total_m3": 4.6,
+      "total_liters": 4600
+    }
+  },
+  {
+    "date": "2026-01-14",
+    "P1": {
+      "total_power_import_kwh": 585,
+      "total_power_export_kwh": 78,
+      "total_gas_m3": 15
+    },
+    "WM": {
+      "total_m3": 4.7,
+      "total_liters": 4700
+    }
+  },
+  {
+    "date": "2026-01-15",
+    "P1": {
+      "total_power_import_kwh": 590,
+      "total_power_export_kwh": 80,
+      "total_gas_m3": 15.2
+    },
+    "WM": {
+      "total_m3": 4.8,
+      "total_liters": 4800
+    }
+  },
+  {
+    "date": "2026-01-16",
+    "P1": {
+      "total_power_import_kwh": 595,
+      "total_power_export_kwh": 82,
+      "total_gas_m3": 15.5
+    },
+    "WM": {
+      "total_m3": 4.9,
+      "total_liters": 4900
+    }
+  },
+  {
+    "date": "2026-01-17",
+    "P1": {
+      "total_power_import_kwh": 600,
+      "total_power_export_kwh": 85,
+      "total_gas_m3": 16
+    },
+    "WM": {
+      "total_m3": 5,
+      "total_liters": 5000
+    }
+  },
+  {
+    "date": "2026-01-18",
+    "P1": {
+      "total_power_import_kwh": 605,
+      "total_power_export_kwh": 87,
+      "total_gas_m3": 16.2
+    },
+    "WM": {
+      "total_m3": 5.1,
+      "total_liters": 5100
+    }
+  },
+  {
+    "date": "2026-01-19",
+    "P1": {
+      "total_power_import_kwh": 610,
+      "total_power_export_kwh": 90,
+      "total_gas_m3": 16.5
+    },
+    "WM": {
+      "total_m3": 5.2,
+      "total_liters": 5200
+    }
+  },
+  {
+    "date": "2026-01-20",
+    "P1": {
+      "total_power_import_kwh": 615,
+      "total_power_export_kwh": 92,
+      "total_gas_m3": 17
+    },
+    "WM": {
+      "total_m3": 5.3,
+      "total_liters": 5300
+    }
+  },
+  {
+    "date": "2026-01-21",
+    "P1": {
+      "total_power_import_kwh": 620,
+      "total_power_export_kwh": 95,
+      "total_gas_m3": 17.2
+    },
+    "WM": {
+      "total_m3": 5.4,
+      "total_liters": 5400
+    }
+  },
+  {
+    "date": "2026-01-22",
+    "P1": {
+      "total_power_import_kwh": 625,
+      "total_power_export_kwh": 98,
+      "total_gas_m3": 17.5
+    },
+    "WM": {
+      "total_m3": 5.5,
+      "total_liters": 5500
+    }
+  },
+  {
+    "date": "2026-01-23",
+    "P1": {
+      "total_power_import_kwh": 630,
+      "total_power_export_kwh": 100,
+      "total_gas_m3": 18
+    },
+    "WM": {
+      "total_m3": 5.6,
+      "total_liters": 5600
+    }
+  },
+  {
+    "date": "2026-01-24",
+    "P1": {
+      "total_power_import_kwh": 635,
+      "total_power_export_kwh": 102,
+      "total_gas_m3": 18.2
+    },
+    "WM": {
+      "total_m3": 5.7,
+      "total_liters": 5700
+    }
+  },
+  {
+    "date": "2026-01-25",
+    "P1": {
+      "total_power_import_kwh": 640,
+      "total_power_export_kwh": 105,
+      "total_gas_m3": 18.5
+    },
+    "WM": {
+      "total_m3": 5.8,
+      "total_liters": 5800
+    }
+  },
+  {
+    "date": "2026-01-26",
+    "P1": {
+      "total_power_import_kwh": 645,
+      "total_power_export_kwh": 108,
+      "total_gas_m3": 19
+    },
+    "WM": {
+      "total_m3": 5.9,
+      "total_liters": 5900
+    }
+  },
+  {
+    "date": "2026-01-27",
+    "P1": {
+      "total_power_import_kwh": 650,
+      "total_power_export_kwh": 110,
+      "total_gas_m3": 19.2
+    },
+    "WM": {
+      "total_m3": 6,
+      "total_liters": 6000
+    }
+  },
+  {
+    "date": "2026-01-28",
+    "P1": {
+      "total_power_import_kwh": 655,
+      "total_power_export_kwh": 112,
+      "total_gas_m3": 19.5
+    },
+    "WM": {
+      "total_m3": 6.1,
+      "total_liters": 6100
+    }
+  },
+  {
+    "date": "2026-01-29",
+    "P1": {
+      "total_power_import_kwh": 660,
+      "total_power_export_kwh": 115,
+      "total_gas_m3": 20
+    },
+    "WM": {
+      "total_m3": 6.2,
+      "total_liters": 6200
+    }
+  },
+  {
+    "date": "2026-01-30",
+    "P1": {
+      "total_power_import_kwh": 665,
+      "total_power_export_kwh": 118,
+      "total_gas_m3": 20.2
+    },
+    "WM": {
+      "total_m3": 6.3,
+      "total_liters": 6300
+    }
+  }
+]
