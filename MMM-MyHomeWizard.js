@@ -34,47 +34,27 @@ Module.register('MMM-MyHomeWizard', {
         this.urlP1 = this.config.P1_IP ? "http://" + this.config.P1_IP + "/api/v1/data/" : null;
         this.urlWM = this.config.WM_IP ? "http://" + this.config.WM_IP + "/api/v1/data/" : null;
 
-        // Dummy fallback data if no real meters
-        this.MHW_P1 = this.urlP1 ? {} : {
-            total_power_import_kwh: 123,
-            total_power_export_kwh: 10,
-            total_gas_m3: 5,
-            active_power_w: 100,
-            meter_model: "Dummy P1",
-            wifi_strength: 80,
-            any_power_fail_count: 0
-        };
-
-        this.MHW_WM = this.urlWM ? {} : {
-            total_liter_m3: 2,
-            active_liter_lpm: 5,
-            wifi_strength: 75
-        };
-
-        this.loadedP1 = !!this.MHW_P1 && Object.keys(this.MHW_P1).length > 0;
-        this.loadedWM = !!this.MHW_WM && Object.keys(this.MHW_WM).length > 0;
-
+        this.MHW_P1 = {};
+        this.MHW_WM = {};
+        this.loadedP1 = false;
+        this.loadedWM = false;
+        this.lastSnapshotDate = null;
         this.errorP1 = false;
         this.errorWM = false;
-        this.lastSnapshotDate = null;
 
         this.scheduleUpdate();
     },
 
     scheduleUpdate: function () {
-        this.updateIntervalId = setInterval(() => {
-            this.getMHW_P1();
-            this.getMHW_WM();
-        }, this.config.updateInterval);
-
         setTimeout(() => {
             this.getMHW_P1();
             this.getMHW_WM();
         }, this.config.initialLoadDelay);
-    },
 
-    stop: function () {
-        if (this.updateIntervalId) clearInterval(this.updateIntervalId);
+        this.updateIntervalId = setInterval(() => {
+            this.getMHW_P1();
+            this.getMHW_WM();
+        }, this.config.updateInterval);
     },
 
     getDom: function () {
@@ -85,7 +65,7 @@ Module.register('MMM-MyHomeWizard', {
         const hasP1Data = this.loadedP1 || Object.keys(this.MHW_P1).length > 0;
         const hasWMData = this.loadedWM || Object.keys(this.MHW_WM).length > 0;
 
-        if ((!hasP1Data && this.config.P1_IP) || (!hasWMData && this.config.WM_IP)) {
+        if (!hasP1Data && !hasWMData) {
             wrapper.innerHTML = "Loading....";
             wrapper.classList.add("bright", "light", "small");
             return wrapper;
@@ -94,8 +74,8 @@ Module.register('MMM-MyHomeWizard', {
         const table = document.createElement("table");
         table.className = "small";
 
-        if (this.config.P1_IP) this.addPowerRows(table, this.MHW_P1);
-        if (this.config.WM_IP) this.addWaterRows(table, this.MHW_WM);
+        if (hasP1Data) this.addPowerRows(table, this.MHW_P1);
+        if (hasWMData) this.addWaterRows(table, this.MHW_WM);
 
         if (this.config.showFooter) {
             const row = document.createElement("tr");
@@ -128,21 +108,21 @@ Module.register('MMM-MyHomeWizard', {
             this.MHW_P1 = payload;
             this.loadedP1 = true;
             this.errorP1 = false;
-            this.updateDom(this.config.initialLoadDelay);
+            this.updateDom(0);
         }
         else if (notification === "MHWWM_RESULT") {
             this.MHW_WM = payload;
             this.loadedWM = true;
             this.errorWM = false;
-            this.updateDom(this.config.initialLoadDelay);
+            this.updateDom(0);
         }
         else if (notification === "MHWP1_ERROR") {
             if (payload.retry > 0) this.getMHW_P1(payload.retry - 1);
-            else { this.errorP1 = true; this.updateDom(this.config.initialLoadDelay); }
+            else { this.errorP1 = true; this.updateDom(0); }
         }
         else if (notification === "MHWWM_ERROR") {
             if (payload.retry > 0) this.getMHW_WM(payload.retry - 1);
-            else { this.errorWM = true; this.updateDom(this.config.initialLoadDelay); }
+            else { this.errorWM = true; this.updateDom(0); }
         }
         else if (notification === "LAST_SNAPSHOT_DATE") {
             this.lastSnapshotDate = payload;
@@ -151,12 +131,12 @@ Module.register('MMM-MyHomeWizard', {
     },
 
     getMHW_P1: function(retry = this.config.retryCount) {
-        if (!this.urlP1) return; // skip if no real P1
+        if (!this.urlP1) return;
         this.sendSocketNotification('GET_MHWP1', { url: this.urlP1, retry });
     },
 
     getMHW_WM: function(retry = this.config.retryCount) {
-        if (!this.urlWM) return; // skip if no real WM
+        if (!this.urlWM) return;
         this.sendSocketNotification('GET_MHWWM', { url: this.urlWM, retry });
     }
 
