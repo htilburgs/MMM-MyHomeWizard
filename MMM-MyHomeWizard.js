@@ -161,26 +161,26 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // --- Delta rijen ---
+        // --- Delta rijen (zelfde classes als data) ---
         if (this.deltaP1) {
             // Delta stroom
             var row = document.createElement("tr");
-            row.className = "delta-power-row";
-            row.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Pwr"), "deltapowertextcell"));
+            row.className = "total-power-row";
+            row.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Pwr"), "totalpowertextcell"));
             row.appendChild(this.createCell(
                 Math.round(this.deltaP1.total_power_import_kwh || 0) + " kWh / " +
                 Math.round(this.deltaP1.total_power_export_kwh || 0) + " kWh",
-                "deltapowerdatacell"
+                "totalpowerdatacell"
             ));
             table.appendChild(row);
 
-            // Delta gas (nu met pijl-icoon ⬆)
+            // Delta gas
             var gasRow = document.createElement("tr");
-            gasRow.className = "delta-gas-row";
-            gasRow.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Gas"), "deltagasttextcell"));
+            gasRow.className = "total-gas-row";
+            gasRow.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Gas"), "totalgastextcell"));
             gasRow.appendChild(this.createCell(
                 Math.round(this.deltaP1.total_gas_m3 || 0) + " m³",
-                "deltagasdatacell"
+                "totalgasdatacell"
             ));
             table.appendChild(gasRow);
         }
@@ -206,11 +206,11 @@ Module.register('MMM-MyHomeWizard', {
 
         if (this.deltaWM) {
             var row = document.createElement("tr");
-            row.className = "delta-water-row";
-            row.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Wtr"), "deltawatertextcell"));
+            row.className = "total-water-row"; // zelfde class als totaal water
+            row.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Wtr"), "totalwatertextcell"));
             row.appendChild(this.createCell(
                 Math.round(this.deltaWM.total_liter_m3 || 0) + " m³ (" + Math.round(this.deltaWM.total_liters || 0) + " L)",
-                "deltawaterdatacell"
+                "totalwaterdatacell"
             ));
             table.appendChild(row);
         }
