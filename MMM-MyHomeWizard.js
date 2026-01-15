@@ -1,38 +1,23 @@
 Module.register('MMM-MyHomeWizard', {
 
     defaults: {
-        P1_IP: null,
-        WM_IP: null,
-        maxWidth: "500px",
-        extraInfo: false,
-        showFooter: false,
-        showGas: true,
-        showFeedback: true,
-        currentPower: false,
-        currentWater: false,
-        initialLoadDelay: 1000,
-        updateInterval: 10000,
-        fetchTimeout: 5000,
-        retryCount: 2,
-        showHistoryCharts: {
-            electricity: true,
-            gas: true,
-            water: true
-        }
+        P1_IP: null,              
+        WM_IP: null,              
+        maxWidth: "500px",        
+        extraInfo: false,         
+        showFooter: false,        
+        showGas: true,            
+        showFeedback: true,       
+        currentPower: false,      
+        currentWater: false,      
+        initialLoadDelay: 1000,  
+        updateInterval: 10000,    
+        fetchTimeout: 5000,       
+        retryCount: 2             
     },
 
-    chartColors: {
-        electricityImport: 'rgb(54, 162, 235)',
-        electricityExport: 'rgb(75, 192, 192)',
-        gas: 'rgb(255, 159, 64)',
-        water: 'rgb(153, 102, 255)'
-    },
-
-    getScripts: function () {
-        return [
-            "MMM-MyHomeWizard.css",
-            "https://cdn.jsdelivr.net/npm/chart.js"
-        ];
+    getStyles: function () {
+        return ["MMM-MyHomeWizard.css"];
     },
 
     getTranslations: function () {
@@ -93,50 +78,37 @@ Module.register('MMM-MyHomeWizard', {
             wrapper.innerHTML = '<span class="error">Water Meter offline</span>';
             return wrapper;
         }
+
         if ((!this.loadedP1 && this.config.P1_IP) || (!this.loadedWM && this.config.WM_IP)) {
             wrapper.innerHTML = "Loading....";
             wrapper.classList.add("bright", "light", "small");
             return wrapper;
         }
 
-        // Table
         var table = document.createElement("table");
         table.className = "small";
+
         if (this.config.P1_IP) this.addPowerRows(table, this.MHW_P1);
         if (this.config.WM_IP) this.addWaterRows(table, this.MHW_WM);
-        wrapper.appendChild(table);
 
-        // Chart canvas
-        if (this.config.showHistoryCharts.electricity || this.config.showHistoryCharts.gas || this.config.showHistoryCharts.water) {
-            var canvasWrapper = document.createElement("div");
-            canvasWrapper.style.marginTop = "15px";
-            var canvas = document.createElement("canvas");
-            canvas.id = "MHWHistoryChart";
-            canvasWrapper.appendChild(canvas);
-            wrapper.appendChild(canvasWrapper);
-
-            this.drawHistoryChart();
+        if (this.config.showFooter && this.MHW_P1?.meter_model) {
+            var row = document.createElement("tr");
+            var cell = document.createElement("td");
+            cell.setAttribute("colspan", "2");
+            cell.className = "footer";
+            cell.innerHTML = '<i class="fa-solid fa-charging-station"></i>&nbsp;' + this.MHW_P1.meter_model;
+            row.appendChild(cell);
+            table.appendChild(row);
         }
 
+        wrapper.appendChild(table);
         return wrapper;
     },
 
-    createCell: function(content, className, color) {
+    createCell: function(content, className) {
         var cell = document.createElement("td");
         cell.className = "normal " + className;
-        if (color) {
-            cell.innerHTML = `<span style="
-                display:inline-block;
-                width:12px;
-                height:12px;
-                background-color:${color};
-                border-radius:50%;
-                margin-right:5px;
-                vertical-align:middle;
-            "></span>` + content;
-        } else {
-            cell.innerHTML = content;
-        }
+        cell.innerHTML = content;
         return cell;
     },
 
@@ -145,21 +117,21 @@ Module.register('MMM-MyHomeWizard', {
             var row = document.createElement("tr");
             row.className = "current-power-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-bolt-lightning"></i>&nbsp;' + this.translate("Current_Pwr"), "currentpowertextcell"));
-            row.appendChild(this.createCell(Math.round(data.active_power_w) + " Watt", "currentpowerdatacell", this.chartColors.electricityImport));
+            row.appendChild(this.createCell(Math.round(data.active_power_w) + " Watt", "currentpowerdatacell"));
             table.appendChild(row);
         }
 
         var row = document.createElement("tr");
         row.className = "total-power-row";
         row.appendChild(this.createCell('<i class="fa-solid fa-plug-circle-bolt"></i>&nbsp;' + this.translate("Total_Pwr"), "totalpowertextcell"));
-        row.appendChild(this.createCell(Math.round(data.total_power_import_kwh) + " kWh", "totalpowerdatacell", this.chartColors.electricityImport));
+        row.appendChild(this.createCell(Math.round(data.total_power_import_kwh) + " kWh", "totalpowerdatacell"));
         table.appendChild(row);
 
         if (this.config.showFeedback) {
             var row = document.createElement("tr");
             row.className = "total-feedback-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-plug-circle-plus"></i>&nbsp;' + this.translate("Total_Feedback"), "totalfeedbacktextcell"));
-            row.appendChild(this.createCell(Math.round(data.total_power_export_kwh) + " kWh", "totalfeedbackdatacell", this.chartColors.electricityExport));
+            row.appendChild(this.createCell(Math.round(data.total_power_export_kwh) + " kWh", "totalfeedbackdatacell"));
             table.appendChild(row);
         }
 
@@ -167,7 +139,7 @@ Module.register('MMM-MyHomeWizard', {
             var row = document.createElement("tr");
             row.className = "total-gas-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-fire"></i>&nbsp;' + this.translate("Total_Gas"), "totalgastextcell"));
-            row.appendChild(this.createCell(Math.round(data.total_gas_m3) + " m³", "totalgasdatacell", this.chartColors.gas));
+            row.appendChild(this.createCell(Math.round(data.total_gas_m3) + " m³", "totalgasdatacell"));
             table.appendChild(row);
         }
 
@@ -179,18 +151,15 @@ Module.register('MMM-MyHomeWizard', {
             var row = document.createElement("tr");
             row.className = "current-water-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-water"></i>&nbsp;' + this.translate("Current_Wtr"), "currentwatertextcell"));
-            row.appendChild(this.createCell(Math.round(data.active_liter_lpm) + " Lpm", "currentwaterdatacell", this.chartColors.water));
+            row.appendChild(this.createCell(Math.round(data.active_liter_lpm) + " Lpm", "currentwaterdatacell"));
             table.appendChild(row);
         }
 
+        var totalLiters = data.total_liter_m3 * 1000;
         var row = document.createElement("tr");
         row.className = "total-water-row";
         row.appendChild(this.createCell('<i class="fa-solid fa-droplet"></i>&nbsp;' + this.translate("Total_Wtr"), "totalwatertextcell"));
-        row.appendChild(this.createCell(
-            Math.round(data.total_liter_m3) + " m³ (" + Math.round(data.total_liter_m3 * 1000) + " L)",
-            "totalwaterdatacell",
-            this.chartColors.water
-        ));
+        row.appendChild(this.createCell(Math.round(data.total_liter_m3) + " m³ (" + Math.round(totalLiters) + " L)", "totalwaterdatacell"));
         table.appendChild(row);
 
         if (this.config.extraInfo) this.addExtraInfo(table, data, "WM");
@@ -216,75 +185,27 @@ Module.register('MMM-MyHomeWizard', {
         }
     },
 
-    drawHistoryChart: function () {
-        const fs = require('fs');
-        const path = require('path');
-        const historyFile = path.join(__dirname, 'history_data.json');
-
-        if (!fs.existsSync(historyFile)) return;
-
-        let history = [];
-        try { history = JSON.parse(fs.readFileSync(historyFile, 'utf8')); }
-        catch (err) { console.error("Failed to read history_data.json for chart:", err.message); return; }
-
-        if (history.length === 0) return;
-
-        const labels = history.map(day => day.date);
-        const datasets = [];
-
-        if (this.config.showHistoryCharts.electricity) {
-            datasets.push({
-                label: 'Electricity Import (kWh)',
-                data: history.map(d => d.P1.total_power_import_kwh),
-                borderColor: this.chartColors.electricityImport,
-                fill: false, tension: 0.1
-            });
-            datasets.push({
-                label: 'Electricity Export (kWh)',
-                data: history.map(d => d.P1.total_power_export_kwh),
-                borderColor: this.chartColors.electricityExport,
-                fill: false, tension: 0.1
-            });
-        }
-
-        if (this.config.showHistoryCharts.gas) {
-            datasets.push({
-                label: 'Gas (m³)',
-                data: history.map(d => d.P1.total_gas_m3),
-                borderColor: this.chartColors.gas,
-                fill: false, tension: 0.1
-            });
-        }
-
-        if (this.config.showHistoryCharts.water) {
-            datasets.push({
-                label: 'Water (m³)',
-                data: history.map(d => d.WM.total_m3),
-                borderColor: this.chartColors.water,
-                fill: false, tension: 0.1
-            });
-        }
-
-        const ctx = document.getElementById("MHWHistoryChart").getContext("2d");
-        if (this.historyChart) this.historyChart.destroy();
-
-        this.historyChart = new Chart(ctx, {
-            type: 'line',
-            data: { labels, datasets },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: 'bottom' }, tooltip: { mode: 'index', intersect: false } },
-                interaction: { mode: 'nearest', intersect: false },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
+    getMHW_P1: function(retry = this.config.retryCount) {
+        this.sendSocketNotification('GET_MHWP1', { url: this.urlP1, retry });
     },
 
-    getMHW_P1: function(retry = this.config.retryCount) { this.sendSocketNotification('GET_MHWP1', { url: this.urlP1, retry }); },
-    getMHW_WM: function(retry = this.config.retryCount) { this.sendSocketNotification('GET_MHWWM', { url: this.urlWM, retry }); },
+    getMHW_WM: function(retry = this.config.retryCount) {
+        this.sendSocketNotification('GET_MHWWM', { url: this.urlWM, retry });
+    },
 
-    processMHW_P1: function(data) { this.MHW_P1 = data; this.loadedP1 = true; this.errorP1 = false; if (this.loadedP1 && this.loadedWM) this.updateDom(this.config.initialLoadDelay); },
-    processMHW_WM: function(data) { this.MHW_WM = data; this.loadedWM = true; this.errorWM = false; if (this.loadedP1 && this.loadedWM) this.updateDom(this.config.initialLoadDelay); },
+    processMHW_P1: function(data) {
+        this.MHW_P1 = data;
+        this.loadedP1 = true;
+        this.errorP1 = false;
+        if (this.loadedP1 && this.loadedWM) this.updateDom(this.config.initialLoadDelay);
+    },
+
+    processMHW_WM: function(data) {
+        this.MHW_WM = data;
+        this.loadedWM = true;
+        this.errorWM = false;
+        if (this.loadedP1 && this.loadedWM) this.updateDom(this.config.initialLoadDelay);
+    },
 
     socketNotificationReceived: function(notification, payload) {
         if (notification === "MHWP1_RESULT") this.processMHW_P1(payload);
@@ -293,7 +214,8 @@ Module.register('MMM-MyHomeWizard', {
             console.error("MMM-MyHomeWizard P1 Error:", payload.error);
             if (payload.retry > 0) this.getMHW_P1(payload.retry - 1);
             else { this.errorP1 = true; this.updateDom(this.config.initialLoadDelay); }
-        } else if (notification === "MHWWM_ERROR") {
+        }
+        else if (notification === "MHWWM_ERROR") {
             console.error("MMM-MyHomeWizard WM Error:", payload.error);
             if (payload.retry > 0) this.getMHW_WM(payload.retry - 1);
             else { this.errorWM = true; this.updateDom(this.config.initialLoadDelay); }
