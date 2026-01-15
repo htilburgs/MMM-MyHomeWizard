@@ -9,50 +9,7 @@ module.exports = NodeHelper.create({
 
         this.MHW_P1 = null;
         this.MHW_WM = null;
-        this.firstSnapshotSaved = false;
 
-        const historyFile = path.join(__dirname, 'history_data.json');
-
-        // Send last snapshot date if exists
-        if (fs.existsSync(historyFile)) {
-            try {
-                const content = fs.readFileSync(historyFile, 'utf8');
-                const history = JSON.parse(content);
-                if (history.length > 0) {
-                    const lastDate = history[history.length - 1].date;
-                    setTimeout(() => {
-                        this.sendSocketNotification("LAST_SNAPSHOT_DATE", lastDate);
-                    }, 1000);
-                }
-            } catch (err) {
-                console.error("Failed to read history_data.json:", err.message);
-            }
-        }
-
-        // Immediately send dummy data to front-end to avoid Loading...
-        if (!this.MHW_P1) {
-            this.MHW_P1 = {
-                total_power_import_kwh: 0,
-                total_power_export_kwh: 0,
-                total_gas_m3: 0,
-                active_power_w: 0,
-                meter_model: "P1 meter",
-                wifi_strength: 0,
-                any_power_fail_count: 0
-            };
-            this.sendSocketNotification('MHWP1_RESULT', this.MHW_P1);
-        }
-
-        if (!this.MHW_WM) {
-            this.MHW_WM = {
-                total_liter_m3: 0,
-                active_liter_lpm: 0,
-                wifi_strength: 0
-            };
-            this.sendSocketNotification('MHWWM_RESULT', this.MHW_WM);
-        }
-
-        // Schedule nightly snapshot
         this.scheduleNightlySave();
     },
 
@@ -107,8 +64,6 @@ module.exports = NodeHelper.create({
         try {
             fs.writeFileSync(historyFile, JSON.stringify(history, null, 2));
             console.log("Daily snapshot saved");
-            this.firstSnapshotSaved = true;
-            this.sendSocketNotification("LAST_SNAPSHOT_DATE", snapshot.date);
         } catch (err) {
             console.error("Failed to write history_data.json:", err.message);
         }
@@ -119,7 +74,6 @@ module.exports = NodeHelper.create({
             const result = await this.fetchWithTimeout(url);
             this.MHW_P1 = result;
             this.sendSocketNotification('MHWP1_RESULT', result);
-            if (!this.firstSnapshotSaved) this.saveDailyData();
         } catch (error) {
             console.error("P1 Error:", error.message);
             this.sendSocketNotification('MHWP1_ERROR', { error: error.message, retry });
@@ -131,7 +85,6 @@ module.exports = NodeHelper.create({
             const result = await this.fetchWithTimeout(url);
             this.MHW_WM = result;
             this.sendSocketNotification('MHWWM_RESULT', result);
-            if (!this.firstSnapshotSaved) this.saveDailyData();
         } catch (error) {
             console.error("WM Error:", error.message);
             this.sendSocketNotification('MHWWM_ERROR', { error: error.message, retry });
