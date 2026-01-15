@@ -37,36 +37,13 @@ Module.register('MMM-MyHomeWizard', {
         this.MHW_P1 = {};
         this.MHW_WM = {};
 
-        // Flags to control loading
+        // Flags to control Loading state
         this.hasP1Data = false;
         this.hasWMData = false;
 
         this.lastSnapshotDate = null;
         this.errorP1 = false;
         this.errorWM = false;
-
-        // Dummy fallback if no real meter
-        if (!this.urlP1) {
-            this.MHW_P1 = {
-                total_power_import_kwh: 123,
-                total_power_export_kwh: 10,
-                total_gas_m3: 5,
-                active_power_w: 100,
-                meter_model: "Dummy P1",
-                wifi_strength: 80,
-                any_power_fail_count: 0
-            };
-            this.hasP1Data = true;
-        }
-
-        if (!this.urlWM) {
-            this.MHW_WM = {
-                total_liter_m3: 2,
-                active_liter_lpm: 5,
-                wifi_strength: 75
-            };
-            this.hasWMData = true;
-        }
 
         this.scheduleUpdate();
     },
