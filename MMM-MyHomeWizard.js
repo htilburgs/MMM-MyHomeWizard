@@ -84,12 +84,14 @@ Module.register('MMM-MyHomeWizard', {
         if (this.updateIntervalId) clearInterval(this.updateIntervalId);
     },
 
+    // --- Format number with language, fallback to en-GB for EU style ---
     formatNumber: function(number) {
         let language = (config && config.language) ? config.language : 'en';
         try {
             return new Intl.NumberFormat(language).format(number);
         } catch (e) {
-            return new Intl.NumberFormat('en').format(number);
+            // fallback naar Europees Engels
+            return new Intl.NumberFormat('en-GB').format(number);
         }
     },
 
