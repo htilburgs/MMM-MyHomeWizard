@@ -41,7 +41,6 @@ module.exports = NodeHelper.create({
         }
 
         const today = new Date().toISOString().split('T')[0];
-
         if (history.some(h => h.date === today)) return;
 
         const snapshot = {
@@ -58,15 +57,10 @@ module.exports = NodeHelper.create({
         };
 
         history.push(snapshot);
+        if (history.length > 30) history = history.slice(-30);
 
-        if (history.length > 30) history = history.slice(history.length - 30);
-
-        try {
-            fs.writeFileSync(historyFile, JSON.stringify(history, null, 2));
-            this.firstSnapshotSaved = true;
-        } catch (err) {
-            console.error("Failed to write history_data.json:", err.message);
-        }
+        try { fs.writeFileSync(historyFile, JSON.stringify(history, null, 2)); this.firstSnapshotSaved = true; } 
+        catch (err) { console.error("Failed to write history_data.json:", err.message); }
     },
 
     getMHW_P1: async function({url, retry}) {
@@ -125,18 +119,23 @@ module.exports = NodeHelper.create({
                 } catch (e) { console.error("Failed to read last update from history_data.json:", e.message); }
             }
 
-            this.sendSocketNotification("LAST_UPDATE_RESULT", {
-                lastDate: lastSnapshot ? lastSnapshot.date : new Date().toISOString().split('T')[0],
-                deltaP1: previousSnapshot && lastSnapshot ? {
+            const lastDate = lastSnapshot ? lastSnapshot.date : new Date().toISOString().split('T')[0];
+            const deltaP1 = previousSnapshot && lastSnapshot
+                ? {
                     total_power_import_kwh: lastSnapshot.P1.total_power_import_kwh - previousSnapshot.P1.total_power_import_kwh,
                     total_power_export_kwh: lastSnapshot.P1.total_power_export_kwh - previousSnapshot.P1.total_power_export_kwh,
                     total_gas_m3: lastSnapshot.P1.total_gas_m3 - previousSnapshot.P1.total_gas_m3
-                } : { total_power_import_kwh: 0, total_power_export_kwh: 0, total_gas_m3: 0 },
-                deltaWM: previousSnapshot && lastSnapshot ? {
+                }
+                : { total_power_import_kwh: 0, total_power_export_kwh: 0, total_gas_m3: 0 };
+
+            const deltaWM = previousSnapshot && lastSnapshot
+                ? {
                     total_liter_m3: lastSnapshot.WM.total_m3 - previousSnapshot.WM.total_m3,
                     total_liters: lastSnapshot.WM.total_liters - previousSnapshot.WM.total_liters
-                } : { total_liter_m3: 0, total_liters: 0 }
-            });
+                }
+                : { total_liter_m3: 0, total_liters: 0 };
+
+            this.sendSocketNotification("LAST_UPDATE_RESULT", { lastDate, deltaP1, deltaWM });
         }
     }
 
