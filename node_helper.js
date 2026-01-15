@@ -1,5 +1,4 @@
 const NodeHelper = require('node_helper');
-const fetch = require('node-fetch'); // Make sure node-fetch is installed
 
 module.exports = NodeHelper.create({
 
