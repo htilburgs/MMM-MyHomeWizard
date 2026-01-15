@@ -163,20 +163,15 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // --- Delta rows with color coding ---
+        // --- Delta rows without color coding ---
         if (this.deltaP1) {
             if (this.config.showDeltaPower) {
                 var row = document.createElement("tr");
                 row.className = "total-power-row";
                 row.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Pwr"), "totalpowertextcell"));
-
-                var importDelta = Math.round(this.deltaP1.total_power_import_kwh || 0);
-                var exportDelta = Math.round(this.deltaP1.total_power_export_kwh || 0);
-                var importColor = importDelta >= 0 ? "green" : "red";
-                var exportColor = exportDelta >= 0 ? "green" : "red";
-
                 row.appendChild(this.createCell(
-                    `<span style="color:${importColor}">${importDelta} kWh</span> / <span style="color:${exportColor}">${exportDelta} kWh</span>`,
+                    Math.round(this.deltaP1.total_power_import_kwh || 0) + " kWh / " +
+                    Math.round(this.deltaP1.total_power_export_kwh || 0) + " kWh",
                     "totalpowerdatacell"
                 ));
                 table.appendChild(row);
@@ -186,11 +181,10 @@ Module.register('MMM-MyHomeWizard', {
                 var gasRow = document.createElement("tr");
                 gasRow.className = "total-gas-row";
                 gasRow.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Gas"), "totalgastextcell"));
-
-                var gasDelta = Math.round(this.deltaP1.total_gas_m3 || 0);
-                var gasColor = gasDelta >= 0 ? "green" : "red";
-                gasRow.appendChild(this.createCell(`<span style="color:${gasColor}">${gasDelta} m³</span>`, "totalgasdatacell"));
-
+                gasRow.appendChild(this.createCell(
+                    Math.round(this.deltaP1.total_gas_m3 || 0) + " m³",
+                    "totalgasdatacell"
+                ));
                 table.appendChild(gasRow);
             }
         }
@@ -218,13 +212,8 @@ Module.register('MMM-MyHomeWizard', {
             var row = document.createElement("tr");
             row.className = "total-water-row";
             row.appendChild(this.createCell('<i class="fa-solid fa-arrow-up"></i>&nbsp;' + this.translate("Delta_Wtr"), "totalwatertextcell"));
-
-            var m3Delta = Math.round(this.deltaWM.total_liter_m3 || 0);
-            var literDelta = Math.round(this.deltaWM.total_liters || 0);
-            var color = m3Delta >= 0 ? "green" : "red";
-
             row.appendChild(this.createCell(
-                `<span style="color:${color}">${m3Delta} m³ (${literDelta} L)</span>`,
+                Math.round(this.deltaWM.total_liter_m3 || 0) + " m³ (" + Math.round(this.deltaWM.total_liters || 0) + " L)",
                 "totalwaterdatacell"
             ));
             table.appendChild(row);
