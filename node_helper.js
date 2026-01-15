@@ -6,15 +6,20 @@ module.exports = NodeHelper.create({
 
     start: function () {
         console.log("Starting node_helper for: " + this.name);
-
         this.MHW_P1 = null;
         this.MHW_WM = null;
 
+        // Track if first snapshot has been saved today
+        this.firstSnapshotSaved = false;
+
+        // Schedule nightly save at 23:59
         this.scheduleNightlySave();
     },
 
     scheduleNightlySave: function() {
         const now = new Date();
+
+        // Calculate milliseconds until 23:59 tonight
         const millisTillMidnight = new Date(
             now.getFullYear(),
             now.getMonth(),
@@ -23,28 +28,41 @@ module.exports = NodeHelper.create({
         ) - now;
 
         setTimeout(() => {
-            this.saveDailyData();
+            this.saveDailyData(); // Save at 23:59
+            // Repeat every 24h
             setInterval(() => this.saveDailyData(), 24 * 60 * 60 * 1000);
         }, millisTillMidnight);
     },
 
     saveDailyData: function() {
-        if (!this.MHW_P1 && !this.MHW_WM) return;
+        // Only save if at least one meter has real data
+        if (!this.MHW_P1 && !this.MHW_WM) {
+            console.log("No meter data yet, skipping daily snapshot.");
+            return;
+        }
 
         const historyFile = path.join(__dirname, 'history_data.json');
         let history = [];
 
+        // Load existing data
         if (fs.existsSync(historyFile)) {
             try {
-                history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
+                const fileContent = fs.readFileSync(historyFile, 'utf8');
+                history = JSON.parse(fileContent);
             } catch (err) {
                 console.error("Failed to read history_data.json:", err.message);
             }
         }
 
         const today = new Date().toISOString().split('T')[0];
-        if (history.some(h => h.date === today)) return;
 
+        // Prevent duplicate snapshot for the same day
+        if (history.some(h => h.date === today)) {
+            console.log("Snapshot for today already exists.");
+            return;
+        }
+
+        // Build daily snapshot
         const snapshot = {
             date: today,
             P1: {
@@ -59,11 +77,17 @@ module.exports = NodeHelper.create({
         };
 
         history.push(snapshot);
-        if (history.length > 30) history = history.slice(history.length - 30);
 
+        // Keep only last 30 days
+        if (history.length > 30) {
+            history = history.slice(history.length - 30);
+        }
+
+        // Save to file
         try {
             fs.writeFileSync(historyFile, JSON.stringify(history, null, 2));
-            console.log("Daily snapshot saved");
+            console.log("Daily MyHomeWizard snapshot saved to history_data.json");
+            this.firstSnapshotSaved = true;
         } catch (err) {
             console.error("Failed to write history_data.json:", err.message);
         }
@@ -74,8 +98,11 @@ module.exports = NodeHelper.create({
             const result = await this.fetchWithTimeout(url);
             this.MHW_P1 = result;
             this.sendSocketNotification('MHWP1_RESULT', result);
+
+            // Save snapshot immediately after first successful fetch
+            if (!this.firstSnapshotSaved) this.saveDailyData();
         } catch (error) {
-            console.error("P1 Error:", error.message);
+            console.error("MMM-MyHomeWizard P1 Error:", error.message);
             this.sendSocketNotification('MHWP1_ERROR', { error: error.message, retry });
         }
     },
@@ -85,8 +112,11 @@ module.exports = NodeHelper.create({
             const result = await this.fetchWithTimeout(url);
             this.MHW_WM = result;
             this.sendSocketNotification('MHWWM_RESULT', result);
+
+            // Save snapshot immediately after first successful fetch
+            if (!this.firstSnapshotSaved) this.saveDailyData();
         } catch (error) {
-            console.error("WM Error:", error.message);
+            console.error("MMM-MyHomeWizard WM Error:", error.message);
             this.sendSocketNotification('MHWWM_ERROR', { error: error.message, retry });
         }
     },
@@ -94,6 +124,7 @@ module.exports = NodeHelper.create({
     fetchWithTimeout: async function(url, timeout = 5000) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeout);
+
         try {
             const response = await fetch(url, { signal: controller.signal });
             if (!response.ok) throw new Error(`Network response was not ok (${response.status})`);
