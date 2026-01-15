@@ -106,6 +106,8 @@ Module.register('MMM-MyHomeWizard', {
 
             if (this.lastSnapshotDate) {
                 footerText += '<br><i class="fa-solid fa-calendar-check"></i>&nbsp;Last snapshot: ' + this.lastSnapshotDate;
+            } else {
+                footerText += '<br><i class="fa-solid fa-calendar-exclamation"></i>&nbsp;Last snapshot: unknown';
             }
 
             cell.innerHTML = footerText;
@@ -223,12 +225,10 @@ Module.register('MMM-MyHomeWizard', {
         if (notification === "MHWP1_RESULT") this.processMHW_P1(payload);
         else if (notification === "MHWWM_RESULT") this.processMHW_WM(payload);
         else if (notification === "MHWP1_ERROR") {
-            console.error("MMM-MyHomeWizard P1 Error:", payload.error);
             if (payload.retry > 0) this.getMHW_P1(payload.retry - 1);
             else { this.errorP1 = true; this.updateDom(this.config.initialLoadDelay); }
         }
         else if (notification === "MHWWM_ERROR") {
-            console.error("MMM-MyHomeWizard WM Error:", payload.error);
             if (payload.retry > 0) this.getMHW_WM(payload.retry - 1);
             else { this.errorWM = true; this.updateDom(this.config.initialLoadDelay); }
         }
