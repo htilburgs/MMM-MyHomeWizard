@@ -9,22 +9,25 @@ module.exports = NodeHelper.create({
         this.MHW_P1 = null;
         this.MHW_WM = null;
         this.firstSnapshotSaved = false;
-        this.snapshotAlreadyLogged = false; // Flag for Option 1
+        this.snapshotAlreadyLogged = false; // <-- flag for logging once per session
         this.scheduleNightlySave();
     },
 
+    // --- DST-safe nightly scheduling ---
     scheduleNightlySave: function() {
         const now = new Date();
-        const millisTillMidnight = new Date(
+        const nextMidnight = new Date(
             now.getFullYear(),
             now.getMonth(),
-            now.getDate(),
-            23, 59, 0, 0
-        ) - now;
+            now.getDate() + 1,
+            0, 0, 0, 0
+        );
+
+        const millisTillMidnight = nextMidnight - now;
 
         setTimeout(() => {
             this.saveDailyData();
-            setInterval(() => this.saveDailyData(), 24 * 60 * 60 * 1000);
+            this.scheduleNightlySave(); // schedule next day
         }, millisTillMidnight);
     },
 
@@ -47,7 +50,7 @@ module.exports = NodeHelper.create({
 
         const today = new Date().toISOString().split('T')[0];
 
-        // Only log once per session if snapshot exists
+        // --- Log once per session if snapshot exists, then skip ---
         if (history.some(h => h.date === today)) {
             if (!this.snapshotAlreadyLogged) {
                 console.log("Snapshot for today already exists.");
@@ -72,7 +75,7 @@ module.exports = NodeHelper.create({
         history.push(snapshot);
 
         if (history.length > 30) {
-            history = history.slice(history.length - 30);
+            history = history.slice(history.length - 30); // keep last 30 snapshots
         }
 
         try {
