@@ -31,21 +31,31 @@ Module.register('MMM-MyHomeWizard', {
         Log.info("Starting module: " + this.name);
         this.requiresVersion = "2.9.0";
 
-        this.urlP1 = this.config.P1_IP
-            ? "http://" + this.config.P1_IP + "/api/v1/data/"
-            : "https://dummyjson.com/c/f8b2-91c3-400b-8709";
+        this.urlP1 = this.config.P1_IP ? "http://" + this.config.P1_IP + "/api/v1/data/" : null;
+        this.urlWM = this.config.WM_IP ? "http://" + this.config.WM_IP + "/api/v1/data/" : null;
 
-        this.urlWM = this.config.WM_IP
-            ? "http://" + this.config.WM_IP + "/api/v1/data/"
-            : "https://dummyjson.com/c/704a-9a96-4845-bc72";
+        // Dummy fallback data if no real meters
+        this.MHW_P1 = this.urlP1 ? {} : {
+            total_power_import_kwh: 123,
+            total_power_export_kwh: 10,
+            total_gas_m3: 5,
+            active_power_w: 100,
+            meter_model: "Dummy P1",
+            wifi_strength: 80,
+            any_power_fail_count: 0
+        };
 
-        this.MHW_P1 = {};
-        this.MHW_WM = {};
-        this.loadedP1 = false;
-        this.loadedWM = false;
+        this.MHW_WM = this.urlWM ? {} : {
+            total_liter_m3: 2,
+            active_liter_lpm: 5,
+            wifi_strength: 75
+        };
+
+        this.loadedP1 = !!this.MHW_P1 && Object.keys(this.MHW_P1).length > 0;
+        this.loadedWM = !!this.MHW_WM && Object.keys(this.MHW_WM).length > 0;
+
         this.errorP1 = false;
         this.errorWM = false;
-
         this.lastSnapshotDate = null;
 
         this.scheduleUpdate();
@@ -68,11 +78,10 @@ Module.register('MMM-MyHomeWizard', {
     },
 
     getDom: function () {
-        var wrapper = document.createElement("div");
+        const wrapper = document.createElement("div");
         wrapper.className = "wrapper";
         wrapper.style.maxWidth = this.config.maxWidth;
 
-        // Only show loading if no data exists at all
         const hasP1Data = this.loadedP1 || Object.keys(this.MHW_P1).length > 0;
         const hasWMData = this.loadedWM || Object.keys(this.MHW_WM).length > 0;
 
@@ -82,15 +91,15 @@ Module.register('MMM-MyHomeWizard', {
             return wrapper;
         }
 
-        var table = document.createElement("table");
+        const table = document.createElement("table");
         table.className = "small";
 
         if (this.config.P1_IP) this.addPowerRows(table, this.MHW_P1);
         if (this.config.WM_IP) this.addWaterRows(table, this.MHW_WM);
 
         if (this.config.showFooter) {
-            var row = document.createElement("tr");
-            var cell = document.createElement("td");
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
             cell.setAttribute("colspan", "2");
             cell.className = "footer";
 
@@ -142,10 +151,12 @@ Module.register('MMM-MyHomeWizard', {
     },
 
     getMHW_P1: function(retry = this.config.retryCount) {
+        if (!this.urlP1) return; // skip if no real P1
         this.sendSocketNotification('GET_MHWP1', { url: this.urlP1, retry });
     },
 
     getMHW_WM: function(retry = this.config.retryCount) {
+        if (!this.urlWM) return; // skip if no real WM
         this.sendSocketNotification('GET_MHWWM', { url: this.urlWM, retry });
     }
 
