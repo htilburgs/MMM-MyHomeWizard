@@ -1,5 +1,3 @@
-
-Je zei:
 Module.register('MMM-MyHomeWizard', {
 
     defaults: {
