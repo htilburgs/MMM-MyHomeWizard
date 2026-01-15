@@ -29,7 +29,30 @@ module.exports = NodeHelper.create({
             }
         }
 
-        // Schedule nightly snapshot at 23:59
+        // Immediately send dummy data to front-end to avoid Loading...
+        if (!this.MHW_P1) {
+            this.MHW_P1 = {
+                total_power_import_kwh: 0,
+                total_power_export_kwh: 0,
+                total_gas_m3: 0,
+                active_power_w: 0,
+                meter_model: "P1 meter",
+                wifi_strength: 0,
+                any_power_fail_count: 0
+            };
+            this.sendSocketNotification('MHWP1_RESULT', this.MHW_P1);
+        }
+
+        if (!this.MHW_WM) {
+            this.MHW_WM = {
+                total_liter_m3: 0,
+                active_liter_lpm: 0,
+                wifi_strength: 0
+            };
+            this.sendSocketNotification('MHWWM_RESULT', this.MHW_WM);
+        }
+
+        // Schedule nightly snapshot
         this.scheduleNightlySave();
     },
 
