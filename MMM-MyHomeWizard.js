@@ -15,9 +15,9 @@ Module.register('MMM-MyHomeWizard', {
         fetchTimeout: 5000,
         retryCount: 2,
         showLastUpdate: true,
-        showDeltaPower: true,   // Delta stroom aan/uit
-        showDeltaGas: true,     // Delta gas aan/uit
-        showDeltaWater: true    // Delta water aan/uit
+        showDeltaPower: true,
+        showDeltaGas: true,
+        showDeltaWater: true
     },
 
     getStyles: function () {
@@ -54,17 +54,14 @@ Module.register('MMM-MyHomeWizard', {
         this.deltaP1 = null;
         this.deltaWM = null;
 
+        // Stuur frontend taal naar NodeHelper
+        this.sendSocketNotification('SET_LOCALE', { locale: this.config.language });
+
         this.scheduleUpdate();
 
         if (this.config.showLastUpdate) {
             this.readLastUpdate();
         }
-    },
-
-    // --- Helper: format numbers based on language ---
-    formatNumber: function(number) {
-        const locale = this.config.language || "nl";
-        return Math.round(number).toLocaleString(locale);
     },
 
     scheduleUpdate: function () {
@@ -81,6 +78,11 @@ Module.register('MMM-MyHomeWizard', {
 
     stop: function () {
         if (this.updateIntervalId) clearInterval(this.updateIntervalId);
+    },
+
+    formatNumber: function(number) {
+        const locale = this.config.language || "nl";
+        return Math.round(number).toLocaleString(locale);
     },
 
     getDom: function () {
@@ -170,7 +172,6 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // Delta rows
         if (this.deltaP1) {
             if (this.config.showDeltaPower) {
                 var row = document.createElement("tr");
@@ -183,7 +184,6 @@ Module.register('MMM-MyHomeWizard', {
                 ));
                 table.appendChild(row);
             }
-
             if (this.config.showDeltaGas) {
                 var gasRow = document.createElement("tr");
                 gasRow.className = "total-gas-row";
