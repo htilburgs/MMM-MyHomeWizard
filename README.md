@@ -49,8 +49,9 @@ Add the module to your modules array in your config.js.
   		}
 },
 ```
-<img width="35" height="27" alt="image" src="https://github.com/user-attachments/assets/46b185aa-ac08-4acb-9182-1ca981540471" />
-The Delta values needs 2 days in history_data.json, so this option will first show after 2 days. So this is not a bug, but as designed!
+<img width="35" height="27" alt="image" src="https://github.com/user-attachments/assets/46b185aa-ac08-4acb-9182-1ca981540471" /></br>
+*The Delta values needs 2 days in history_data.json, so this option will first show after 2 days. </br>
+So this is not a bug, but as designed!*
 
 ## Images
 <img width="300" alt="image" src="https://github.com/user-attachments/assets/b2ef6704-5d26-4705-a692-a268106c30f0" /> <br />
