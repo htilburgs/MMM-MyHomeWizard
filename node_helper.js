@@ -13,7 +13,7 @@ module.exports = NodeHelper.create({
         this.firstSnapshotSaved = false;
         this.snapshotAlreadyLogged = false;
 
-        // 🔑 Fix 1: markeer restart
+        // 🔑 Restart flag
         this.justRestarted = true;
 
         this.scheduleNightlySave();
@@ -29,13 +29,13 @@ module.exports = NodeHelper.create({
         ) - now;
 
         setTimeout(() => {
-            this.saveDailyData();
-            setInterval(() => this.saveDailyData(), 24 * 60 * 60 * 1000);
+            this.saveDailyData(true); // force nightly save
+            setInterval(() => this.saveDailyData(true), 24 * 60 * 60 * 1000); // every 24h
         }, millisTillMidnight);
     },
 
-    saveDailyData: function () {
-        // 🔒 Fix 2: nooit opslaan zonder beide meters
+    saveDailyData: function (force = false) {
+        // 🔒 Alleen opslaan als beide meters aanwezig
         if (!this.MHW_P1 || !this.MHW_WM) {
             console.log("Waiting for both P1 and WM before saving daily snapshot.");
             return;
@@ -53,23 +53,24 @@ module.exports = NodeHelper.create({
         }
 
         const today = new Date().toISOString().split('T')[0];
-
-        // Bestaat snapshot van vandaag al?
         const hasToday = history.some(h => h.date === today);
 
-        // 🔑 Fix 1: restart = baseline → overschrijf vandaag
-        if (this.justRestarted) {
+        // 🔑 Restart baseline
+        if (this.justRestarted && !force) {
             console.log("Restart detected — snapshot stored as baseline (no delta).");
             history = history.filter(h => h.date !== today);
             this.justRestarted = false;
-        } else if (hasToday) {
+        }
+        // 🟢 Normale save zonder force maar snapshot bestaat al
+        else if (hasToday && !force) {
             if (!this.snapshotAlreadyLogged) {
-                console.log("Snapshot for today already exists.");
+                console.log("Snapshot for today already exists, skipping normal save.");
                 this.snapshotAlreadyLogged = true;
             }
             return;
         }
 
+        // Create snapshot
         const snapshot = {
             date: today,
             P1: {
@@ -83,22 +84,26 @@ module.exports = NodeHelper.create({
             }
         };
 
-        // 🛡️ Extra WM sanity check (optioneel maar veilig)
+        // 🛡️ Sanity check WM
         if (history.length > 0) {
             const last = history[history.length - 1];
             const deltaWM = snapshot.WM.total_m3 - last.WM.total_m3;
-
             if (deltaWM < 0 || deltaWM > 5) {
                 console.warn("WM snapshot ignored due to unrealistic delta:", deltaWM);
                 return;
             }
         }
 
+        // Force overwrite bij nachtelijke save
+        if (force) {
+            history = history.filter(h => h.date !== today);
+        }
+
         history.push(snapshot);
 
-        // max 30 dagen
+        // Keep last 30 days
         if (history.length > 30) {
-            history = history.slice(history.length - 30);
+            history = history.slice(-30);
         }
 
         try {
@@ -116,7 +121,7 @@ module.exports = NodeHelper.create({
             this.MHW_P1 = result;
             this.sendSocketNotification('MHWP1_RESULT', result);
 
-            // 🔒 Fix 2: alleen snapshot als beide meters binnen zijn
+            // Alleen snapshot opslaan als beide meters binnen zijn
             if (!this.firstSnapshotSaved && this.MHW_WM) {
                 this.saveDailyData();
             }
@@ -132,7 +137,6 @@ module.exports = NodeHelper.create({
             this.MHW_WM = result;
             this.sendSocketNotification('MHWWM_RESULT', result);
 
-            // 🔒 Fix 2: alleen snapshot als beide meters binnen zijn
             if (!this.firstSnapshotSaved && this.MHW_P1) {
                 this.saveDailyData();
             }
@@ -176,7 +180,7 @@ module.exports = NodeHelper.create({
                 }
             }
 
-            // 🔑 Fix 3: delta blokkeren bij restart / identieke dag
+            // 🔑 Fix delta-safeguard: geen delta bij restart / identieke dag
             if (
                 lastSnapshot &&
                 previousSnapshot &&
