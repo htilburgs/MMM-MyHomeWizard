@@ -33,26 +33,35 @@ Add the module to your modules array in your config.js.
   header: 'HomeWizard',
   disabled: false,
   config: {
-		P1_IP: "0.0.0.0",	// IP Address HomeWizard P1 meter
-		WM_IP: "0.0.0.0",	// IP Address HomeWizrd Water meter - Remove when not used
-		extraInfo: false, 	// Show extra information from P1 meter
+		P1_IP: "0.0.0.0",	    // IP Address HomeWizard P1 meter
+		WM_IP: "0.0.0.0",	    // IP Address HomeWizrd Water meter - Remove when not used
+		extraInfo: false, 	    // Show extra information from P1 meter
 		currentPower: false,	// Show the current Power Consumption
 		currentWater: false,	// Show the current Water Consumption
-		showGas: true,		// Show the Gas option
-		showFooter: true,	// Show footer (name Power Meter)
+		showGas: true,		    // Show the Gas option
+		showFooter: true,	    // Show footer (name Power Meter)
 		updateInterval: 5000,   // Update every 5 seconds
-		maxWidth: "500px"	// Max Module width
-          }
+		maxWidth: "500px",	    // Max Module width
+        showLastUpdate: true,	// Show the last update for the History Data in the footer
+        showDeltaPower: true,	// Show Delta between History and Current data (Power)
+        showDeltaGas: true,		// Show Delta between History and Current data (Gas)
+        showDeltaWater: true	// Show Delta between History and Current data (Water)
+  		}
 },
 ```
-## Images
-<img width="285" alt="image" src="https://github.com/user-attachments/assets/75fc5be5-22c8-468f-94b2-cdbabeabce14" /> <br />
+<img width="35" height="27" alt="image" src="https://github.com/user-attachments/assets/46b185aa-ac08-4acb-9182-1ca981540471" /></br>
+*The Delta values needs 2 days in history_data.json, so this option will first show after 2 days. </br>
+So this is not a bug, but as designed!*
 
-<img width="285" alt="image" src="https://github.com/user-attachments/assets/6286bb00-bf6f-48b1-a6e6-718ae987699e" />
+## Images
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/b2ef6704-5d26-4705-a692-a268106c30f0" /> <br />
+
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/f681c16f-9459-4505-a6a9-3f08fe4750b8" />
 
 ## Explanation
 **Total Power** is the sum of Power usage from T1 and T2 (peak and off-peak rate) <br />
 **Current Power** is the current Power usage (Watt) <br />
+**Total Feedback** is the Total Feedback to the grid today (kWH) <br />
 **Total Gas** is the total of Gas usage (m³) <br />
 **Current Water** is the current Water usage (Liters per minute) <br />
 **Total Water** is the total Water usage (m³) <br />
@@ -73,10 +82,15 @@ Here is the documentation of options for the modules configuration
 | `showGas`		| Show the Gas Option of youre PowerMeter <br /><br />**True/False**<br />Default: `true`
 | `showFooter`		| Show the Footer with the name of youre PowerMeter <br /><br />**True/False**<br />Default: `false`
 | `maxWidth`		| The maximum width of the module <br /><br />Default: `500px`
+| ` showLastUpdate` | Show last update of the "history_data.json" file as footer<br /><br />**True/False**<br />Default: `true`
+| ` showDeltaPower` | Show Delta between History and Current data (Power)<br /><br />**True/False**<br />Default: `true`
+| ` showDeltaGas`   | Show Delta between History and Current data (Gas)<br /><br />**True/False**<br />Default: `true`
+| ` showDeltaWater` | Show Delta between History and Current data (Water)<br /><br />**True/False**<br />Default: `true`
 
 ## Version
 v1.0.0 - 26-11-2024	: Initial version </br>
 v1.0.1 - 29-12-2024	: Add option showGas </br>
+v2.0.0 - 22-01-2026 : Update with daily saving data to history_data and option for show Deltas
 
 ## License
 ### The MIT License (MIT)

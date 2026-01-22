@@ -1,0 +1,15 @@
+{
+  "Current_Pwr": "Puissance actuelle",
+  "Total_Pwr": "Puissance totale",
+  "Total_Feedback": "Retour total",
+  "Total_Gas": "Gaz total",
+  "Delta_Pwr": "Delta puissance",
+  "Delta_Gas": "Delta gaz",
+  "Delta_Wtr": "Delta eau",
+  "Wifi_P1": "Wifi P1",
+  "Fail_Pwr": "Panne électrique",
+  "Current_Wtr": "Eau actuelle",
+  "Total_Wtr": "Eau totale",
+  "Wifi_WM": "Wifi compteur d'eau",
+  "Last_Update": "Dernière mise à jour"
+}

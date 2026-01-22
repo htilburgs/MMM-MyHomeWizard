@@ -2,9 +2,16 @@
   "Current_Pwr": "Current Power:",
   "Total_Pwr": "Total Power:",
   "Total_Gas": "Total Gas:",
+  "Total_Feedback": "Total Feedback:",
   "Total_Wtr": "Total Water:",
   "Current_Wtr": "Current Water:",
   "Wifi_P1": "Wifi P1 Meter:",
   "Wifi_WM": "Wifi Water Meter:",
-  "Fail_Pwr": "Power Failures:"
+  "Fail_Pwr": "Power Failures:",
+  "Daily_Feedback": "Daily Feedback",
+  "Last_Update": "Last update",
+  "Delta": "Since last update",
+  "Delta_Pwr": "Delta Power",
+  "Delta_Wtr": "Delta Water",
+  "Delta_Gas": "Delta Gas"
 }
