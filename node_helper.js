@@ -6,14 +6,20 @@ module.exports = NodeHelper.create({
 
     start: function () {
         console.log("Starting node_helper for: " + this.name);
+
         this.MHW_P1 = null;
         this.MHW_WM = null;
+
         this.firstSnapshotSaved = false;
         this.snapshotAlreadyLogged = false;
+
+        // 🔑 Fix 1: markeer restart
+        this.justRestarted = true;
+
         this.scheduleNightlySave();
     },
 
-    scheduleNightlySave: function() {
+    scheduleNightlySave: function () {
         const now = new Date();
         const millisTillMidnight = new Date(
             now.getFullYear(),
@@ -28,9 +34,10 @@ module.exports = NodeHelper.create({
         }, millisTillMidnight);
     },
 
-    saveDailyData: function() {
-        if (!this.MHW_P1 && !this.MHW_WM) {
-            console.log("No meter data yet, skipping daily snapshot.");
+    saveDailyData: function () {
+        // 🔒 Fix 2: nooit opslaan zonder beide meters
+        if (!this.MHW_P1 || !this.MHW_WM) {
+            console.log("Waiting for both P1 and WM before saving daily snapshot.");
             return;
         }
 
@@ -47,8 +54,15 @@ module.exports = NodeHelper.create({
 
         const today = new Date().toISOString().split('T')[0];
 
-        // --- Option 1: log if snapshot exists ---
-        if (history.some(h => h.date === today)) {
+        // Bestaat snapshot van vandaag al?
+        const hasToday = history.some(h => h.date === today);
+
+        // 🔑 Fix 1: restart = baseline → overschrijf vandaag
+        if (this.justRestarted) {
+            console.log("Restart detected — snapshot stored as baseline (no delta).");
+            history = history.filter(h => h.date !== today);
+            this.justRestarted = false;
+        } else if (hasToday) {
             if (!this.snapshotAlreadyLogged) {
                 console.log("Snapshot for today already exists.");
                 this.snapshotAlreadyLogged = true;
@@ -59,19 +73,30 @@ module.exports = NodeHelper.create({
         const snapshot = {
             date: today,
             P1: {
-                total_power_import_kwh: this.MHW_P1?.total_power_import_kwh || 0,
-                total_power_export_kwh: this.MHW_P1?.total_power_export_kwh || 0,
-                total_gas_m3: this.MHW_P1?.total_gas_m3 || 0
+                total_power_import_kwh: this.MHW_P1.total_power_import_kwh,
+                total_power_export_kwh: this.MHW_P1.total_power_export_kwh,
+                total_gas_m3: this.MHW_P1.total_gas_m3
             },
             WM: {
-                total_m3: this.MHW_WM?.total_liter_m3 || 0,
-                total_liters: this.MHW_WM ? this.MHW_WM.total_liter_m3 * 1000 : 0
+                total_m3: this.MHW_WM.total_liter_m3,
+                total_liters: this.MHW_WM.total_liter_m3 * 1000
             }
         };
 
+        // 🛡️ Extra WM sanity check (optioneel maar veilig)
+        if (history.length > 0) {
+            const last = history[history.length - 1];
+            const deltaWM = snapshot.WM.total_m3 - last.WM.total_m3;
+
+            if (deltaWM < 0 || deltaWM > 5) {
+                console.warn("WM snapshot ignored due to unrealistic delta:", deltaWM);
+                return;
+            }
+        }
+
         history.push(snapshot);
 
-        // Keep only last 30 days
+        // max 30 dagen
         if (history.length > 30) {
             history = history.slice(history.length - 30);
         }
@@ -85,47 +110,58 @@ module.exports = NodeHelper.create({
         }
     },
 
-    getMHW_P1: async function({url, retry}) {
+    async getMHW_P1({ url, retry }) {
         try {
             const result = await this.fetchWithTimeout(url);
             this.MHW_P1 = result;
             this.sendSocketNotification('MHWP1_RESULT', result);
-            if (!this.firstSnapshotSaved) this.saveDailyData();
+
+            // 🔒 Fix 2: alleen snapshot als beide meters binnen zijn
+            if (!this.firstSnapshotSaved && this.MHW_WM) {
+                this.saveDailyData();
+            }
         } catch (error) {
             console.error("MMM-MyHomeWizard P1 Error:", error.message);
             this.sendSocketNotification('MHWP1_ERROR', { error: error.message, retry });
         }
     },
 
-    getMHW_WM: async function({url, retry}) {
+    async getMHW_WM({ url, retry }) {
         try {
             const result = await this.fetchWithTimeout(url);
             this.MHW_WM = result;
             this.sendSocketNotification('MHWWM_RESULT', result);
-            if (!this.firstSnapshotSaved) this.saveDailyData();
+
+            // 🔒 Fix 2: alleen snapshot als beide meters binnen zijn
+            if (!this.firstSnapshotSaved && this.MHW_P1) {
+                this.saveDailyData();
+            }
         } catch (error) {
             console.error("MMM-MyHomeWizard WM Error:", error.message);
             this.sendSocketNotification('MHWWM_ERROR', { error: error.message, retry });
         }
     },
 
-    fetchWithTimeout: async function(url, timeout = 5000) {
+    async fetchWithTimeout(url, timeout = 5000) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeout);
 
         try {
             const response = await fetch(url, { signal: controller.signal });
-            if (!response.ok) throw new Error(`Network response was not ok (${response.status})`);
+            if (!response.ok) {
+                throw new Error(`Network response was not ok (${response.status})`);
+            }
             return response.json();
         } finally {
             clearTimeout(timer);
         }
     },
 
-    socketNotificationReceived: function(notification, payload) {
+    socketNotificationReceived: function (notification, payload) {
         if (notification === 'GET_MHWP1') this.getMHW_P1(payload);
         else if (notification === 'GET_MHWWM') this.getMHW_WM(payload);
-        else if (notification === "GET_LAST_UPDATE") {
+        else if (notification === 'GET_LAST_UPDATE') {
+
             const historyFile = path.join(__dirname, 'history_data.json');
             let lastSnapshot = null;
             let previousSnapshot = null;
@@ -136,20 +172,40 @@ module.exports = NodeHelper.create({
                     if (history.length > 0) lastSnapshot = history[history.length - 1];
                     if (history.length > 1) previousSnapshot = history[history.length - 2];
                 } catch (e) {
-                    console.error("Failed to read last update from history_data.json:", e.message);
+                    console.error("Failed to read history_data.json:", e.message);
                 }
+            }
+
+            // 🔑 Fix 3: delta blokkeren bij restart / identieke dag
+            if (
+                lastSnapshot &&
+                previousSnapshot &&
+                lastSnapshot.date === previousSnapshot.date
+            ) {
+                console.warn("Delta ignored due to identical snapshot dates (restart safeguard).");
+                previousSnapshot = null;
             }
 
             this.sendSocketNotification("LAST_UPDATE_RESULT", {
                 lastDate: lastSnapshot ? lastSnapshot.date : null,
                 deltaP1: previousSnapshot && lastSnapshot ? {
-                    total_power_import_kwh: lastSnapshot.P1.total_power_import_kwh - previousSnapshot.P1.total_power_import_kwh,
-                    total_power_export_kwh: lastSnapshot.P1.total_power_export_kwh - previousSnapshot.P1.total_power_export_kwh,
-                    total_gas_m3: lastSnapshot.P1.total_gas_m3 - previousSnapshot.P1.total_gas_m3
+                    total_power_import_kwh:
+                        lastSnapshot.P1.total_power_import_kwh -
+                        previousSnapshot.P1.total_power_import_kwh,
+                    total_power_export_kwh:
+                        lastSnapshot.P1.total_power_export_kwh -
+                        previousSnapshot.P1.total_power_export_kwh,
+                    total_gas_m3:
+                        lastSnapshot.P1.total_gas_m3 -
+                        previousSnapshot.P1.total_gas_m3
                 } : null,
                 deltaWM: previousSnapshot && lastSnapshot ? {
-                    total_liter_m3: lastSnapshot.WM.total_m3 - previousSnapshot.WM.total_m3,
-                    total_liters: lastSnapshot.WM.total_liters - previousSnapshot.WM.total_liters
+                    total_liter_m3:
+                        lastSnapshot.WM.total_m3 -
+                        previousSnapshot.WM.total_m3,
+                    total_liters:
+                        lastSnapshot.WM.total_liters -
+                        previousSnapshot.WM.total_liters
                 } : null
             });
         }
