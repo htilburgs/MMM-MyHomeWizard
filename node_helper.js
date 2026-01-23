@@ -32,10 +32,7 @@ module.exports = NodeHelper.create({
     },
 
     saveDailyData: function (force = false) {
-        if (!this.MHW_P1 || !this.MHW_WM) {
-            console.log("Waiting for both P1 and WM before saving daily snapshot.");
-            return;
-        }
+        if (!this.MHW_P1 || !this.MHW_WM) return;
 
         const historyFile = path.join(this.path, 'history_data.json');
         let history = [];
@@ -51,7 +48,6 @@ module.exports = NodeHelper.create({
         const today = new Date().toISOString().split('T')[0];
         const todayExists = history.some(h => h.date === today);
 
-        // Handle restart baseline snapshot
         if (this.justRestarted && !force) {
             console.log("Restart detected — storing baseline snapshot without delta.");
             history = history.filter(h => h.date !== today);
@@ -75,7 +71,6 @@ module.exports = NodeHelper.create({
             }
         };
 
-        // Sanity check for water delta
         if (history.length > 0) {
             const last = history[history.length - 1];
             const deltaWM = snapshot.WM.total_m3 - last.WM.total_m3;
@@ -85,14 +80,9 @@ module.exports = NodeHelper.create({
             }
         }
 
-        // Overwrite today's snapshot if force
-        if (force) {
-            history = history.filter(h => h.date !== today);
-        }
+        if (force) history = history.filter(h => h.date !== today);
 
         history.push(snapshot);
-
-        // Keep only last 30 days
         if (history.length > 30) history = history.slice(-30);
 
         try {
@@ -110,12 +100,16 @@ module.exports = NodeHelper.create({
             this.MHW_P1 = result;
             this.sendSocketNotification('MHWP1_RESULT', result);
 
-            if (!this.firstSnapshotSaved && this.MHW_WM) {
-                this.saveDailyData();
-            }
+            if (!this.firstSnapshotSaved && this.MHW_WM) this.saveDailyData();
         } catch (error) {
             console.error("MMM-MyHomeWizard P1 Error:", error.message);
-            this.sendSocketNotification('MHWP1_ERROR', { error: error.message, retry });
+            if (retry > 0) {
+                const delay = this.getBackoffDelay(retry);
+                console.log(`Retrying P1 in ${delay}ms (${retry} retries left)`);
+                setTimeout(() => this.getMHW_P1({ url, retry: retry - 1 }), delay);
+            } else {
+                this.sendSocketNotification('MHWP1_ERROR', { error: error.message, retry });
+            }
         }
     },
 
@@ -125,13 +119,22 @@ module.exports = NodeHelper.create({
             this.MHW_WM = result;
             this.sendSocketNotification('MHWWM_RESULT', result);
 
-            if (!this.firstSnapshotSaved && this.MHW_P1) {
-                this.saveDailyData();
-            }
+            if (!this.firstSnapshotSaved && this.MHW_P1) this.saveDailyData();
         } catch (error) {
             console.error("MMM-MyHomeWizard WM Error:", error.message);
-            this.sendSocketNotification('MHWWM_ERROR', { error: error.message, retry });
+            if (retry > 0) {
+                const delay = this.getBackoffDelay(retry);
+                console.log(`Retrying WM in ${delay}ms (${retry} retries left)`);
+                setTimeout(() => this.getMHW_WM({ url, retry: retry - 1 }), delay);
+            } else {
+                this.sendSocketNotification('MHWWM_ERROR', { error: error.message, retry });
+            }
         }
+    },
+
+    getBackoffDelay: function (retry) {
+        // Exponential backoff: 2^n * 1000ms
+        return Math.pow(2, this.config.retryCount - retry) * 1000;
     },
 
     async fetchWithTimeout(url, timeout = 5000) {
@@ -177,7 +180,6 @@ module.exports = NodeHelper.create({
             }
         }
 
-        // Delta safeguard: ignore if snapshots have same date
         if (lastSnapshot && previousSnapshot && lastSnapshot.date === previousSnapshot.date) {
             console.warn("Delta ignored due to identical snapshot dates (restart safeguard).");
             previousSnapshot = null;
