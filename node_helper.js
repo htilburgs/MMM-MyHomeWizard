@@ -13,6 +13,9 @@ module.exports = NodeHelper.create({
         this.firstSnapshotSaved = false;
         this.justRestarted = true;
 
+        // Default retry count
+        this.retryCount = 5;
+
         this.scheduleNightlySave();
     },
 
@@ -52,8 +55,7 @@ module.exports = NodeHelper.create({
             console.log("Restart detected — storing baseline snapshot without delta.");
             history = history.filter(h => h.date !== today);
             this.justRestarted = false;
-        }
-        else if (todayExists && !force) {
+        } else if (todayExists && !force) {
             console.log("Snapshot for today already exists, skipping normal save.");
             return;
         }
@@ -95,6 +97,7 @@ module.exports = NodeHelper.create({
     },
 
     async getMHW_P1({ url, retry }) {
+        retry = retry ?? this.retryCount; // fallback if not provided
         try {
             const result = await this.fetchWithTimeout(url);
             this.MHW_P1 = result;
@@ -108,12 +111,13 @@ module.exports = NodeHelper.create({
                 console.log(`Retrying P1 in ${delay}ms (${retry} retries left)`);
                 setTimeout(() => this.getMHW_P1({ url, retry: retry - 1 }), delay);
             } else {
-                this.sendSocketNotification('MHWP1_ERROR', { error: error.message, retry });
+                this.sendSocketNotification('MHWP1_ERROR', { error: error.message, retry: 0 });
             }
         }
     },
 
     async getMHW_WM({ url, retry }) {
+        retry = retry ?? this.retryCount; // fallback if not provided
         try {
             const result = await this.fetchWithTimeout(url);
             this.MHW_WM = result;
@@ -127,14 +131,14 @@ module.exports = NodeHelper.create({
                 console.log(`Retrying WM in ${delay}ms (${retry} retries left)`);
                 setTimeout(() => this.getMHW_WM({ url, retry: retry - 1 }), delay);
             } else {
-                this.sendSocketNotification('MHWWM_ERROR', { error: error.message, retry });
+                this.sendSocketNotification('MHWWM_ERROR', { error: error.message, retry: 0 });
             }
         }
     },
 
     getBackoffDelay: function (retry) {
-        // Exponential backoff: 2^n * 1000ms
-        return Math.pow(2, this.config.retryCount - retry) * 1000;
+        // Exponential backoff: 2^(retryCount - remainingRetry) * 1000ms
+        return Math.pow(2, this.retryCount - retry) * 1000;
     },
 
     async fetchWithTimeout(url, timeout = 5000) {
