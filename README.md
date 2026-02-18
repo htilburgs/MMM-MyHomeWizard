@@ -4,6 +4,12 @@ This modules is for use with the HomeWizard P1 meter and WaterMeter.
 
 Currently this module uses the V1 API from HomeWizard.
 
+## Enable the Local API
+For MMM-MyHomeWizard to get access to the data from an Energy device, you have to enable the API for each device. </br>
+You can do this in the HomeWizard Energy app. </br>
+
+Go to ```Settings > Meters > ''Your meter''```, and enable Local API for the P1 Meter and/or the Water Meter at the botom of the page.
+
 ## Installation
 Clone this repository in your modules folder, and install dependencies:
 
