@@ -241,9 +241,19 @@ Module.register('MMM-MyHomeWizard', {
                 table.appendChild(deltaGasRow);
             }
         }
+
+        // Extra Info now just renders Failures (before water)
+        if (this.config.extraInfo && data.any_power_fail_count !== undefined) {
+            const failRow = document.createElement("tr");
+            failRow.className = "failure-row";
+            failRow.appendChild(this.createCell(`<i class="fa-solid fa-plug-circle-exclamation"></i>&nbsp;${this.translate("Fail_Pwr")}`, "failuretextcell"));
+            failRow.appendChild(this.createCell(data.any_power_fail_count, "failuredatacell"));
+            table.appendChild(failRow);
+        }
     },
 
     addWaterRows: function (table, data) {
+        // Current Water
         if (this.config.currentWater) {
             const row = document.createElement("tr");
             row.className = "current-water-row";
@@ -252,6 +262,7 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
+        // Total Water
         const totalLiters = data.total_liter_m3 * 1000;
         const row = document.createElement("tr");
         row.className = "total-water-row";
@@ -268,39 +279,29 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(deltaRow);
         }
 
-        // WiFi rows at the bottom with spacer
+        // WiFi at the bottom, P1 first, WM second
         if (this.config.extraInfo) this.addWiFiRows(table, this.MHW_P1, data);
     },
 
-    // WiFi rows with spacer before them, WM first, P1 last
     addWiFiRows: function (table, P1data, WMdata) {
         // Spacer row
         const spacer = document.createElement("tr");
         spacer.innerHTML = "<td colspan='2'>&nbsp;</td>";
         table.appendChild(spacer);
 
-        // WiFi WM
-        const wifiWMRow = document.createElement("tr");
-        wifiWMRow.className = "wifi-row-wm";
-        wifiWMRow.appendChild(this.createCell(`<i class="fa-solid fa-wifi"></i>&nbsp;${this.translate("Wifi_WM")}`, "wifitextcellWM"));
-        wifiWMRow.appendChild(this.createCell(`${WMdata.wifi_strength || 0} %`, "wifidatacellWM"));
-        table.appendChild(wifiWMRow);
-
-        // WiFi P1
+        // WiFi P1 first
         const wifiP1Row = document.createElement("tr");
         wifiP1Row.className = "wifi-row-p1";
         wifiP1Row.appendChild(this.createCell(`<i class="fa-solid fa-wifi"></i>&nbsp;${this.translate("Wifi_P1")}`, "wifitextcellP1"));
         wifiP1Row.appendChild(this.createCell(`${P1data.wifi_strength || 0} %`, "wifidatacellP1"));
         table.appendChild(wifiP1Row);
 
-        // Failures under P1 WiFi
-        if (P1data.any_power_fail_count !== undefined) {
-            const failRow = document.createElement("tr");
-            failRow.className = "failure-row";
-            failRow.appendChild(this.createCell(`<i class="fa-solid fa-plug-circle-exclamation"></i>&nbsp;${this.translate("Fail_Pwr")}`, "failuretextcell"));
-            failRow.appendChild(this.createCell(P1data.any_power_fail_count, "failuredatacell"));
-            table.appendChild(failRow);
-        }
+        // WiFi WM second
+        const wifiWMRow = document.createElement("tr");
+        wifiWMRow.className = "wifi-row-wm";
+        wifiWMRow.appendChild(this.createCell(`<i class="fa-solid fa-wifi"></i>&nbsp;${this.translate("Wifi_WM")}`, "wifitextcellWM"));
+        wifiWMRow.appendChild(this.createCell(`${WMdata.wifi_strength || 0} %`, "wifidatacellWM"));
+        table.appendChild(wifiWMRow);
     },
 
     getMHW_P1: function (retry = this.config.retryCount) {
