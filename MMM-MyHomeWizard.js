@@ -251,8 +251,10 @@ Module.register('MMM-MyHomeWizard', {
         }
     },
 
-    addWaterRows: function (table, data) {
-        // Empty spacer before Current Water
+addWaterRows: function (table, data) {
+    // Only add water rows if WM_IP is enabled
+    if (this.config.WM_IP && data) {
+        // Spacer before Current Water
         if (this.config.currentWater) {
             const spacer = document.createElement("tr");
             spacer.innerHTML = "<td colspan='2'>&nbsp;</td>";
@@ -261,55 +263,94 @@ Module.register('MMM-MyHomeWizard', {
             // Current Water
             const row = document.createElement("tr");
             row.className = "current-water-row";
-            row.appendChild(this.createCell(`<i class="fa-solid fa-water"></i>&nbsp;${this.translate("Current_Wtr")}`, "currentwatertextcell"));
-            row.appendChild(this.createCell(`${this.formatNumber(Math.round(data.active_liter_lpm))} Lpm`, "currentwaterdatacell"));
+            row.appendChild(this.createCell(
+                `<i class="fa-solid fa-water"></i>&nbsp;${this.translate("Current_Wtr")}`,
+                "currentwatertextcell"
+            ));
+            row.appendChild(this.createCell(
+                `${this.formatNumber(Math.round(data.active_liter_lpm))} Lpm`,
+                "currentwaterdatacell"
+            ));
             table.appendChild(row);
         }
 
-        // Total Water 
+        // Total Water
         const totalLiters = data.total_liter_m3 * 1000;
         const row = document.createElement("tr");
         row.className = "total-water-row";
-        row.appendChild(this.createCell(`<i class="fa-solid fa-droplet"></i>&nbsp;${this.translate("Total_Wtr")}`, "totalwatertextcell"));
-        row.appendChild(this.createCell(`${this.formatNumber(Math.round(data.total_liter_m3))} m³ (${this.formatNumber(Math.round(totalLiters))} L)`, "totalwaterdatacell"));
+        row.appendChild(this.createCell(
+            `<i class="fa-solid fa-droplet"></i>&nbsp;${this.translate("Total_Wtr")}`,
+            "totalwatertextcell"
+        ));
+        row.appendChild(this.createCell(
+            `${this.formatNumber(Math.round(data.total_liter_m3))} m³ (${this.formatNumber(Math.round(totalLiters))} L)`,
+            "totalwaterdatacell"
+        ));
         table.appendChild(row);
 
         // Delta Water
         if (this.deltaWM && this.config.showDeltaWater) {
             const deltaRow = document.createElement("tr");
             deltaRow.className = "total-water-row";
-            deltaRow.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Wtr")}`, "totalwatertextcell"));
-            deltaRow.appendChild(this.createCell(`${this.formatNumber(Math.round(this.deltaWM.total_liter_m3 || 0))} m³ (${this.formatNumber(Math.round(this.deltaWM.total_liters || 0))} L)`, "totalwaterdatacell"));
+            deltaRow.appendChild(this.createCell(
+                `<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Wtr")}`,
+                "totalwatertextcell"
+            ));
+            deltaRow.appendChild(this.createCell(
+                `${this.formatNumber(Math.round(this.deltaWM.total_liter_m3 || 0))} m³ (${this.formatNumber(Math.round(this.deltaWM.total_liters || 0))} L)`,
+                "totalwaterdatacell"
+            ));
             table.appendChild(deltaRow);
         }
+    }
 
-        // Empty spacer before WiFi
-        if (this.config.extraInfo) {
-            const spacer2 = document.createElement("tr");
-            spacer2.innerHTML = "<td colspan='2'>&nbsp;</td>";
-            table.appendChild(spacer2);
+    // Spacer before WiFi rows
+    if (this.config.extraInfo) {
+        const spacer2 = document.createElement("tr");
+        spacer2.innerHTML = "<td colspan='2'>&nbsp;</td>";
+        table.appendChild(spacer2);
 
-            // WiFi rows at bottom
-            this.addWiFiRows(table, this.MHW_P1, data);
-        }
-    },
+        // WiFi rows
+        this.addWiFiRows(
+            table,
+            this.config.P1_IP ? this.MHW_P1 : null,
+            this.config.WM_IP ? this.MHW_WM : null
+        );
+    }
+},
 
-    addWiFiRows: function (table, P1data, WMdata) {
-        // WiFi P1 
+addWiFiRows: function (table, P1data, WMdata) {
+    // P1 WiFi
+    if (P1data) {
         const wifiP1Row = document.createElement("tr");
         wifiP1Row.className = "wifi-row-p1";
-        wifiP1Row.appendChild(this.createCell(`<i class="fa-solid fa-wifi"></i>&nbsp;${this.translate("Wifi_P1")}`, "wifitextcellP1"));
-        wifiP1Row.appendChild(this.createCell(`${P1data.wifi_strength || 0} %`, "wifidatacellP1"));
+        wifiP1Row.appendChild(this.createCell(
+            `<i class="fa-solid fa-wifi"></i>&nbsp;${this.translate("Wifi_P1")}`,
+            "wifitextcellP1"
+        ));
+        wifiP1Row.appendChild(this.createCell(
+            `${P1data.wifi_strength || 0} %`,
+            "wifidatacellP1"
+        ));
         table.appendChild(wifiP1Row);
+    }
 
-        // WiFi WM 
+    // WM WiFi
+    if (WMdata) {
         const wifiWMRow = document.createElement("tr");
         wifiWMRow.className = "wifi-row-wm";
-        wifiWMRow.appendChild(this.createCell(`<i class="fa-solid fa-wifi"></i>&nbsp;${this.translate("Wifi_WM")}`, "wifitextcellWM"));
-        wifiWMRow.appendChild(this.createCell(`${WMdata.wifi_strength || 0} %`, "wifidatacellWM"));
+        wifiWMRow.appendChild(this.createCell(
+            `<i class="fa-solid fa-wifi"></i>&nbsp;${this.translate("Wifi_WM")}`,
+            "wifitextcellWM"
+        ));
+        wifiWMRow.appendChild(this.createCell(
+            `${WMdata.wifi_strength || 0} %`,
+            "wifidatacellWM"
+        ));
         table.appendChild(wifiWMRow);
+        }
     },
-
+    
     getMHW_P1: function (retry = this.config.retryCount) {
         this.sendSocketNotification('GET_MHWP1', { url: this.urlP1, retry });
     },
