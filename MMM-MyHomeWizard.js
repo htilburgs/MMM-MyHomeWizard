@@ -10,7 +10,7 @@ Module.register('MMM-MyHomeWizard', {
         showFeedback: true,
         currentPower: false,
         currentWater: false,
-        currentVoltage: false, // compact 3-phase with auto detection
+        currentVoltage: false, // compact 3-phase with auto-detect
         initialLoadDelay: 1000,
         updateInterval: 10000,
         fetchTimeout: 5000,
@@ -58,11 +58,6 @@ Module.register('MMM-MyHomeWizard', {
         this.deltaP1 = null;
         this.deltaWM = null;
 
-        this.tableWrapper = null;
-        this.table = null;
-        this.lastUpdateDiv = null;
-        this.cells = {};
-
         this.scheduleUpdate();
 
         if (this.config.showLastUpdate) this.readLastUpdate();
@@ -94,47 +89,53 @@ Module.register('MMM-MyHomeWizard', {
     },
 
     getDom: function () {
-        // Create wrapper and table once
-        if (!this.tableWrapper) {
-            this.tableWrapper = document.createElement("div");
-            this.tableWrapper.className = "wrapper";
-            this.tableWrapper.style.maxWidth = this.config.maxWidth;
+        const wrapper = document.createElement("div");
+        wrapper.className = "wrapper";
+        wrapper.style.maxWidth = this.config.maxWidth;
 
-            this.table = document.createElement("table");
-            this.table.className = "small";
-            this.tableWrapper.appendChild(this.table);
-
-            if (this.config.showLastUpdate) {
-                this.lastUpdateDiv = document.createElement("div");
-                this.lastUpdateDiv.className = "last-update small light";
-                this.lastUpdateDiv.style.marginTop = "5px";
-                this.tableWrapper.appendChild(this.lastUpdateDiv);
-            }
+        if (this.config.P1_IP && this.errorP1) {
+            wrapper.innerHTML = '<span class="error">P1 Meter offline</span>';
+            return wrapper;
         }
 
-        // Show loading if data is not yet available
-        if ((this.config.P1_IP && !this.loadedP1) || (this.config.WM_IP && !this.loadedWM)) {
-            this.table.innerHTML = "<tr><td colspan='2'>Loading....</td></tr>";
-            return this.tableWrapper;
+        if (this.config.WM_IP && this.errorWM) {
+            wrapper.innerHTML = '<span class="error">Water Meter offline</span>';
+            return wrapper;
         }
 
-        // Build table once if not built
-        if (!this.tableBuilt) {
-            this.table.innerHTML = "";
-            if (this.config.P1_IP) this.buildPowerRows(this.table, this.MHW_P1);
-            if (this.config.WM_IP) this.buildWaterRows(this.table, this.MHW_WM);
-            this.tableBuilt = true;
+        if ((!this.loadedP1 && this.config.P1_IP) || (!this.loadedWM && this.config.WM_IP)) {
+            wrapper.innerHTML = "Loading....";
+            wrapper.classList.add("bright", "light", "small");
+            return wrapper;
         }
 
-        // Update cell values on every render
-        this.updateCells();
+        const table = document.createElement("table");
+        table.className = "small";
 
-        // Update last update text
-        if (this.config.showLastUpdate && this.lastUpdateDate && this.lastUpdateDiv) {
-            this.lastUpdateDiv.innerHTML = `${this.translate("Last_Update")}: ${this.lastUpdateDate}`;
+        if (this.config.P1_IP) this.addPowerRows(table, this.MHW_P1);
+        if (this.config.WM_IP) this.addWaterRows(table, this.MHW_WM);
+
+        if (this.config.showFooter && this.MHW_P1?.meter_model) {
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+            cell.setAttribute("colspan", "2");
+            cell.className = "footer";
+            cell.innerHTML = `<i class="fa-solid fa-charging-station"></i>&nbsp;${this.MHW_P1.meter_model}`;
+            row.appendChild(cell);
+            table.appendChild(row);
         }
 
-        return this.tableWrapper;
+        wrapper.appendChild(table);
+
+        if (this.config.showLastUpdate && this.lastUpdateDate) {
+            const updateRow = document.createElement("div");
+            updateRow.className = "last-update small light";
+            updateRow.style.marginTop = "5px";
+            updateRow.innerHTML = `${this.translate("Last_Update")}: ${this.lastUpdateDate}`;
+            wrapper.appendChild(updateRow);
+        }
+
+        return wrapper;
     },
 
     createCell: function (content, className) {
@@ -144,158 +145,136 @@ Module.register('MMM-MyHomeWizard', {
         return cell;
     },
 
-    // Build table rows for the first time
-    buildPowerRows: function (table, data) {
-        this.cells = {}; // reset cell references
-
-        // Current power row
+    addPowerRows: function (table, data) {
+        // Current power
         if (this.config.currentPower) {
             const row = document.createElement("tr");
             row.className = "current-power-row";
-            row.appendChild(this.createCell(`<i class="fa-solid fa-bolt-lightning"></i>&nbsp;${this.translate("Current_Pwr")}`, "currentpowertextcell"));
-            const cell = this.createCell("-", "currentpowerdatacell");
-            row.appendChild(cell);
-            this.cells.currentPower = cell;
+            row.appendChild(this.createCell(
+                `<i class="fa-solid fa-bolt-lightning"></i>&nbsp;${this.translate("Current_Pwr")}`,
+                "currentpowertextcell"
+            ));
+            row.appendChild(this.createCell(
+                `${this.formatNumber(Math.round(data.active_power_w))} Watt`,
+                "currentpowerdatacell"
+            ));
             table.appendChild(row);
         }
 
-        // Total power row
+        // Total power
         const totalRow = document.createElement("tr");
         totalRow.className = "total-power-row";
-        totalRow.appendChild(this.createCell(`<i class="fa-solid fa-plug-circle-bolt"></i>&nbsp;${this.translate("Total_Pwr")}`, "totalpowertextcell"));
-        const totalCell = this.createCell("-", "totalpowerdatacell");
-        totalRow.appendChild(totalCell);
-        this.cells.totalPower = totalCell;
+        totalRow.appendChild(this.createCell(
+            `<i class="fa-solid fa-plug-circle-bolt"></i>&nbsp;${this.translate("Total_Pwr")}`,
+            "totalpowertextcell"
+        ));
+        totalRow.appendChild(this.createCell(
+            `${this.formatNumber(Math.round(data.total_power_import_kwh))} kWh`,
+            "totalpowerdatacell"
+        ));
         table.appendChild(totalRow);
 
-        // Total feedback row
+        // Total Feedback under Total Power
         if (this.config.showFeedback) {
             const feedbackRow = document.createElement("tr");
             feedbackRow.className = "total-feedback-row";
             feedbackRow.appendChild(this.createCell(`<i class="fa-solid fa-plug-circle-plus"></i>&nbsp;${this.translate("Total_Feedback")}`, "totalfeedbacktextcell"));
-            const feedbackCell = this.createCell("-", "totalfeedbackdatacell");
-            feedbackRow.appendChild(feedbackCell);
-            this.cells.totalFeedback = feedbackCell;
+            feedbackRow.appendChild(this.createCell(`${this.formatNumber(Math.round(data.total_power_export_kwh))} kWh`, "totalfeedbackdatacell"));
             table.appendChild(feedbackRow);
         }
 
-        // Delta Power row
-        if (this.config.showDeltaPower) {
-            const deltaRow = document.createElement("tr");
-            deltaRow.className = "total-power-row";
-            deltaRow.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Pwr")}`, "totalpowertextcell"));
-            const deltaCell = this.createCell("-", "totalpowerdatacell");
-            deltaRow.appendChild(deltaCell);
-            this.cells.deltaPower = deltaCell;
-            table.appendChild(deltaRow);
-        }
-
-        // Voltage row (compact 3-phase)
-        if (this.config.currentVoltage) {
-            const voltageRow = document.createElement("tr");
-            voltageRow.className = "voltage-compact-row";
-            voltageRow.appendChild(this.createCell(`<i class="fa-solid fa-bolt"></i>&nbsp;${this.translate("Voltage")}`, "voltagetextcell"));
-            const voltageCell = this.createCell("-", "voltagedatacell");
-            voltageRow.appendChild(voltageCell);
-            this.cells.voltage = voltageCell;
-            table.appendChild(voltageRow);
-        }
-
-        // Total Gas row
-        if (this.config.showGas) {
-            const gasRow = document.createElement("tr");
-            gasRow.className = "total-gas-row";
-            gasRow.appendChild(this.createCell(`<i class="fa-solid fa-fire"></i>&nbsp;${this.translate("Total_Gas")}`, "totalgastextcell"));
-            const gasCell = this.createCell("-", "totalgasdatacell");
-            gasRow.appendChild(gasCell);
-            this.cells.totalGas = gasCell;
-            table.appendChild(gasRow);
-        }
-
-        // Delta Gas row
-        if (this.config.showDeltaGas) {
-            const deltaGasRow = document.createElement("tr");
-            deltaGasRow.className = "total-gas-row";
-            deltaGasRow.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Gas")}`, "totalgastextcell"));
-            const deltaGasCell = this.createCell("-", "totalgasdatacell");
-            deltaGasRow.appendChild(deltaGasCell);
-            this.cells.deltaGas = deltaGasCell;
-            table.appendChild(deltaGasRow);
-        }
-
-        // Extra info rows (wifi, failures)
-        if (this.config.extraInfo) this.addExtraInfo(table, data, "P1");
-    },
-
-    buildWaterRows: function (table, data) {
-        // Current water row
-        if (this.config.currentWater) {
+        // Delta Power
+        if (this.deltaP1 && this.config.showDeltaPower) {
             const row = document.createElement("tr");
-            row.className = "current-water-row";
-            row.appendChild(this.createCell(`<i class="fa-solid fa-water"></i>&nbsp;${this.translate("Current_Wtr")}`, "currentwatertextcell"));
-            const cell = this.createCell("-", "currentwaterdatacell");
-            row.appendChild(cell);
-            this.cells.currentWater = cell;
+            row.className = "total-power-row";
+            row.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Pwr")}`, "totalpowertextcell"));
+            row.appendChild(this.createCell(
+                `${this.formatNumber(Math.round(this.deltaP1.total_power_import_kwh || 0))} kWh / ${this.formatNumber(Math.round(this.deltaP1.total_power_export_kwh || 0))} kWh`,
+                "totalpowerdatacell"
+            ));
             table.appendChild(row);
         }
 
-        // Total water row
-        const totalLiters = data.total_liter_m3 * 1000;
-        const row = document.createElement("tr");
-        row.className = "total-water-row";
-        row.appendChild(this.createCell(`<i class="fa-solid fa-droplet"></i>&nbsp;${this.translate("Total_Wtr")}`, "totalwatertextcell"));
-        const cell = this.createCell("-", "totalwaterdatacell");
-        row.appendChild(cell);
-        this.cells.totalWater = cell;
-        table.appendChild(row);
-
-        // Delta Water row
-        if (this.config.showDeltaWater) {
-            const deltaRow = document.createElement("tr");
-            deltaRow.className = "total-water-row";
-            deltaRow.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Wtr")}`, "totalwatertextcell"));
-            const deltaCell = this.createCell("-", "totalwaterdatacell");
-            deltaRow.appendChild(deltaCell);
-            this.cells.deltaWater = deltaCell;
-            table.appendChild(deltaRow);
-        }
-
-        if (this.config.extraInfo) this.addExtraInfo(table, data, "WM");
-    },
-
-    // Update cell values when new data arrives
-    updateCells: function () {
-        const data = this.MHW_P1;
-        const delta = this.deltaP1;
-
-        if (this.cells.currentPower) this.cells.currentPower.innerHTML = `${this.formatNumber(Math.round(data.active_power_w || 0))} Watt`;
-        if (this.cells.totalPower) this.cells.totalPower.innerHTML = `${this.formatNumber(Math.round(data.total_power_import_kwh || 0))} kWh`;
-        if (this.cells.totalFeedback) this.cells.totalFeedback.innerHTML = `${this.formatNumber(Math.round(data.total_power_export_kwh || 0))} kWh`;
-        if (this.cells.deltaPower && delta) this.cells.deltaPower.innerHTML = `${this.formatNumber(Math.round(delta.total_power_import_kwh || 0))} kWh / ${this.formatNumber(Math.round(delta.total_power_export_kwh || 0))} kWh`;
-
-        // Voltage
-        if (this.cells.voltage) {
+        // Voltage under Delta Power
+        if (this.config.currentVoltage) {
             const v1 = Math.round(data.active_voltage_l1_v || 0);
             const v2 = Math.round(data.active_voltage_l2_v || 0);
             const v3 = Math.round(data.active_voltage_l3_v || 0);
+
             const voltages = [];
             if (v1 > 0) voltages.push(this.formatNumber(v1));
             if (v2 > 0) voltages.push(this.formatNumber(v2));
             if (v3 > 0) voltages.push(this.formatNumber(v3));
-            this.cells.voltage.innerHTML = voltages.length ? `${voltages.join(" / ")} V` : "-";
+
+            if (voltages.length > 0) {
+                const row = document.createElement("tr");
+                row.className = "voltage-compact-row";
+
+                row.appendChild(this.createCell(
+                    `<i class="fa-solid fa-bolt"></i>&nbsp;${this.translate("Voltage")}`,
+                    "voltagetextcell"
+                ));
+
+                row.appendChild(this.createCell(
+                    `${voltages.join(" / ")} V`,
+                    "voltagedatacell"
+                ));
+
+                table.appendChild(row);
+            }
         }
 
-        // Gas
-        if (this.cells.totalGas) this.cells.totalGas.innerHTML = `${this.formatNumber(Math.round(data.total_gas_m3 || 0))} m³`;
-        if (this.cells.deltaGas && delta) this.cells.deltaGas.innerHTML = `${this.formatNumber(Math.round(delta.total_gas_m3 || 0))} m³`;
+        // Total Gas
+        if (this.config.showGas) {
+            const gasRow = document.createElement("tr");
+            gasRow.className = "total-gas-row";
+            gasRow.appendChild(this.createCell(`<i class="fa-solid fa-fire"></i>&nbsp;${this.translate("Total_Gas")}`, "totalgastextcell"));
+            gasRow.appendChild(this.createCell(`${this.formatNumber(Math.round(data.total_gas_m3))} m³`, "totalgasdatacell"));
+            table.appendChild(gasRow);
+        }
 
-        // Water
-        const dataWM = this.MHW_WM;
-        const deltaWM = this.deltaWM;
-        const totalLiters = dataWM.total_liter_m3 * 1000;
-        if (this.cells.currentWater) this.cells.currentWater.innerHTML = `${this.formatNumber(Math.round(dataWM.active_liter_lpm || 0))} Lpm`;
-        if (this.cells.totalWater) this.cells.totalWater.innerHTML = `${this.formatNumber(Math.round(dataWM.total_liter_m3 || 0))} m³ (${this.formatNumber(Math.round(totalLiters))} L)`;
-        if (this.cells.deltaWater && deltaWM) this.cells.deltaWater.innerHTML = `${this.formatNumber(Math.round(deltaWM.total_liter_m3 || 0))} m³ (${this.formatNumber(Math.round(deltaWM.total_liters || 0))} L)`;
+        // Delta Gas
+        if (this.deltaP1 && this.config.showDeltaGas) {
+            const row = document.createElement("tr");
+            row.className = "total-gas-row";
+            row.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Gas")}`, "totalgastextcell"));
+            row.appendChild(this.createCell(
+                `${this.formatNumber(Math.round(this.deltaP1.total_gas_m3 || 0))} m³`,
+                "totalgasdatacell"
+            ));
+            table.appendChild(row);
+        }
+
+        // Extra info P1
+        if (this.config.extraInfo) this.addExtraInfo(table, data, "P1");
+    },
+
+    addWaterRows: function (table, data) {
+        if (this.config.currentWater) {
+            const row = document.createElement("tr");
+            row.className = "current-water-row";
+            row.appendChild(this.createCell(`<i class="fa-solid fa-water"></i>&nbsp;${this.translate("Current_Wtr")}`, "currentwatertextcell"));
+            row.appendChild(this.createCell(`${this.formatNumber(Math.round(data.active_liter_lpm))} Lpm`, "currentwaterdatacell"));
+            table.appendChild(row);
+        }
+
+        const totalLiters = data.total_liter_m3 * 1000;
+        const row = document.createElement("tr");
+        row.className = "total-water-row";
+        row.appendChild(this.createCell(`<i class="fa-solid fa-droplet"></i>&nbsp;${this.translate("Total_Wtr")}`, "totalwatertextcell"));
+        row.appendChild(this.createCell(`${this.formatNumber(Math.round(data.total_liter_m3))} m³ (${this.formatNumber(Math.round(totalLiters))} L)`, "totalwaterdatacell"));
+        table.appendChild(row);
+
+        if (this.deltaWM && this.config.showDeltaWater) {
+            const deltaRow = document.createElement("tr");
+            deltaRow.className = "total-water-row";
+            deltaRow.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Wtr")}`, "totalwatertextcell"));
+            deltaRow.appendChild(this.createCell(`${this.formatNumber(Math.round(this.deltaWM.total_liter_m3 || 0))} m³ (${this.formatNumber(Math.round(this.deltaWM.total_liters || 0))} L)`, "totalwaterdatacell"));
+            table.appendChild(deltaRow);
+        }
+
+        // Extra info WM below P1 WiFi
+        if (this.config.extraInfo) this.addExtraInfo(table, data, "WM");
     },
 
     addExtraInfo: function (table, data, type) {
@@ -303,18 +282,27 @@ Module.register('MMM-MyHomeWizard', {
         spacer.innerHTML = "<td colspan='2'>&nbsp;</td>";
         table.appendChild(spacer);
 
-        const row = document.createElement("tr");
-        row.className = `wifi-row-${type.toLowerCase()}`;
-        row.appendChild(this.createCell(`<i class="fa-solid fa-wifi"></i>&nbsp;${this.translate(`Wifi_${type}`)}`, `wifitextcell${type}`));
-        row.appendChild(this.createCell(`${data.wifi_strength || 0} %`, `wifidatacell${type}`));
-        table.appendChild(row);
-
+        // P1 WiFi above WM WiFi
         if (type === "P1") {
+            const wifiRow = document.createElement("tr");
+            wifiRow.className = "wifi-row-p1";
+            wifiRow.appendChild(this.createCell(`<i class="fa-solid fa-wifi"></i>&nbsp;${this.translate(`Wifi_${type}`)}`, "wifitextcellP1"));
+            wifiRow.appendChild(this.createCell(`${data.wifi_strength || 0} %`, "wifidatacellP1"));
+            table.appendChild(wifiRow);
+
             const failRow = document.createElement("tr");
             failRow.className = "failure-row";
             failRow.appendChild(this.createCell(`<i class="fa-solid fa-plug-circle-exclamation"></i>&nbsp;${this.translate("Fail_Pwr")}`, "failuretextcell"));
             failRow.appendChild(this.createCell(data.any_power_fail_count || 0, "failuredatacell"));
             table.appendChild(failRow);
+        }
+
+        if (type === "WM") {
+            const wifiRow = document.createElement("tr");
+            wifiRow.className = "wifi-row-wm";
+            wifiRow.appendChild(this.createCell(`<i class="fa-solid fa-wifi"></i>&nbsp;${this.translate(`Wifi_${type}`)}`, "wifitextcellWM"));
+            wifiRow.appendChild(this.createCell(`${data.wifi_strength || 0} %`, "wifidatacellWM"));
+            table.appendChild(wifiRow);
         }
     },
 
@@ -330,14 +318,22 @@ Module.register('MMM-MyHomeWizard', {
         this.MHW_P1 = data;
         this.loadedP1 = true;
         this.errorP1 = false;
-        this.updateDom();
+        this.updateDomAfterLoad();
     },
 
     processMHW_WM: function (data) {
         this.MHW_WM = data;
         this.loadedWM = true;
         this.errorWM = false;
-        this.updateDom();
+        this.updateDomAfterLoad();
+    },
+
+    updateDomAfterLoad: function () {
+        if ((this.config.P1_IP ? this.loadedP1 : true) &&
+            (this.config.WM_IP ? this.loadedWM : true)) {
+            if (this.config.showLastUpdate) this.readLastUpdate();
+            else this.updateDom(this.config.initialLoadDelay);
+        }
     },
 
     readLastUpdate: function () {
@@ -360,11 +356,11 @@ Module.register('MMM-MyHomeWizard', {
                 break;
             case "MHWP1_ERROR":
                 console.error("MMM-MyHomeWizard P1 Error:", payload.error);
-                payload.retry > 0 ? this.getMHW_P1(payload.retry - 1) : (() => { this.errorP1 = true; this.updateDom(); })();
+                payload.retry > 0 ? this.getMHW_P1(payload.retry - 1) : (() => { this.errorP1 = true; this.updateDom(this.config.initialLoadDelay); })();
                 break;
             case "MHWWM_ERROR":
                 console.error("MMM-MyHomeWizard WM Error:", payload.error);
-                payload.retry > 0 ? this.getMHW_WM(payload.retry - 1) : (() => { this.errorWM = true; this.updateDom(); })();
+                payload.retry > 0 ? this.getMHW_WM(payload.retry - 1) : (() => { this.errorWM = true; this.updateDom(this.config.initialLoadDelay); })();
                 break;
         }
     }
