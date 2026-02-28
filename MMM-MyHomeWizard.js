@@ -231,19 +231,16 @@ Module.register('MMM-MyHomeWizard', {
 
             // Delta Gas under Total Gas
             if (this.deltaP1 && this.config.showDeltaGas) {
-                const row = document.createElement("tr");
-                row.className = "total-gas-row";
-                row.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Gas")}`, "totalgastextcell"));
-                row.appendChild(this.createCell(
+                const deltaGasRow = document.createElement("tr");
+                deltaGasRow.className = "total-gas-row";
+                deltaGasRow.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Gas")}`, "totalgastextcell"));
+                deltaGasRow.appendChild(this.createCell(
                     `${this.formatNumber(Math.round(this.deltaP1.total_gas_m3 || 0))} m³`,
                     "totalgasdatacell"
                 ));
-                table.appendChild(row);
+                table.appendChild(deltaGasRow);
             }
         }
-
-        // Extra info P1 rendered at the end
-        if (this.config.extraInfo) this.addWiFiRows(table, data, this.MHW_WM);
     },
 
     addWaterRows: function (table, data) {
@@ -270,10 +267,18 @@ Module.register('MMM-MyHomeWizard', {
             deltaRow.appendChild(this.createCell(`${this.formatNumber(Math.round(this.deltaWM.total_liter_m3 || 0))} m³ (${this.formatNumber(Math.round(this.deltaWM.total_liters || 0))} L)`, "totalwaterdatacell"));
             table.appendChild(deltaRow);
         }
+
+        // WiFi rows at the bottom with spacer
+        if (this.config.extraInfo) this.addWiFiRows(table, this.MHW_P1, data);
     },
 
-    // WiFi rows: WM first, P1 below
+    // WiFi rows with spacer before them, WM first, P1 last
     addWiFiRows: function (table, P1data, WMdata) {
+        // Spacer row
+        const spacer = document.createElement("tr");
+        spacer.innerHTML = "<td colspan='2'>&nbsp;</td>";
+        table.appendChild(spacer);
+
         // WiFi WM
         const wifiWMRow = document.createElement("tr");
         wifiWMRow.className = "wifi-row-wm";
