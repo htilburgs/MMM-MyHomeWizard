@@ -53,13 +53,13 @@ Add the module to your modules array in your config.js.
 		showFeedback: true,       	// display feed back to grid
 		showLastUpdate: true,     	// display the last update for the history data in the footer
 		currentPower: true,       	// show current power usage
-		currentWater: true,       	// show current water usage
+		currentWater: false,       	// show current water usage
 		currentVoltage: true,     	// compact 3-fase, auto detection
 
 		// Deltaws
         showDeltaPower: true,		// Show Delta between History and Current data (Power)
         showDeltaGas: true,			// Show Delta between History and Current data (Gas)
-        showDeltaWater: true		// Show Delta between History and Current data (Water)
+        showDeltaWater: false		// Show Delta between History and Current data (Water)
   		}
 },
 ```
@@ -91,16 +91,16 @@ Here is the documentation of options for the modules configuration
 | `P1_IP`            	| **REQUIRED if use P1 meter** <br /> The IP Address of your HomeWizard P1 meter <br /><br />**Number** <br />Default: `0.0.0.0`
 | `WM_IP`           	| **REQUIRED if use Water meter** <br />The IP Address of your HomeWizard Water meter <br /><br />**Number** <br />Default: `0.0.0.0`
 | `updateInterval`		| **REQUIRED** - The interval the information is updated (in milliseconds)<br /><br />**Number** <br/>Default: `5000`
-| `extraInfo`			| Show extra information from P1 meter<br /><br />**True/False**<br />Default: `false`
-| `currentPower`		| Show the current power consumption<br /><br />**True/False**<br />Default: `false`
+| `extraInfo`			| Show extra information from P1 meter<br /><br />**True/False**<br />Default: `true`
+| `currentPower`		| Show the current power consumption<br /><br />**True/False**<br />Default: `true`
 | `currentWater`		| Show the current water consumption<br /><br />**True/False**<br />Default: `false`
 | `currentVoltage`		| Show the current 3-phase consumption<br /><br />**True/False**<br />Default: `true`
 | `showGas`				| Show the Gas Option of youre PowerMeter <br /><br />**True/False**<br />Default: `true`
-| `showFooter`			| Show the Footer with the name of youre PowerMeter <br /><br />**True/False**<br />Default: `false`
+| `showFooter`			| Show the Footer with the name of youre PowerMeter <br /><br />**True/False**<br />Default: `true`
 | ` showLastUpdate` 	| Show last update of the "history_data.json" file as footer<br /><br />**True/False**<br />Default: `true`
 | ` showDeltaPower` 	| Show Delta between History and Current data (Power)<br /><br />**True/False**<br />Default: `true`
 | ` showDeltaGas`   	| Show Delta between History and Current data (Gas)<br /><br />**True/False**<br />Default: `true`
-| ` showDeltaWater` 	| Show Delta between History and Current data (Water)<br /><br />**True/False**<br />Default: `true`
+| ` showDeltaWater` 	| Show Delta between History and Current data (Water)<br /><br />**True/False**<br />Default: `false`
 
 ## Version
 v1.0.0 - 26-11-2024	: Initial version </br>
