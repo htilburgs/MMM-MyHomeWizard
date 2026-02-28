@@ -10,7 +10,7 @@ Module.register('MMM-MyHomeWizard', {
         showFeedback: true,
         currentPower: false,
         currentWater: false,
-        currentVoltage: false, // compact 3-fase, auto detectie
+        currentVoltage: false, // compacte 3-fase met auto detectie
         initialLoadDelay: 1000,
         updateInterval: 10000,
         fetchTimeout: 5000,
@@ -162,7 +162,20 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // ⚡ Slimme compacte 3-fase voltage regel (auto detectie)
+        // Total power
+        const totalRow = document.createElement("tr");
+        totalRow.className = "total-power-row";
+        totalRow.appendChild(this.createCell(
+            `<i class="fa-solid fa-plug-circle-bolt"></i>&nbsp;${this.translate("Total_Pwr")}`,
+            "totalpowertextcell"
+        ));
+        totalRow.appendChild(this.createCell(
+            `${this.formatNumber(Math.round(data.total_power_import_kwh))} kWh`,
+            "totalpowerdatacell"
+        ));
+        table.appendChild(totalRow);
+
+        // ⚡ Voltage regel direct onder Total Power
         if (this.config.currentVoltage) {
             const v1 = Math.round(data.active_voltage_l1_v || 0);
             const v2 = Math.round(data.active_voltage_l2_v || 0);
@@ -191,20 +204,7 @@ Module.register('MMM-MyHomeWizard', {
             }
         }
 
-        // Total power
-        const totalRow = document.createElement("tr");
-        totalRow.className = "total-power-row";
-        totalRow.appendChild(this.createCell(
-            `<i class="fa-solid fa-plug-circle-bolt"></i>&nbsp;${this.translate("Total_Pwr")}`,
-            "totalpowertextcell"
-        ));
-        totalRow.appendChild(this.createCell(
-            `${this.formatNumber(Math.round(data.total_power_import_kwh))} kWh`,
-            "totalpowerdatacell"
-        ));
-        table.appendChild(totalRow);
-
-        // Feedback, Gas, Delta etc. (kopieer je bestaande code hier)
+        // Feedback, Gas, Delta enz. (rest van je bestaande code)
     },
 
     addWaterRows: function (table, data) {
