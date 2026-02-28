@@ -327,6 +327,7 @@ Module.register('MMM-MyHomeWizard', {
     },
 
     addWiFiRows: function (table, P1data, WMdata) {
+        // P1 WiFi is independent
         if (P1data) {
             const wifiP1Row = document.createElement("tr");
             wifiP1Row.className = "wifi-row-p1";
@@ -341,6 +342,7 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(wifiP1Row);
         }
 
+        // WM WiFi only if WM exists
         if (WMdata) {
             const wifiWMRow = document.createElement("tr");
             wifiWMRow.className = "wifi-row-wm";
@@ -384,10 +386,6 @@ Module.register('MMM-MyHomeWizard', {
             // Always request deltas
             this.sendSocketNotification("GET_LAST_UPDATE");
         }
-    },
-
-    readLastUpdate: function () {
-        this.sendSocketNotification("GET_LAST_UPDATE");
     },
 
     socketNotificationReceived: function (notification, payload) {
