@@ -381,12 +381,8 @@ Module.register('MMM-MyHomeWizard', {
     updateDomAfterLoad: function () {
         if ((this.config.P1_IP ? this.loadedP1 : true) &&
             (this.config.WM_IP ? this.loadedWM : true)) {
-            // Always read delta values
-            this.readLastUpdate();
-            // If showLastUpdate is false, still update the DOM
-            if (!this.config.showLastUpdate) {
-                this.updateDom(this.config.initialLoadDelay);
-            }
+            // Always request deltas
+            this.sendSocketNotification("GET_LAST_UPDATE");
         }
     },
 
@@ -403,9 +399,13 @@ Module.register('MMM-MyHomeWizard', {
                 this.processMHW_WM(payload);
                 break;
             case "LAST_UPDATE_RESULT":
-                this.lastUpdateDate = payload.lastDate;
+                // Always set deltas
                 this.deltaP1 = payload.deltaP1;
                 this.deltaWM = payload.deltaWM;
+
+                if (this.config.showLastUpdate) {
+                    this.lastUpdateDate = payload.lastDate;
+                }
                 this.updateDom();
                 break;
             case "MHWP1_ERROR":
