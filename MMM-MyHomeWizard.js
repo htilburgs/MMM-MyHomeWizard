@@ -195,19 +195,7 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // Delta Gas
-        if (this.deltaP1 && this.config.showDeltaGas) {
-            const row = document.createElement("tr");
-            row.className = "total-gas-row";
-            row.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Gas")}`, "totalgastextcell"));
-            row.appendChild(this.createCell(
-                `${this.formatNumber(Math.round(this.deltaP1.total_gas_m3 || 0))} m³`,
-                "totalgasdatacell"
-            ));
-            table.appendChild(row);
-        }
-
-        // Voltage 3-phase 
+        // Voltage 3-phase
         if (this.config.currentVoltage) {
             const v1 = Math.round(data.active_voltage_l1_v || 0);
             const v2 = Math.round(data.active_voltage_l2_v || 0);
@@ -233,7 +221,7 @@ Module.register('MMM-MyHomeWizard', {
             }
         }
 
-        // Power Failures 
+        // Power Failures (after Delta Power & Voltage)
         if (data.any_power_fail_count !== undefined) {
             const failRow = document.createElement("tr");
             failRow.className = "failure-row";
@@ -249,6 +237,18 @@ Module.register('MMM-MyHomeWizard', {
             gasRow.appendChild(this.createCell(`<i class="fa-solid fa-fire"></i>&nbsp;${this.translate("Total_Gas")}`, "totalgastextcell"));
             gasRow.appendChild(this.createCell(`${this.formatNumber(Math.round(data.total_gas_m3))} m³`, "totalgasdatacell"));
             table.appendChild(gasRow);
+
+            // Delta Gas under Total Gas
+            if (this.deltaP1 && this.config.showDeltaGas) {
+                const row = document.createElement("tr");
+                row.className = "total-gas-row";
+                row.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Gas")}`, "totalgastextcell"));
+                row.appendChild(this.createCell(
+                    `${this.formatNumber(Math.round(this.deltaP1.total_gas_m3 || 0))} m³`,
+                    "totalgasdatacell"
+                ));
+                table.appendChild(row);
+            }
         }
     },
 
