@@ -39,19 +39,28 @@ Add the module to your modules array in your config.js.
   header: 'HomeWizard',
   disabled: false,
   config: {
-		P1_IP: "0.0.0.0",	    // IP Address HomeWizard P1 meter
-		WM_IP: "0.0.0.0",	    // IP Address HomeWizrd Water meter - Remove when not used
-		extraInfo: false, 	    // Show extra information from P1 meter
-		currentPower: false,	// Show the current Power Consumption
-		currentWater: false,	// Show the current Water Consumption
-		showGas: true,		    // Show the Gas option
-		showFooter: true,	    // Show footer (name Power Meter)
-		updateInterval: 5000,   // Update every 5 seconds
-		maxWidth: "500px",	    // Max Module width
-        showLastUpdate: true,	// Show the last update for the History Data in the footer
-        showDeltaPower: true,	// Show Delta between History and Current data (Power)
-        showDeltaGas: true,		// Show Delta between History and Current data (Gas)
-        showDeltaWater: true	// Show Delta between History and Current data (Water)
+		// Replace these with your actual meter IPs
+		P1_IP: "0.0.0.0",	    	// IP Address HomeWizard P1 meter
+		WM_IP: "0.0.0.0",	    	// IP Address HomeWizrd Water meter - Remove line when not used
+
+		// Timing & update
+		updateInterval: 5000,   	// Update every 5 seconds
+ 		maxWidth: "500px",			// Max width of the module
+
+		// Display settings
+		extraInfo: true,          	// show wifi & power fail info
+        showFooter: true,        	// show meter model in footer
+		showGas: true,            	// display gas usage
+		showFeedback: true,       	// display feed back to grid
+		showLastUpdate: true,     	// display the last update for the history data in the footer
+		currentPower: true,       	// show current power usage
+		currentWater: false,       	// show current water usage
+		currentVoltage: true,     	// compact 3-fase, auto detection
+
+		// Deltaws
+        showDeltaPower: true,		// Show Delta between History and Current data (Power)
+        showDeltaGas: true,			// Show Delta between History and Current data (Gas)
+        showDeltaWater: false		// Show Delta between History and Current data (Water)
   		}
 },
 ```
@@ -60,14 +69,15 @@ Add the module to your modules array in your config.js.
 So this is not a bug, but as designed!*
 
 ## Images
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/b2ef6704-5d26-4705-a692-a268106c30f0" /> <br />
+<img width="427" height="156" alt="SCR-20260228-ogwt" src="https://github.com/user-attachments/assets/d300dcd1-28b6-450a-ad80-61145fdf5dd5" /><br />
+<img width="427" height="455" alt="SCR-20260228-plnq" src="https://github.com/user-attachments/assets/d5da3ad2-89c6-45df-8c12-410e481f6f46" />
 
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/f681c16f-9459-4505-a6a9-3f08fe4750b8" />
 
 ## Explanation
 **Total Power** is the sum of Power usage from T1 and T2 (peak and off-peak rate) <br />
 **Current Power** is the current Power usage (Watt) <br />
 **Total Feedback** is the Total Feedback to the grid today (kWH) <br />
+**Voltage** is the current 3-phase Voltage usage (V) with autodetection if it is only 1-phase </br>
 **Total Gas** is the total of Gas usage (m³) <br />
 **Current Water** is the current Water usage (Liters per minute) <br />
 **Total Water** is the total Water usage (m³) <br />
@@ -80,23 +90,24 @@ Here is the documentation of options for the modules configuration
 | Option                | Description
 |:----------------------|:-------------
 | `P1_IP`            	| **REQUIRED if use P1 meter** <br /> The IP Address of your HomeWizard P1 meter <br /><br />**Number** <br />Default: `0.0.0.0`
-| `WM_IP`           	| **REQUIRED if use Water meter** <br />The IP Address of your HomeWizard Water meter <br /><br />**Number** <br />Default: `0.0.0.0`
-| `updateInterval`	| **REQUIRED** - The interval the information is updated (in milliseconds)<br /><br />**Number** <br/>Default: `5000`
-| `extraInfo`		| Show extra information from P1 meter<br /><br />**True/False**<br />Default: `false`
-| `currentPower`	| Show the current power consumption<br /><br />**True/False**<br />Default: `false`
-| `currentWater`	| Show the current water consumption<br /><br />**True/False**<br />Default: `false`
-| `showGas`		| Show the Gas Option of youre PowerMeter <br /><br />**True/False**<br />Default: `true`
-| `showFooter`		| Show the Footer with the name of youre PowerMeter <br /><br />**True/False**<br />Default: `false`
-| `maxWidth`		| The maximum width of the module <br /><br />Default: `500px`
-| ` showLastUpdate` | Show last update of the "history_data.json" file as footer<br /><br />**True/False**<br />Default: `true`
-| ` showDeltaPower` | Show Delta between History and Current data (Power)<br /><br />**True/False**<br />Default: `true`
-| ` showDeltaGas`   | Show Delta between History and Current data (Gas)<br /><br />**True/False**<br />Default: `true`
-| ` showDeltaWater` | Show Delta between History and Current data (Water)<br /><br />**True/False**<br />Default: `true`
+| `WM_IP`           	| **REQUIRED if use Water meter** <br />The IP Address of your HomeWizard Water meter <br /><br />**Number** <br />Default: `0.0.0.0`</br></br>If you don't have a Water Meter, remove this line! or you get an error "Water Meter offline"
+| `updateInterval`		| **REQUIRED** - The interval the information is updated (in milliseconds)<br /><br />**Number** <br/>Default: `5000`
+| `extraInfo`			| Show extra information from P1 meter<br /><br />**True/False**<br />Default: `true`
+| `currentPower`		| Show the current power consumption<br /><br />**True/False**<br />Default: `true`
+| `currentWater`		| Show the current water consumption<br /><br />**True/False**<br />Default: `false`
+| `currentVoltage`		| Show the current 3-phase consumption<br /><br />**True/False**<br />Default: `true`
+| `showGas`				| Show the Gas Option of youre PowerMeter <br /><br />**True/False**<br />Default: `true`
+| `showFooter`			| Show the Footer with the name of youre PowerMeter <br /><br />**True/False**<br />Default: `true`
+| ` showLastUpdate` 	| Show last update of the "history_data.json" file as footer<br /><br />**True/False**<br />Default: `true`
+| ` showDeltaPower` 	| Show Delta between History and Current data (Power)<br /><br />**True/False**<br />Default: `true`
+| ` showDeltaGas`   	| Show Delta between History and Current data (Gas)<br /><br />**True/False**<br />Default: `true`
+| ` showDeltaWater` 	| Show Delta between History and Current data (Water)<br /><br />**True/False**<br />Default: `false`
 
 ## Version
 v1.0.0 - 26-11-2024	: Initial version </br>
 v1.0.1 - 29-12-2024	: Add option showGas </br>
-v2.0.0 - 22-01-2026 : Update with daily saving data to history_data and option for show Deltas
+v2.0.0 - 22-01-2026 : Update with daily saving data to history_data and option for show Deltas </br>
+v2.0.1 - 28-02-2026 : Add option currentVoltage voor 3-phase usage
 
 ## License
 ### The MIT License (MIT)
