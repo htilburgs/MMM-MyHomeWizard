@@ -145,8 +145,13 @@ Module.register('MMM-MyHomeWizard', {
         return cell;
     },
 
+    createSpacerRow: function () {
+        const row = document.createElement("tr");
+        row.innerHTML = "<td colspan='2'>&nbsp;</td>";
+        return row;
+    },
+
     addPowerRows: function (table, data) {
-        // Current power
         if (this.config.currentPower) {
             const row = document.createElement("tr");
             row.className = "current-power-row";
@@ -161,7 +166,6 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // Total Power
         const totalRow = document.createElement("tr");
         totalRow.className = "total-power-row";
         totalRow.appendChild(this.createCell(
@@ -174,7 +178,6 @@ Module.register('MMM-MyHomeWizard', {
         ));
         table.appendChild(totalRow);
 
-        // Total Feedback
         if (this.config.showFeedback) {
             const feedbackRow = document.createElement("tr");
             feedbackRow.className = "total-feedback-row";
@@ -183,7 +186,6 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(feedbackRow);
         }
 
-        // Delta Power
         if (this.deltaP1 && this.config.showDeltaPower) {
             const row = document.createElement("tr");
             row.className = "total-power-row";
@@ -195,17 +197,14 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // Voltage under Delta Power
         if (this.config.currentVoltage) {
             const v1 = Math.round(data.active_voltage_l1_v || 0);
             const v2 = Math.round(data.active_voltage_l2_v || 0);
             const v3 = Math.round(data.active_voltage_l3_v || 0);
-
             const voltages = [];
             if (v1 > 0) voltages.push(this.formatNumber(v1));
             if (v2 > 0) voltages.push(this.formatNumber(v2));
             if (v3 > 0) voltages.push(this.formatNumber(v3));
-
             if (voltages.length > 0) {
                 const row = document.createElement("tr");
                 row.className = "voltage-compact-row";
@@ -221,39 +220,37 @@ Module.register('MMM-MyHomeWizard', {
             }
         }
 
-        // Total Gas
         if (this.config.showGas) {
             const gasRow = document.createElement("tr");
             gasRow.className = "total-gas-row";
             gasRow.appendChild(this.createCell(`<i class="fa-solid fa-fire"></i>&nbsp;${this.translate("Total_Gas")}`, "totalgastextcell"));
             gasRow.appendChild(this.createCell(`${this.formatNumber(Math.round(data.total_gas_m3))} m³`, "totalgasdatacell"));
             table.appendChild(gasRow);
-
-            // Delta Gas under Total Gas
-            if (this.deltaP1 && this.config.showDeltaGas) {
-                const deltaGasRow = document.createElement("tr");
-                deltaGasRow.className = "total-gas-row";
-                deltaGasRow.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Gas")}`, "totalgastextcell"));
-                deltaGasRow.appendChild(this.createCell(
-                    `${this.formatNumber(Math.round(this.deltaP1.total_gas_m3 || 0))} m³`,
-                    "totalgasdatacell"
-                ));
-                table.appendChild(deltaGasRow);
-            }
         }
 
-        // Extra Info now just renders Failures (before water)
-        if (this.config.extraInfo && data.any_power_fail_count !== undefined) {
-            const failRow = document.createElement("tr");
-            failRow.className = "failure-row";
-            failRow.appendChild(this.createCell(`<i class="fa-solid fa-plug-circle-exclamation"></i>&nbsp;${this.translate("Fail_Pwr")}`, "failuretextcell"));
-            failRow.appendChild(this.createCell(data.any_power_fail_count, "failuredatacell"));
-            table.appendChild(failRow);
+        if (this.deltaP1 && this.config.showDeltaGas) {
+            const row = document.createElement("tr");
+            row.className = "total-gas-row";
+            row.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Gas")}`, "totalgastextcell"));
+            row.appendChild(this.createCell(
+                `${this.formatNumber(Math.round(this.deltaP1.total_gas_m3 || 0))} m³`,
+                "totalgasdatacell"
+            ));
+            table.appendChild(row);
         }
     },
 
     addWaterRows: function (table, data) {
-        // Current Water
+        // Power Failures first
+        if (this.MHW_P1.any_power_fail_count !== undefined) {
+            const failRow = document.createElement("tr");
+            failRow.className = "failure-row";
+            failRow.appendChild(this.createCell(`<i class="fa-solid fa-plug-circle-exclamation"></i>&nbsp;${this.translate("Fail_Pwr")}`, "failuretextcell"));
+            failRow.appendChild(this.createCell(this.MHW_P1.any_power_fail_count, "failuredatacell"));
+            table.appendChild(failRow);
+            table.appendChild(this.createSpacerRow());
+        }
+
         if (this.config.currentWater) {
             const row = document.createElement("tr");
             row.className = "current-water-row";
@@ -262,15 +259,6 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // Total Water
-        const totalLiters = data.total_liter_m3 * 1000;
-        const row = document.createElement("tr");
-        row.className = "total-water-row";
-        row.appendChild(this.createCell(`<i class="fa-solid fa-droplet"></i>&nbsp;${this.translate("Total_Wtr")}`, "totalwatertextcell"));
-        row.appendChild(this.createCell(`${this.formatNumber(Math.round(data.total_liter_m3))} m³ (${this.formatNumber(Math.round(totalLiters))} L)`, "totalwaterdatacell"));
-        table.appendChild(row);
-
-        // Delta Water
         if (this.deltaWM && this.config.showDeltaWater) {
             const deltaRow = document.createElement("tr");
             deltaRow.className = "total-water-row";
@@ -279,24 +267,19 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(deltaRow);
         }
 
-        // WiFi at the bottom, P1 first, WM second
+        // Spacer before WiFi rows
+        table.appendChild(this.createSpacerRow());
+
         if (this.config.extraInfo) this.addWiFiRows(table, this.MHW_P1, data);
     },
 
     addWiFiRows: function (table, P1data, WMdata) {
-        // Spacer row
-        const spacer = document.createElement("tr");
-        spacer.innerHTML = "<td colspan='2'>&nbsp;</td>";
-        table.appendChild(spacer);
-
-        // WiFi P1 first
         const wifiP1Row = document.createElement("tr");
         wifiP1Row.className = "wifi-row-p1";
         wifiP1Row.appendChild(this.createCell(`<i class="fa-solid fa-wifi"></i>&nbsp;${this.translate("Wifi_P1")}`, "wifitextcellP1"));
         wifiP1Row.appendChild(this.createCell(`${P1data.wifi_strength || 0} %`, "wifidatacellP1"));
         table.appendChild(wifiP1Row);
 
-        // WiFi WM second
         const wifiWMRow = document.createElement("tr");
         wifiWMRow.className = "wifi-row-wm";
         wifiWMRow.appendChild(this.createCell(`<i class="fa-solid fa-wifi"></i>&nbsp;${this.translate("Wifi_WM")}`, "wifitextcellWM"));
