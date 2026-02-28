@@ -196,7 +196,7 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(row);
         }
 
-        // Voltage regel nu onder Delta Power
+        // ⚡ Voltage regel nu onder Delta Power, met fa-bolt
         if (this.config.currentVoltage) {
             const v1 = Math.round(data.active_voltage_l1_v || 0);
             const v2 = Math.round(data.active_voltage_l2_v || 0);
@@ -212,7 +212,7 @@ Module.register('MMM-MyHomeWizard', {
                 row.className = "voltage-compact-row";
 
                 row.appendChild(this.createCell(
-                    `<i class="fa-solid fa-bolt-lightning"></i>&nbsp;${this.translate("Voltage")}`,
+                    `<i class="fa-solid fa-bolt"></i>&nbsp;${this.translate("Voltage")}`,
                     "voltagetextcell"
                 ));
 
