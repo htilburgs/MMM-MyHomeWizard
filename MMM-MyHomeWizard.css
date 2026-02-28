@@ -64,6 +64,22 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
      line-height: 25px;
 }
 
+.voltagetextcell {
+     display: table-cell;
+     width: 50%;
+     font-size: 20px;
+     color: darkgrey !important;               
+     text-align: right !important;       
+}
+
+.voltagedatacell {
+     display: table-cell;
+     width: 50%;
+     font-size: 20px;
+     color: white !important;               
+     text-align: right !important;   
+}
+
 .fa-plug-circle-bolt {
      color: bisque;
 }
