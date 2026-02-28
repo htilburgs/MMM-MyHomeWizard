@@ -40,6 +40,10 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
      color: bisque;
 }
 
+.fa-bolt {
+     color: bisque;
+}
+
 .total-power-row {
      line-height: 25px;
 }
