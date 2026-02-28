@@ -45,6 +45,7 @@ Add the module to your modules array in your config.js.
 
 		// Timing & update
 		updateInterval: 5000,   	// Update every 5 seconds
+ 		maxWidth: "500px",			// Max width of the module
 
 		// Display settings
 		extraInfo: true,          	// show wifi & power fail info
