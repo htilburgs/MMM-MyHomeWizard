@@ -60,6 +60,10 @@ Pick your color, copy and paste the HEX number. Example - #62FF00 = bright green
      text-align: right !important;   
 }
 
+.voltage-compact-row {
+     line-height: 25px;
+}
+
 .fa-plug-circle-bolt {
      color: bisque;
 }
