@@ -1,6 +1,6 @@
 {
           "name": "MMM-MyHomeWizard",
-          "version": "1.0.0",
+          "version": "2.0.1",
           "description": "MagicMirror 2 module to get real-time HomeWizard P1 / WaterMeter information.",
           "repository": {
                     "type": "git",
@@ -20,5 +20,5 @@
           },
           "homepage": "https://github.com/htilburgs/MMM-MyHomeWizard#readme",
           "dependencies": {
-                          } 
+          } 
 }
