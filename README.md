@@ -107,7 +107,7 @@ Here is the documentation of options for the modules configuration
 v1.0.0 - 26-11-2024	: Initial version </br>
 v1.0.1 - 29-12-2024	: Add option showGas </br>
 v2.0.0 - 22-01-2026 : Update with daily saving data to history_data and option for show Deltas </br>
-v2.0.1 - 28-02-2026 : Add option currentVoltage voor 3-phase usage
+v2.0.1 - 28-02-2026 : Add option currentVoltage for 3-phase usage
 
 ## License
 ### The MIT License (MIT)
