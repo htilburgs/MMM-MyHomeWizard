@@ -152,7 +152,7 @@ Module.register('MMM-MyHomeWizard', {
             const row = document.createElement("tr");
             row.className = "current-power-row";
             row.appendChild(this.createCell(
-                `<i class="fa-solid fa-bolt-lightning"></i>&nbsp;${this.translate("Current_Pwr")}`,
+                `<i class="fa-solid fa-bolt"></i>&nbsp;${this.translate("Current_Pwr")}`,
                 "currentpowertextcell"
             ));
             row.appendChild(this.createCell(
