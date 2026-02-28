@@ -221,7 +221,7 @@ Module.register('MMM-MyHomeWizard', {
             }
         }
 
-        // Power Failures (after Delta Power & Voltage)
+        // Power Failures
         if (data.any_power_fail_count !== undefined) {
             const failRow = document.createElement("tr");
             failRow.className = "failure-row";
@@ -238,7 +238,7 @@ Module.register('MMM-MyHomeWizard', {
             gasRow.appendChild(this.createCell(`${this.formatNumber(Math.round(data.total_gas_m3))} m³`, "totalgasdatacell"));
             table.appendChild(gasRow);
 
-            // Delta Gas under Total Gas
+            // Delta Gas
             if (this.deltaP1 && this.config.showDeltaGas) {
                 const row = document.createElement("tr");
                 row.className = "total-gas-row";
@@ -253,6 +253,12 @@ Module.register('MMM-MyHomeWizard', {
     },
 
     addWaterRows: function (table, data) {
+        // Empty spacer before Current Water
+        if (this.config.currentWater) {
+        const spacer = document.createElement("tr");
+        spacer.innerHTML = "<td colspan='2'>&nbsp;</td>";
+        table.appendChild(spacer);
+        
         // Current Water
         if (this.config.currentWater) {
             const row = document.createElement("tr");
