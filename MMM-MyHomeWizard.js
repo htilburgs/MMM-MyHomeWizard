@@ -328,6 +328,11 @@ Module.register('MMM-MyHomeWizard', {
             ));
             table.appendChild(deltaRow);
         }
+
+        // Spacer after Delta Water
+        const spacerAfterDelta = document.createElement("tr");
+        spacerAfterDelta.innerHTML = "<td colspan='2'>&nbsp;</td>";
+        table.appendChild(spacerAfterDelta);
     },
 
     addWiFiRows: function (table, P1data, WMdata) {
