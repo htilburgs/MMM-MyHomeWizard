@@ -116,6 +116,15 @@ Module.register('MMM-MyHomeWizard', {
         if (this.config.P1_IP) this.addPowerRows(table, this.MHW_P1);
         if (this.config.WM_IP && this.config.showWater) this.addWaterRows(table, this.MHW_WM);
 
+        // If no watermeter IP but extraInfo enabled, still show WiFi P1
+        if (!this.config.WM_IP && this.config.extraInfo) {
+            const spacer = document.createElement("tr");
+            spacer.innerHTML = "<td colspan='2'>&nbsp;</td>";
+            table.appendChild(spacer);
+
+            this.addWiFiRows(table, this.MHW_P1, {});
+        }
+
         wrapper.appendChild(table);
 
         if (this.config.showLastUpdate && this.lastUpdateDate) {
