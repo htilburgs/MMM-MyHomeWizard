@@ -76,6 +76,7 @@ So this is not a bug, but as designed!*
 **Total Power** is the sum of Power usage from T1 and T2 (peak and off-peak rate) <br />
 **Current Power** is the current Power usage (Watt) <br />
 **Total Feedback** is the Total Feedback to the grid today (kWH) <br />
+**Voltage** is the current 3-phase Voltage usage (V) with autodetection if it is only 1-phase </br>
 **Total Gas** is the total of Gas usage (m³) <br />
 **Current Water** is the current Water usage (Liters per minute) <br />
 **Total Water** is the total Water usage (m³) <br />
