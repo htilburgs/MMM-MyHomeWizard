@@ -59,8 +59,6 @@ Module.register('MMM-MyHomeWizard', {
         this.deltaWM = null;
 
         this.scheduleUpdate();
-
-        if (this.config.showLastUpdate) this.readLastUpdate();
     },
 
     scheduleUpdate: function () {
@@ -112,13 +110,9 @@ Module.register('MMM-MyHomeWizard', {
         const table = document.createElement("table");
         table.className = "small";
 
-        // Power rows
         if (this.config.P1_IP) this.addPowerRows(table, this.MHW_P1);
-
-        // Water rows
         if (this.config.WM_IP) this.addWaterRows(table, this.MHW_WM);
 
-        // WiFi rows, independent of WM_IP
         if (this.config.extraInfo) {
             this.addWiFiRows(
                 table,
@@ -127,7 +121,6 @@ Module.register('MMM-MyHomeWizard', {
             );
         }
 
-        // Footer
         if (this.config.showFooter && this.MHW_P1?.meter_model) {
             const row = document.createElement("tr");
             const cell = document.createElement("td");
@@ -140,7 +133,6 @@ Module.register('MMM-MyHomeWizard', {
 
         wrapper.appendChild(table);
 
-        // Last update
         if (this.config.showLastUpdate && this.lastUpdateDate) {
             const updateRow = document.createElement("div");
             updateRow.className = "last-update small light";
@@ -329,7 +321,6 @@ Module.register('MMM-MyHomeWizard', {
             table.appendChild(deltaRow);
         }
 
-        // Spacer after Delta Water
         const spacerAfterDelta = document.createElement("tr");
         spacerAfterDelta.innerHTML = "<td colspan='2'>&nbsp;</td>";
         table.appendChild(spacerAfterDelta);
@@ -390,8 +381,12 @@ Module.register('MMM-MyHomeWizard', {
     updateDomAfterLoad: function () {
         if ((this.config.P1_IP ? this.loadedP1 : true) &&
             (this.config.WM_IP ? this.loadedWM : true)) {
-            if (this.config.showLastUpdate) this.readLastUpdate();
-            else this.updateDom(this.config.initialLoadDelay);
+            // Always read delta values
+            this.readLastUpdate();
+            // If showLastUpdate is false, still update the DOM
+            if (!this.config.showLastUpdate) {
+                this.updateDom(this.config.initialLoadDelay);
+            }
         }
     },
 
