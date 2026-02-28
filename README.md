@@ -40,8 +40,8 @@ Add the module to your modules array in your config.js.
   disabled: false,
   config: {
 		// Replace these with your actual meter IPs
-		P1_IP: "0.0.0.0",	    // IP Address HomeWizard P1 meter
-		WM_IP: "0.0.0.0",	    // IP Address HomeWizrd Water meter - Remove when not used
+		P1_IP: "0.0.0.0",	    	// IP Address HomeWizard P1 meter
+		WM_IP: "0.0.0.0",	    	// IP Address HomeWizrd Water meter - Remove when not used
 
 		// Timing & update
 		updateInterval: 5000,   	// Update every 5 seconds
