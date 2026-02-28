@@ -69,9 +69,8 @@ Add the module to your modules array in your config.js.
 So this is not a bug, but as designed!*
 
 ## Images
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/b2ef6704-5d26-4705-a692-a268106c30f0" /> <br />
-
-<img width="300" alt="image" src="https://github.com/user-attachments/assets/f681c16f-9459-4505-a6a9-3f08fe4750b8" />
+<img width="427" height="156" alt="SCR-20260228-ogwt" src="https://github.com/user-attachments/assets/d300dcd1-28b6-450a-ad80-61145fdf5dd5" /><br />
+<img width="427" height="459" alt="SCR-20260228-olwj" src="https://github.com/user-attachments/assets/b8a8b4b6-cf23-4684-b3ce-735943463f5f" />
 
 ## Explanation
 **Total Power** is the sum of Power usage from T1 and T2 (peak and off-peak rate) <br />
