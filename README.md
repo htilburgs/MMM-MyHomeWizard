@@ -39,19 +39,27 @@ Add the module to your modules array in your config.js.
   header: 'HomeWizard',
   disabled: false,
   config: {
+		// Replace these with your actual meter IPs
 		P1_IP: "0.0.0.0",	    // IP Address HomeWizard P1 meter
 		WM_IP: "0.0.0.0",	    // IP Address HomeWizrd Water meter - Remove when not used
-		extraInfo: false, 	    // Show extra information from P1 meter
-		currentPower: false,	// Show the current Power Consumption
-		currentWater: false,	// Show the current Water Consumption
-		showGas: true,		    // Show the Gas option
-		showFooter: true,	    // Show footer (name Power Meter)
-		updateInterval: 5000,   // Update every 5 seconds
-		maxWidth: "500px",	    // Max Module width
-        showLastUpdate: true,	// Show the last update for the History Data in the footer
-        showDeltaPower: true,	// Show Delta between History and Current data (Power)
-        showDeltaGas: true,		// Show Delta between History and Current data (Gas)
-        showDeltaWater: true	// Show Delta between History and Current data (Water)
+
+		// Timing & update
+		updateInterval: 5000,   	// Update every 5 seconds
+
+		// Display settings
+		extraInfo: true,          	// show wifi & power fail info
+        showFooter: true,        	// show meter model in footer
+		showGas: true,            	// display gas usage
+		showFeedback: true,       	// display feed back to grid
+		showLastUpdate: true,     	// display the last update for the history data in the footer
+		currentPower: true,       	// show current power usage
+		currentWater: true,       	// show current water usage
+		currentVoltage: true,     	// compact 3-fase, auto detection
+
+		// Deltaws
+        showDeltaPower: true,		// Show Delta between History and Current data (Power)
+        showDeltaGas: true,			// Show Delta between History and Current data (Gas)
+        showDeltaWater: true		// Show Delta between History and Current data (Water)
   		}
 },
 ```
