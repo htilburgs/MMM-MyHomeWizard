@@ -152,7 +152,7 @@ Module.register('MMM-MyHomeWizard', {
             const row = document.createElement("tr");
             row.className = "current-power-row";
             row.appendChild(this.createCell(
-                `<i class="fa-solid fa-bolt"></i>&nbsp;${this.translate("Current_Pwr")}`,
+                `<i class="fa-solid fa-bolt-lightning"></i>&nbsp;${this.translate("Current_Pwr")}`,
                 "currentpowertextcell"
             ));
             row.appendChild(this.createCell(
@@ -204,7 +204,50 @@ Module.register('MMM-MyHomeWizard', {
             }
         }
 
-        // Feedback, Gas, Delta enz. (rest van je bestaande code)
+        // 💹 Delta Power & Delta Gas
+        if (this.deltaP1) {
+            if (this.config.showDeltaPower) {
+                const row = document.createElement("tr");
+                row.className = "total-power-row";
+                row.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Pwr")}`, "totalpowertextcell"));
+                row.appendChild(this.createCell(
+                    `${this.formatNumber(Math.round(this.deltaP1.total_power_import_kwh || 0))} kWh / ${this.formatNumber(Math.round(this.deltaP1.total_power_export_kwh || 0))} kWh`,
+                    "totalpowerdatacell"
+                ));
+                table.appendChild(row);
+            }
+
+            if (this.config.showDeltaGas) {
+                const row = document.createElement("tr");
+                row.className = "total-gas-row";
+                row.appendChild(this.createCell(`<i class="fa-solid fa-arrow-up"></i>&nbsp;${this.translate("Delta_Gas")}`, "totalgastextcell"));
+                row.appendChild(this.createCell(
+                    `${this.formatNumber(Math.round(this.deltaP1.total_gas_m3 || 0))} m³`,
+                    "totalgasdatacell"
+                ));
+                table.appendChild(row);
+            }
+        }
+
+        // Feedback en Gas totaal
+        if (this.config.showFeedback) {
+            const feedbackRow = document.createElement("tr");
+            feedbackRow.className = "total-feedback-row";
+            feedbackRow.appendChild(this.createCell(`<i class="fa-solid fa-plug-circle-plus"></i>&nbsp;${this.translate("Total_Feedback")}`, "totalfeedbacktextcell"));
+            feedbackRow.appendChild(this.createCell(`${this.formatNumber(Math.round(data.total_power_export_kwh))} kWh`, "totalfeedbackdatacell"));
+            table.appendChild(feedbackRow);
+        }
+
+        if (this.config.showGas) {
+            const gasRow = document.createElement("tr");
+            gasRow.className = "total-gas-row";
+            gasRow.appendChild(this.createCell(`<i class="fa-solid fa-fire"></i>&nbsp;${this.translate("Total_Gas")}`, "totalgastextcell"));
+            gasRow.appendChild(this.createCell(`${this.formatNumber(Math.round(data.total_gas_m3))} m³`, "totalgasdatacell"));
+            table.appendChild(gasRow);
+        }
+
+        // Extra info (wifi, failures)
+        if (this.config.extraInfo) this.addExtraInfo(table, data, "P1");
     },
 
     addWaterRows: function (table, data) {
