@@ -4,6 +4,9 @@ This modules is for use with the HomeWizard P1 meter and WaterMeter.
 
 Currently this module uses the V1 API from HomeWizard.
 
+<img width="427" height="156" alt="SCR-20260228-ogwt" src="https://github.com/user-attachments/assets/d300dcd1-28b6-450a-ad80-61145fdf5dd5" /><br />
+<img width="427" height="455" alt="SCR-20260228-plnq" src="https://github.com/user-attachments/assets/d5da3ad2-89c6-45df-8c12-410e481f6f46" />
+
 ## Enable the Local API
 For MMM-MyHomeWizard to get access to the data from an Energy device, you have to enable the API for each device. </br>
 You can do this in the HomeWizard Energy app. </br>
@@ -68,11 +71,6 @@ Add the module to your modules array in your config.js.
 *The Delta values needs 2 days in history_data.json, so this option will first show after 2 days. </br>
 So this is not a bug, but as designed!*
 
-## Images
-<img width="427" height="156" alt="SCR-20260228-ogwt" src="https://github.com/user-attachments/assets/d300dcd1-28b6-450a-ad80-61145fdf5dd5" /><br />
-<img width="427" height="455" alt="SCR-20260228-plnq" src="https://github.com/user-attachments/assets/d5da3ad2-89c6-45df-8c12-410e481f6f46" />
-
-
 ## Explanation
 **Total Power** is the sum of Power usage from T1 and T2 (peak and off-peak rate) <br />
 **Current Power** is the current Power usage (Watt) <br />
@@ -104,10 +102,16 @@ Here is the documentation of options for the modules configuration
 | ` showDeltaWater` 	| Show Delta between History and Current data (Water)<br /><br />**True/False**<br />Default: `false`
 
 ## Version
-v1.0.0 - 26-11-2024	: Initial version </br>
-v1.0.1 - 29-12-2024	: Add option showGas </br>
-v2.0.0 - 22-01-2026 : Update with daily saving data to history_data and option for show Deltas </br>
-v2.0.1 - 28-02-2026 : Add option currentVoltage for 3-phase usage
+#### v2.0.1 (28-02-2026)
+* Add option currentVoltage for 3-phase usage
+
+#### v2.0.0 (22-01-2026)
+* Update with daily saving data to history_data and option for show Deltas
+
+#### v1.0.1 (29-12-2024)
+* Add option ShowGas
+
+#### v1.0.0 (26-11-2024-: Initial version)
 
 ## License
 ### The MIT License (MIT)
