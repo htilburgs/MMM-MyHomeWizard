@@ -101,7 +101,7 @@ Here is the documentation of options for the modules configuration
 | ` showDeltaGas`   	| Show Delta between History and Current data (Gas)<br /><br />**True/False**<br />Default: `true`
 | ` showDeltaWater` 	| Show Delta between History and Current data (Water)<br /><br />**True/False**<br />Default: `false`
 
-## Version
+## Versions
 #### v2.0.1 (28-02-2026)
 * Add option currentVoltage for 3-phase usage
 
